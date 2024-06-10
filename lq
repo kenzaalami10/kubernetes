@@ -1,35 +1,4 @@
 ---
-apiVersion: policy/v1beta1
-kind: PodSecurityPolicy
-metadata:
-  name: psp.flannel.unprivileged
-  annotations:
-    seccomp.security.alpha.kubernetes.io/allowedProfileNames: docker/default
-    seccomp.security.alpha.kubernetes.io/defaultProfileName: docker/default
-spec:
-  privileged: false
-  volumes:
-    - configMap
-    - secret
-    - emptyDir
-    - hostPath
-  hostNetwork: true
-  hostPorts:
-    - min: 0
-      max: 65535
-  allowedHostPaths:
-    - pathPrefix: "/etc/cni/net.d"
-    - pathPrefix: "/etc/kube-flannel/"
-    - pathPrefix: "/run/flannel/"
-  runAsUser:
-    rule: RunAsAny
-  seLinux:
-    rule: RunAsAny
-  supplementalGroups:
-    rule: RunAsAny
-  fsGroup:
-    rule: RunAsAny
----
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -198,14 +167,4 @@ spec:
         configMap:
           name: kube-flannel-cfg
 
-
-[devops@CAASPFEAD5M ~]$ vi flannel.yaml
-[devops@CAASPFEAD5M ~]$ kubectl apply -f flannel.yaml
-serviceaccount/flannel created
-clusterrole.rbac.authorization.k8s.io/flannel created
-clusterrolebinding.rbac.authorization.k8s.io/flannel created
-configmap/kube-flannel-cfg created
-daemonset.apps/kube-flannel-ds created
-error: resource mapping not found for name: "psp.flannel.unprivileged" namespace: "" from "flannel.yaml": no matches for kind "PodSecurityPolicy" in version "policy/v1beta1"
-ensure CRDs are installed first
 
