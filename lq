@@ -1,43 +1,25 @@
-Étape 1 : Listez les images chargées
 
-Utilisez podman images pour vérifier les images qui ont été chargées correctement :
+[devops@GITOPSRBDAD1M ~]$ sudo podman images
+REPOSITORY                             TAG              IMAGE ID      CREATED        SIZE
+localhost:443/kube-apiserver           v1.29.2          8a9000f98a52  3 months ago   128 MB
+localhost:443/kube-controller-manager  v1.29.2          138fb5a3a2e3  3 months ago   123 MB
+localhost:443/kube-proxy               v1.29.2          9344fce2372f  3 months ago   83.5 MB
+localhost:443/kube-scheduler           v1.29.2          6fc5e6b7218c  3 months ago   60.6 MB
+localhost/registry                     latest           a8781fe3b7a2  4 months ago   26 MB
+localhost/registry                     2.8.3            a8781fe3b7a2  4 months ago   26 MB
+docker.io/flannel/flannel-cni-plugin   v1.4.0-flannel1  77c1250c26d9  4 months ago   10.2 MB
+localhost/my-flannel-plugin            latest           77c1250c26d9  4 months ago   10.2 MB
+docker.io/library/registry             latest           d6b2c32a0f14  8 months ago   26 MB
+localhost:443/coredns                  v1.11.1          cbb01a7bd410  9 months ago   61.2 MB
+localhost:443/pause                    3.9              e6f181688397  20 months ago  748 kB
+[devops@GITOPSRBDAD1M ~]$ ls
+ 62a9c3168ff6441a2952dacc.png   ca.srl              'devops@10.173.144.179~^C'   etcd-v3.3.9-linux-amd64.tar.gz   files.tar.gz         install_ssl_deps   kubeadm-config.yaml   registry.v3.ext
+ ca.crt                         chat.txt             docker                      file                             haproxy_keepalived   k8s                kube-flannel.yml      roles.zip
+ ca.key                         container_registry   etcd-3.5.13.tar.gz          files                            images               k8s.tar            registry.csr
+[devops@GITOPSRBDAD1M ~]$ cd images
+[devops@GITOPSRBDAD1M ~/images]$ ls
+coredns-v1.11.1.tar.gz  etcd-3.5.0.tar.gz  etcd-3.5.10-0.tar.gz  etcd-3.5.9-k3s1.tar.gz         kube-controller-manager-v1.29.2.tar.gz  kube-scheduler-v1.29.2.tar.gz  registry-2.8.3.tar.gz
+etcd-3.4.32.tar.gz      etcd-3.5.0.zip     etcd-3.5.13.tar       kube-apiserver-v1.29.2.tar.gz  kube-proxy-v1.29.2.tar.gz               pause-3.9.tar.gz
+[devops@GITOPSRBDAD1M ~/images]$ ^C
+[devops@GITOPSRBDAD1M ~/images]$
 
-sh
-
-sudo podman images
-
-Vous verrez une liste des images avec leurs identifiants et tags actuels.
-Étape 2 : Taguer les images avec le registre local
-
-Taguez chaque image en utilisant l'identifiant correct :
-
-sh
-
-sudo podman tag sha256:cbb01a7bd410dc08ba382018ab909a674fb0e48687f0c00797ed5bc34fcc6bb4 localhost:443/coredns:v1.11.1
-sudo podman tag sha256:8a9000f98a528cbfefc5c11adee43f9ef6eb5bb9a1eb16aa83c66411a8bed8ee localhost:443/kube-apiserver:v1.29.2
-sudo podman tag sha256:138fb5a3a2e3414f1ef83e14e561276a0b1dc2b2a7614a392b4f6e8758dc888a localhost:443/kube-controller-manager:v1.29.2
-sudo podman tag sha256:9344fce2372f88fad811d9c6941271027abd5cc882d631630efbd2b8c268c547 localhost:443/kube-proxy:v1.29.2
-sudo podman tag sha256:6fc5e6b7218c753ea7ebbd0320957218bad762c27a60319c6f4d8136b0840893 localhost:443/kube-scheduler:v1.29.2
-sudo podman tag sha256:e6f1816883972d4be47bd48879a08919b96afcd344132622e4d444987919323c localhost:443/pause:3.9
-sudo podman tag sha256:a8781fe3b7 localhost:443/registry:2.8.3
-
-Assurez-vous de remplacer sha256:... par les bons identifiants des images listées dans votre sortie podman images.
-Étape 3 : Pousser les images vers le registre local
-
-Poussez chaque image vers votre registre local :
-
-sh
-
-sudo podman push localhost:443/coredns:v1.11.1
-sudo podman push localhost:443/kube-apiserver:v1.29.2
-sudo podman push localhost:443/kube-controller-manager:v1.29.2
-sudo podman push localhost:443/kube-proxy:v1.29.2
-sudo podman push localhost:443/kube-scheduler:v1.29.2
-sudo podman push localhost:443/pause:3.9
-sudo podman push localhost:443/registry:2.8.3
-
-Étape 4 : Vérifiez que les images sont dans le registre
-
-Vous pouvez vérifier que les images ont été poussées correctement en accédant à votre registre via l'interface web ou en utilisant des commandes pour lister les images présentes dans votre registre.
-
-En suivant ces étapes, vous devriez pouvoir taguer et pousser correctement les images vers votre registre local.
