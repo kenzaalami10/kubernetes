@@ -1,32 +1,29 @@
-Complete Commands
 
-sh
-
-# Step 1: Extract the source code
-tar -xzvf etcd-3.4.32.tar.gz
-cd etcd-3.4.32
-
-# Step 2: Create a Dockerfile
-cat <<EOF > Dockerfile
-FROM golang:1.17 AS builder
-WORKDIR /etcd
-COPY . .
-RUN ./build
-
+etcd-3.4.32/wal/walpb/record.pb.go
+etcd-3.4.32/wal/walpb/record.proto
+[devops@GITOPSRBDAD1M ~/images]$ cd etcd-3.4.32
+[devops@GITOPSRBDAD1M ~/images/etcd-3.4.32]$ cat <<EOF > Dockerfile
+> FROM golang:1.17 AS builder
+> WORKDIR /etcd
+> COPY . .
+> RUN ./build
+>
 FROM alpine:3.14
-COPY --from=builder /etcd/bin/etcd /usr/local/bin/
-COPY --from=builder /etcd/bin/etcdctl /usr/local/bin/
-EXPOSE 2379 2380
-ENTRYPOINT ["/usr/local/bin/etcd"]
-EOF
+> FROM alpine:3.14
+> COPY --from=builder /etcd/bin/etcd /usr/local/bin/
+> COPY --from=builder /etcd/bin/etcdctl /usr/local/bin/
+> EXPOSE 2379 2380
+> ENTRYPOINT ["/usr/local/bin/etcd"]
+> EOF
+[devops@GITOPSRBDAD1M ~/images/etcd-3.4.32]$ sudo podman build -t localhost:443/etcd:3.4.32 .
+[1/2] STEP 1/4: FROM golang:1.17 AS builder
+✔ docker.io/library/golang:1.17
+Trying to pull docker.io/library/golang:1.17...
+Error: creating build container: initializing source docker://golang:1.17: pinging container registry registry-1.docker.io: Get "https://registry-1.docker.io/v2/": dial tcp: lookup registry-1.docker.io on 10.4.2.102:53: no such host
+[devops@GITOPSRBDAD1M ~/images/etcd-3.4.32]$ sudo podman build -t localhost:443/etcd:3.4.32 .
+[1/2] STEP 1/4: FROM golang:1.17 AS builder
+✔ quay.io/golang:1.17
+Trying to pull quay.io/golang:1.17...
+Error: creating build container: initializing source docker://quay.io/golang:1.17: pinging container registry quay.io: Get "https://quay.io/v2/": dial tcp: lookup quay.io on 10.4.2.102:53: no such host
+[devops@GITOPSRBDAD1M ~/images/etcd-3.4.32]$
 
-# Step 3: Build the Docker image
-sudo podman build -t localhost:443/etcd:3.4.32 .
-
-# Step 4: Push the Docker image to your local registry
-sudo podman push localhost:443/etcd:3.4.32
-
-# Step 5: Verify the image
-sudo podman images
-
-This will build and push
