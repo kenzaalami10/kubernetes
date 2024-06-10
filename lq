@@ -1,4 +1,19 @@
-devops@CAASPFEAD5M ~]$ systemctl status kubelet
+
+[devops@CAASPFEAD5M ~]$ ^C
+[devops@CAASPFEAD5M ~]$ kubectl get pods
+No resources found in default namespace.
+[devops@CAASPFEAD5M ~]$ kubectl get nodes
+NAME          STATUS     ROLES           AGE     VERSION
+caaspfead5m   NotReady   control-plane   2d23h   v1.29.2
+devad1m       Ready      <none>          2d23h   v1.29.2
+worker1       Ready      <none>          2d23h   v1.29.2
+[devops@CAASPFEAD5M ~]$ sudo kubeadm config images pull --cri-socket unix:///var/run/crio/crio.sock --kubernetes-version v1.29.2 --image-repository 10.173.181.26
+^C
+[devops@CAASPFEAD5M ~]$ systenctl status kubelet
+bash: systenctl: commande inconnue...
+Impossible de rechercher des fichiers: Failed to download gpg key for repo 'kubernetes': Curl error (6): Couldn't resolve host name for https://packages.cloud.google.com/yum/doc/yum-key.gpg [Could not resolve host: packages.cloud.google.com]
+[devops@CAASPFEAD5M ~]$ ^C
+[devops@CAASPFEAD5M ~]$ systemctl status kubelet
 ● kubelet.service - kubelet: The Kubernetes Node Agent
    Loaded: loaded (/usr/lib/systemd/system/kubelet.service; enabled; vendor preset: disabled)
   Drop-In: /usr/lib/systemd/system/kubelet.service.d
@@ -67,5 +82,140 @@ failed to pull image "10.173.181.26/kube-apiserver:v1.29.2": output: E0610 15:54
 time="2024-06-10T15:54:59+01:00" level=fatal msg="pulling image: pinging container registry 10.173.181.26: Get \"https://10.173.181.26/v2/\": net/http: TLS handshake timeout"
 , error: exit status 1
 To see the stack trace of this error execute with --v=5 or higher
-[devops@CAASPFEAD5M ~]$
+[devops@CAASPFEAD5M ~]$ ^C
+[devops@CAASPFEAD5M ~]$ ls -l /var/run/crio/crio.sock
+srw-rw----. 1 root root 0 10 juin  15:51 /var/run/crio/crio.sock
+[devops@CAASPFEAD5M ~]$ sudo chmod 666 /var/run/crio/crio.sock
+[devops@CAASPFEAD5M ~]$ ls -l /var/run/crio/crio.sock
+srw-rw-rw-. 1 root root 0 10 juin  15:51 /var/run/crio/crio.sock
+[devops@CAASPFEAD5M ~]$ sudo cp ca.crt /etc/pki/ca-trust/source/anchors/ca.crt
+[devops@CAASPFEAD5M ~]$ sudo update-ca-trust
+[devops@CAASPFEAD5M ~]$ systemctl restart crio
+==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units ====
+Authentification requise pour redémarrer « crio.service ».
+Authenticating as: root
+Password:
+[devops@CAASPFEAD5M ~]$ sudo systemctl restart crio
+[devops@CAASPFEAD5M ~]$ sudo systemctl restart kubelet
+[devops@CAASPFEAD5M ~]$ pping 10.173.181.26
+bash: pping: commande inconnue...
+Commande similaire : 'ping'
+[devops@CAASPFEAD5M ~]$ ping 10.173.181.26
+PING 10.173.181.26 (10.173.181.26) 56(84) bytes of data.
+64 bytes from 10.173.181.26: icmp_seq=1 ttl=63 time=0.342 ms
+64 bytes from 10.173.181.26: icmp_seq=2 ttl=63 time=0.539 ms
+64 bytes from 10.173.181.26: icmp_seq=3 ttl=63 time=0.437 ms
+^C
+--- 10.173.181.26 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2060ms
+rtt min/avg/max/mdev = 0.342/0.439/0.539/0.082 ms
+[devops@CAASPFEAD5M ~]$ sudo kubeadm config images pull --cri-socket unix:///var/run/crio/crio.sock --kubernetes-version v1.29.2 --image-repository 10.173.181.26
+^C
+[devops@CAASPFEAD5M ~]$ sudo kubeadm config images pull --cri-socket unix:///var/run/crio/crio.sock --kubernetes-version v1.29.2 --image-repository 10.173.181.26 --v=5
+I0610 15:59:41.895688 3059917 interface.go:432] Looking for default routes with IPv4 addresses
+I0610 15:59:41.895788 3059917 interface.go:437] Default route transits interface "ens160"
+I0610 15:59:41.896233 3059917 interface.go:209] Interface ens160 is up
+I0610 15:59:41.896285 3059917 interface.go:257] Interface "ens160" has 1 addresses :[10.173.144.179/24].
+I0610 15:59:41.896304 3059917 interface.go:224] Checking addr  10.173.144.179/24.
+I0610 15:59:41.896313 3059917 interface.go:231] IP found 10.173.144.179
+I0610 15:59:41.896332 3059917 interface.go:263] Found valid IPv4 address 10.173.144.179 for interface "ens160".
+I0610 15:59:41.896341 3059917 interface.go:443] Found active IP 10.173.144.179
+I0610 15:59:41.896364 3059917 kubelet.go:196] the value of KubeletConfiguration.cgroupDriver is empty; setting it to "systemd"
+exit status 1
+output: E0610 16:01:22.056417 3060186 remote_image.go:180] "PullImage from image service failed" err="rpc error: code = Unknown desc = pinging container registry 10.173.181.26: Get \"https://10.173.181.26/v2/\": net/http: TLS handshake timeout" image="10.173.181.26/kube-apiserver:v1.29.2"
+time="2024-06-10T16:01:22+01:00" level=fatal msg="pulling image: pinging container registry 10.173.181.26: Get \"https://10.173.181.26/v2/\": net/http: TLS handshake timeout"
+, error
+k8s.io/kubernetes/cmd/kubeadm/app/util/runtime.(*CRIRuntime).PullImage
+        cmd/kubeadm/app/util/runtime/runtime.go:139
+k8s.io/kubernetes/cmd/kubeadm/app/cmd.PullControlPlaneImages
+        cmd/kubeadm/app/cmd/config.go:393
+k8s.io/kubernetes/cmd/kubeadm/app/cmd.newCmdConfigImagesPull.func1
+        cmd/kubeadm/app/cmd/config.go:379
+github.com/spf13/cobra.(*Command).execute
+        vendor/github.com/spf13/cobra/command.go:940
+github.com/spf13/cobra.(*Command).ExecuteC
+        vendor/github.com/spf13/cobra/command.go:1068
+github.com/spf13/cobra.(*Command).Execute
+        vendor/github.com/spf13/cobra/command.go:992
+k8s.io/kubernetes/cmd/kubeadm/app.Run
+        cmd/kubeadm/app/kubeadm.go:50
+main.main
+        cmd/kubeadm/kubeadm.go:25
+runtime.main
+        /usr/local/go/src/runtime/proc.go:267
+runtime.goexit
+        /usr/local/go/src/runtime/asm_amd64.s:1650
+failed to pull image "10.173.181.26/kube-apiserver:v1.29.2"
+k8s.io/kubernetes/cmd/kubeadm/app/cmd.PullControlPlaneImages
+        cmd/kubeadm/app/cmd/config.go:394
+k8s.io/kubernetes/cmd/kubeadm/app/cmd.newCmdConfigImagesPull.func1
+        cmd/kubeadm/app/cmd/config.go:379
+github.com/spf13/cobra.(*Command).execute
+        vendor/github.com/spf13/cobra/command.go:940
+github.com/spf13/cobra.(*Command).ExecuteC
+        vendor/github.com/spf13/cobra/command.go:1068
+github.com/spf13/cobra.(*Command).Execute
+        vendor/github.com/spf13/cobra/command.go:992
+k8s.io/kubernetes/cmd/kubeadm/app.Run
+        cmd/kubeadm/app/kubeadm.go:50
+main.main
+        cmd/kubeadm/kubeadm.go:25
+runtime.main
+        /usr/local/go/src/runtime/proc.go:267
+runtime.goexit
+        /usr/local/go/src/runtime/asm_amd64.s:1650
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[devops@GITOPSRBDAD1M ~]$ sudo podman ps
+CONTAINER ID  IMAGE                              COMMAND               CREATED     STATUS      PORTS                  NAMES
+ef252d835895  docker.io/library/registry:latest  /etc/docker/regis...  3 days ago  Up 3 days   0.0.0.0:443->5000/tcp  registry
+[devops@GITOPSRBDAD1M ~]$ sudo podman images
+REPOSITORY                                TAG              IMAGE ID      CREATED        SIZE
+localhost:443/kube-apiserver              v1.29.2          8a9000f98a52  3 months ago   128 MB
+10.173.181.26/kube-apiserver              v1.29.2          8a9000f98a52  3 months ago   128 MB
+10.173.181.26/kube-scheduler              v1.29.2          6fc5e6b7218c  3 months ago   60.6 MB
+10.173.181.26/kube-proxy                  v1.29.2          9344fce2372f  3 months ago   83.5 MB
+localhost:443/kube-scheduler              v1.29.2          6fc5e6b7218c  3 months ago   60.6 MB
+localhost:443/kube-controller-manager     v1.29.2          138fb5a3a2e3  3 months ago   123 MB
+10.173.181.26/kube-controller-manager     v1.29.2          138fb5a3a2e3  3 months ago   123 MB
+localhost:443/kube-proxy                  v1.29.2          9344fce2372f  3 months ago   83.5 MB
+10.173.181.26/registry                    latest           a8781fe3b7a2  4 months ago   26 MB
+10.173.181.26/registry                    2.8.3            a8781fe3b7a2  4 months ago   26 MB
+localhost/registry                        2.8.3            a8781fe3b7a2  4 months ago   26 MB
+localhost/registry                        latest           a8781fe3b7a2  4 months ago   26 MB
+10.173.181.26/flannel/flannel-cni-plugin  v1.4.0-flannel1  77c1250c26d9  4 months ago   10.2 MB
+docker.io/flannel/flannel-cni-plugin      v1.4.0-flannel1  77c1250c26d9  4 months ago   10.2 MB
+10.173.181.26/my-flannel-plugin           latest           77c1250c26d9  4 months ago   10.2 MB
+localhost/my-flannel-plugin               latest           77c1250c26d9  4 months ago   10.2 MB
+docker.io/library/registry                latest           d6b2c32a0f14  8 months ago   26 MB
+localhost:443/coredns                     v1.11.1          cbb01a7bd410  9 months ago   61.2 MB
+10.173.181.26/coredns                     v1.11.1          cbb01a7bd410  9 months ago   61.2 MB
+10.173.181.26/pause                       3.9              e6f181688397  20 months ago  748 kB
+localhost:443/pause                       3.9              e6f181688397  20 months ago  748 kB
+quay.io/coreos/etcd                       v3.2.5           03012333722b  6 years ago    36 MB
+localhost:443/etcd                        latest           03012333722b  6 years ago    36 MB
+localhost:443/etcd                        v3.2.5           03012333722b  6 years ago    36 MB
+host.docker.internal:443/etcd             v3.2.5           03012333722b  6 years ago    36 MB
+10.173.181.26:443/etcd                    v3.2.5           03012333722b  6 years ago    36 MB
+10.173.181.26/etcd                        v3.2.5           03012333722b  6 years ago    36 MB
+10.173.181.26/etcd                        latest           03012333722b  6 years ago    36 MB
+[devops@GITOPSRBDAD1M ~]$
+
 
