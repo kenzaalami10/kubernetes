@@ -197,3 +197,15 @@ spec:
       - name: flannel-cfg
         configMap:
           name: kube-flannel-cfg
+
+
+[devops@CAASPFEAD5M ~]$ vi flannel.yaml
+[devops@CAASPFEAD5M ~]$ kubectl apply -f flannel.yaml
+serviceaccount/flannel created
+clusterrole.rbac.authorization.k8s.io/flannel created
+clusterrolebinding.rbac.authorization.k8s.io/flannel created
+configmap/kube-flannel-cfg created
+daemonset.apps/kube-flannel-ds created
+error: resource mapping not found for name: "psp.flannel.unprivileged" namespace: "" from "flannel.yaml": no matches for kind "PodSecurityPolicy" in version "policy/v1beta1"
+ensure CRDs are installed first
+
