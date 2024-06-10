@@ -1,6 +1,4 @@
-
-[devops@CAASPFEAD5M ~]$ ^C
-[devops@CAASPFEAD5M ~]$ systemctl status kubelet
+devops@CAASPFEAD5M ~]$ systemctl status kubelet
 ● kubelet.service - kubelet: The Kubernetes Node Agent
    Loaded: loaded (/usr/lib/systemd/system/kubelet.service; enabled; vendor preset: disabled)
   Drop-In: /usr/lib/systemd/system/kubelet.service.d
@@ -44,6 +42,29 @@ worker1       Ready      <none>          2d23h   v1.29.2
 [devops@CAASPFEAD5M ~]$ sudo kubeadm config images pull --cri-socket unix:///var/run/crio/crio.sock --kubernetes-version v1.29.2 --image-repository 10.173.181.26
 failed to pull image "10.173.181.26/kube-apiserver:v1.29.2": output: E0610 15:47:17.923002 3058858 remote_image.go:180] "PullImage from image service failed" err="rpc error: code = Unknown desc = pinging container registry 10.173.181.26: Get \"https://10.173.181.26/v2/\": net/http: TLS handshake timeout" image="10.173.181.26/kube-apiserver:v1.29.2"
 time="2024-06-10T15:47:17+01:00" level=fatal msg="pulling image: pinging container registry 10.173.181.26: Get \"https://10.173.181.26/v2/\": net/http: TLS handshake timeout"
+, error: exit status 1
+To see the stack trace of this error execute with --v=5 or higher
+[devops@CAASPFEAD5M ~]$ ^C
+[devops@CAASPFEAD5M ~]$ systemctl restart crio
+==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units ====
+Authentification requise pour redémarrer « crio.service ».
+Authenticating as: root
+Password:
+[devops@CAASPFEAD5M ~]$ sudo systemctl restart crio
+[devops@CAASPFEAD5M ~]$ sudo systemctl restart kubelet
+[devops@CAASPFEAD5M ~]$ ls
+ca.crt  --discovery-token-ca-cert-hash  files  flannel.yaml  flannel.yml  kube-flannel.yml  kube-proxy.kubeconfig
+[devops@CAASPFEAD5M ~]$ sudo cp ca.crt /etc/pki/ca-trust/source/anchors/ca.crt sudo update-ca-trust
+cp: la cible 'update-ca-trust' n'est pas un répertoire
+[devops@CAASPFEAD5M ~]$ sudo cp ca.crt /etc/pki/ca-trust/source/anchors/ca.crt
+[devops@CAASPFEAD5M ~]$  sudo update-ca-trust
+[devops@CAASPFEAD5M ~]$ kubeadm config images pull --cri-socket unix:///var/run/crio/crio.sock --kubernetes-version v1.29.2 --image-repository 10.173.181.26
+failed to pull image "10.173.181.26/kube-apiserver:v1.29.2": output: time="2024-06-10T15:53:04+01:00" level=fatal msg="validate service connection: validate CRI v1 image API for endpoint \"unix:///var/run/crio/crio.sock\": rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing: dial unix /var/run/crio/crio.sock: connect: permission denied\""
+, error: exit status 1
+To see the stack trace of this error execute with --v=5 or higher
+[devops@CAASPFEAD5M ~]$ sudo kubeadm config images pull --cri-socket unix:///var/run/crio/crio.sock --kubernetes-version v1.29.2 --image-repository 10.173.181.26
+failed to pull image "10.173.181.26/kube-apiserver:v1.29.2": output: E0610 15:54:59.178741 3059382 remote_image.go:180] "PullImage from image service failed" err="rpc error: code = Unknown desc = pinging container registry 10.173.181.26: Get \"https://10.173.181.26/v2/\": net/http: TLS handshake timeout" image="10.173.181.26/kube-apiserver:v1.29.2"
+time="2024-06-10T15:54:59+01:00" level=fatal msg="pulling image: pinging container registry 10.173.181.26: Get \"https://10.173.181.26/v2/\": net/http: TLS handshake timeout"
 , error: exit status 1
 To see the stack trace of this error execute with --v=5 or higher
 [devops@CAASPFEAD5M ~]$
