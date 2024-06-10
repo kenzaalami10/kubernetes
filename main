@@ -1,0 +1,85 @@
+[devops@CAASPFEAD5M ~]$ kubectl get pods
+No resources found in default namespace.
+[devops@CAASPFEAD5M ~]$ kubectl get nodes
+NAME          STATUS     ROLES           AGE     VERSION
+caaspfead5m   NotReady   control-plane   2d18h   v1.29.2
+devad1m       Ready      <none>          2d18h   v1.29.2
+worker1       Ready      <none>          2d18h   v1.29.2
+[devops@CAASPFEAD5M ~]$ kubectl describe node caaspfead5m
+Name:               caaspfead5m
+Roles:              control-plane
+Labels:             beta.kubernetes.io/arch=amd64
+                    beta.kubernetes.io/os=linux
+                    kubernetes.io/arch=amd64
+                    kubernetes.io/hostname=caaspfead5m
+                    kubernetes.io/os=linux
+                    node-role.kubernetes.io/control-plane=
+                    node.kubernetes.io/exclude-from-external-load-balancers=
+Annotations:        kubeadm.alpha.kubernetes.io/cri-socket: unix:///var/run/crio/crio.sock
+                    node.alpha.kubernetes.io/ttl: 0
+                    volumes.kubernetes.io/controller-managed-attach-detach: true
+CreationTimestamp:  Fri, 07 Jun 2024 16:26:41 +0100
+Taints:             node.kubernetes.io/not-ready:NoExecute
+                    node-role.kubernetes.io/control-plane:NoSchedule
+                    node.kubernetes.io/not-ready:NoSchedule
+Unschedulable:      false
+Lease:
+  HolderIdentity:  caaspfead5m
+  AcquireTime:     <unset>
+  RenewTime:       Mon, 10 Jun 2024 10:37:56 +0100
+Conditions:
+  Type             Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
+  ----             ------  -----------------                 ------------------                ------                       -------
+  MemoryPressure   False   Mon, 10 Jun 2024 10:36:41 +0100   Fri, 07 Jun 2024 16:26:41 +0100   KubeletHasSufficientMemory   kubelet has sufficient memory available
+  DiskPressure     False   Mon, 10 Jun 2024 10:36:41 +0100   Fri, 07 Jun 2024 16:26:41 +0100   KubeletHasNoDiskPressure     kubelet has no disk pressure
+  PIDPressure      False   Mon, 10 Jun 2024 10:36:41 +0100   Fri, 07 Jun 2024 16:26:41 +0100   KubeletHasSufficientPID      kubelet has sufficient PID available
+  Ready            False   Mon, 10 Jun 2024 10:36:41 +0100   Fri, 07 Jun 2024 16:26:41 +0100   KubeletNotReady              container runtime network not ready: NetworkReady=false reason:NetworkPluginNotReady message:Network plugin returns error: No CNI configuration file in /etc/cni/net.d/. Has your network provider started?
+Addresses:
+  InternalIP:  10.173.144.179
+  Hostname:    caaspfead5m
+Capacity:
+  cpu:                4
+  ephemeral-storage:  5110Mi
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             5805592Ki
+  pods:               110
+Allocatable:
+  cpu:                4
+  ephemeral-storage:  4822401017
+  hugepages-1Gi:      0
+  hugepages-2Mi:      0
+  memory:             5703192Ki
+  pods:               110
+System Info:
+  Machine ID:                 7b37db99e7aea1b2dc5bbc646634adad
+  System UUID:                4220e8e7-762c-dfb4-b47c-892b73bbaab3
+  Boot ID:                    7e5a746a-78c9-4f38-a19d-713b9f6eb27a
+  Kernel Version:             4.18.0-513.9.1.el8_9.x86_64
+  OS Image:                   Red Hat Enterprise Linux 8.9 (Ootpa)
+  Operating System:           linux
+  Architecture:               amd64
+  Container Runtime Version:  cri-o://1.29.2
+  Kubelet Version:            v1.29.2
+  Kube-Proxy Version:         v1.29.2
+PodCIDR:                      10.244.0.0/24
+PodCIDRs:                     10.244.0.0/24
+Non-terminated Pods:          (5 in total)
+  Namespace                   Name                                   CPU Requests  CPU Limits  Memory Requests  Memory Limits  Age
+  ---------                   ----                                   ------------  ----------  ---------------  -------------  ---
+  kube-system                 etcd-caaspfead5m                       100m (2%)     0 (0%)      100Mi (1%)       0 (0%)         2d18h
+  kube-system                 kube-apiserver-caaspfead5m             250m (6%)     0 (0%)      0 (0%)           0 (0%)         2d18h
+  kube-system                 kube-controller-manager-caaspfead5m    200m (5%)     0 (0%)      0 (0%)           0 (0%)         2d18h
+  kube-system                 kube-proxy-lggcz                       0 (0%)        0 (0%)      0 (0%)           0 (0%)         2d18h
+  kube-system                 kube-scheduler-caaspfead5m             100m (2%)     0 (0%)      0 (0%)           0 (0%)         2d18h
+Allocated resources:
+  (Total limits may be over 100 percent, i.e., overcommitted.)
+  Resource           Requests    Limits
+  --------           --------    ------
+  cpu                650m (16%)  0 (0%)
+  memory             100Mi (1%)  0 (0%)
+  ephemeral-storage  0 (0%)      0 (0%)
+  hugepages-1Gi      0 (0%)      0 (0%)
+  hugepages-2Mi      0 (0%)      0 (0%)
+Events:              <none>
+[devops@CAASPFEAD5M ~]$
