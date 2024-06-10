@@ -1,16 +1,56 @@
-[devops@GITOPSRBDAD1M ~/images/etcd-3.4.32]$ cd
-[devops@GITOPSRBDAD1M ~]$ sudo podman images
-REPOSITORY                             TAG              IMAGE ID      CREATED        SIZE
-localhost:443/kube-apiserver           v1.29.2          8a9000f98a52  3 months ago   128 MB
-localhost:443/kube-controller-manager  v1.29.2          138fb5a3a2e3  3 months ago   123 MB
-localhost:443/kube-proxy               v1.29.2          9344fce2372f  3 months ago   83.5 MB
-localhost:443/kube-scheduler           v1.29.2          6fc5e6b7218c  3 months ago   60.6 MB
-localhost/registry                     latest           a8781fe3b7a2  4 months ago   26 MB
-localhost/registry                     2.8.3            a8781fe3b7a2  4 months ago   26 MB
-docker.io/flannel/flannel-cni-plugin   v1.4.0-flannel1  77c1250c26d9  4 months ago   10.2 MB
-localhost/my-flannel-plugin            latest           77c1250c26d9  4 months ago   10.2 MB
-docker.io/library/registry             latest           d6b2c32a0f14  8 months ago   26 MB
-localhost:443/coredns                  v1.11.1          cbb01a7bd410  9 months ago   61.2 MB
-localhost:443/pause                    3.9              e6f181688397  20 months ago  748 kB
+
+[devops@GITOPSRBDAD1M ~]$  sudo update-ca-trust
+[devops@GITOPSRBDAD1M ~]$ docker ps
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES
+[devops@GITOPSRBDAD1M ~]$ sudo docker ps
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+CONTAINER ID  IMAGE                              COMMAND               CREATED     STATUS      PORTS                  NAMES
+ef252d835895  docker.io/library/registry:latest  /etc/docker/regis...  3 days ago  Up 3 days   0.0.0.0:443->5000/tcp  registry
+[devops@GITOPSRBDAD1M ~]$ sudo docker images
+Emulate Docker CLI using podman. Create /etc/containers/nodocker to quiet msg.
+REPOSITORY                                TAG              IMAGE ID      CREATED        SIZE
+localhost:443/kube-apiserver              v1.29.2          8a9000f98a52  3 months ago   128 MB
+10.173.181.26/kube-apiserver              v1.29.2          8a9000f98a52  3 months ago   128 MB
+10.173.181.26/kube-scheduler              v1.29.2          6fc5e6b7218c  3 months ago   60.6 MB
+10.173.181.26/kube-proxy                  v1.29.2          9344fce2372f  3 months ago   83.5 MB
+localhost:443/kube-scheduler              v1.29.2          6fc5e6b7218c  3 months ago   60.6 MB
+localhost:443/kube-controller-manager     v1.29.2          138fb5a3a2e3  3 months ago   123 MB
+10.173.181.26/kube-controller-manager     v1.29.2          138fb5a3a2e3  3 months ago   123 MB
+localhost:443/kube-proxy                  v1.29.2          9344fce2372f  3 months ago   83.5 MB
+10.173.181.26/registry                    latest           a8781fe3b7a2  4 months ago   26 MB
+10.173.181.26/registry                    2.8.3            a8781fe3b7a2  4 months ago   26 MB
+localhost/registry                        2.8.3            a8781fe3b7a2  4 months ago   26 MB
+localhost/registry                        latest           a8781fe3b7a2  4 months ago   26 MB
+10.173.181.26/flannel/flannel-cni-plugin  v1.4.0-flannel1  77c1250c26d9  4 months ago   10.2 MB
+docker.io/flannel/flannel-cni-plugin      v1.4.0-flannel1  77c1250c26d9  4 months ago   10.2 MB
+10.173.181.26/my-flannel-plugin           latest           77c1250c26d9  4 months ago   10.2 MB
+localhost/my-flannel-plugin               latest           77c1250c26d9  4 months ago   10.2 MB
+docker.io/library/registry                latest           d6b2c32a0f14  8 months ago   26 MB
+localhost:443/coredns                     v1.11.1          cbb01a7bd410  9 months ago   61.2 MB
+10.173.181.26/coredns                     v1.11.1          cbb01a7bd410  9 months ago   61.2 MB
+10.173.181.26/pause                       3.9              e6f181688397  20 months ago  748 kB
+localhost:443/pause                       3.9              e6f181688397  20 months ago  748 kB
+quay.io/coreos/etcd                       v3.2.5           03012333722b  6 years ago    36 MB
+localhost:443/etcd                        latest           03012333722b  6 years ago    36 MB
+localhost:443/etcd                        v3.2.5           03012333722b  6 years ago    36 MB
+host.docker.internal:443/etcd             v3.2.5           03012333722b  6 years ago    36 MB
+10.173.181.26:443/etcd                    v3.2.5           03012333722b  6 years ago    36 MB
+10.173.181.26/etcd                        v3.2.5           03012333722b  6 years ago    36 MB
+10.173.181.26/etcd                        latest           03012333722b  6 years ago    36 MB
 [devops@GITOPSRBDAD1M ~]$
+
+
+
+
+assword:
+[devops@CAASPFEAD5M ~]$ sudo systemctl enable --now crio
+[devops@CAASPFEAD5M ~]$ sudo systemctl enable kubelet
+[devops@CAASPFEAD5M ~]$ sudo kubeadm config images pull --cri-socket unix:///var/run/crio/crio.sock --kubernetes-version v1.29.2 --image-repository 10.173.181.26
+^C
+[devops@CAASPFEAD5M ~]$
+
+
+
+
 
