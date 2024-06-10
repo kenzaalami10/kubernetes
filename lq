@@ -1,141 +1,43 @@
+Étape 1 : Listez les images chargées
 
-[devops@GITOPSRBDAD1M ~]$ cd images
-[devops@GITOPSRBDAD1M ~/images]$ ls
-coredns-v1.11.1.tar.gz  etcd-3.5.0.tar.gz  etcd-3.5.10-0.tar.gz  etcd-3.5.9-k3s1.tar.gz         kube-controller-manager-v1.29.2.tar.gz  kube-scheduler-v1.29.2.tar.gz  registry-2.8.3.tar.gz
-etcd-3.4.32.tar.gz      etcd-3.5.0.zip     etcd-3.5.13.tar       kube-apiserver-v1.29.2.tar.gz  kube-proxy-v1.29.2.tar.gz               pause-3.9.tar.gz
-[devops@GITOPSRBDAD1M ~/images]$ podman ps
-CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES
-[devops@GITOPSRBDAD1M ~/images]$ sudo podman ps
-CONTAINER ID  IMAGE                              COMMAND               CREATED     STATUS      PORTS                  NAMES
-ef252d835895  docker.io/library/registry:latest  /etc/docker/regis...  3 days ago  Up 3 days   0.0.0.0:443->5000/tcp  registry
-[devops@GITOPSRBDAD1M ~/images]$ sudo podman images
-REPOSITORY                            TAG              IMAGE ID      CREATED       SIZE
-docker.io/flannel/flannel-cni-plugin  v1.4.0-flannel1  77c1250c26d9  4 months ago  10.2 MB
-localhost/my-flannel-plugin           latest           77c1250c26d9  4 months ago  10.2 MB
-docker.io/library/registry            latest           d6b2c32a0f14  8 months ago  26 MB
-[devops@GITOPSRBDAD1M ~/images]$ ^C
-[devops@GITOPSRBDAD1M ~/images]$ sudo podman load < coredns-v1.11.1.tar.gz
-Getting image source signatures
-Copying blob e023e0e48e6e done
-Copying blob e023e0e48e6e done
-Copying blob 6fbdf253bbc2 done
-Copying blob 7bea6b893187 done
-Copying blob ff5700ec5418 done
-Copying blob d52f02c6501c done
-Copying blob e624a5370eca done
-Copying blob 1a73b54f556b done
-Copying blob d2d7ec0f6756 done
-Copying blob 4cb10dd2545b done
-Copying blob aec96fc6d10e done
-Copying blob 545a68d51bc4 done
-Copying config cbb01a7bd4 done
-Writing manifest to image destination
-Loaded image: sha256:cbb01a7bd410dc08ba382018ab909a674fb0e48687f0c00797ed5bc34fcc6bb4
-[devops@GITOPSRBDAD1M ~/images]$ sudo podman load < etcd-3.4.32.tar.gz
-Error: payload does not match any of the supported image formats:
- * oci: initializing source oci:/var/tmp/podman828895466:: open /var/tmp/podman828895466/index.json: not a directory
- * oci-archive: loading index: open /var/tmp/oci4050999529/index.json: no such file or directory
- * docker-archive: loading tar component manifest.json: file does not exist
- * dir: open /var/tmp/podman828895466/manifest.json: not a directory
-[devops@GITOPSRBDAD1M ~/images]$ sudo podman load < kube-apiserver-v1.29.2.tar.gz
-Getting image source signatures
-Copying blob 6f4d4102c049 done
-Copying blob 10e9b9e72178 done
-Copying blob 6f1e3682d66a done
-Copying blob ff5700ec5418 skipped: already exists
-Copying blob d52f02c6501c skipped: already exists
-Copying blob e624a5370eca skipped: already exists
-Copying blob 1a73b54f556b skipped: already exists
-Copying blob 8f2b2d741d53 done
-Copying blob 9959f8de3336 done
-Copying blob eeda2c8159d7 done
-Copying blob e2561eb7fe6f done
-Copying config 8a9000f98a done
-Writing manifest to image destination
-Loaded image: sha256:8a9000f98a528cbfefc5c11adee43f9ef6eb5bb9a1eb16aa83c66411a8bed8ee
-[devops@GITOPSRBDAD1M ~/images]$ sudo podman load < kube-controller-manager-v1.29.2.tar.gz
-Getting image source signatures
-Copying blob 6f4d4102c049 skipped: already exists
-Copying blob 10e9b9e72178 skipped: already exists
-Copying blob 6f1e3682d66a skipped: already exists
-Copying blob ff5700ec5418 skipped: already exists
-Copying blob d52f02c6501c skipped: already exists
-Copying blob e624a5370eca skipped: already exists
-Copying blob 1a73b54f556b skipped: already exists
-Copying blob 8f2b2d741d53 skipped: already exists
-Copying blob 9959f8de3336 skipped: already exists
-Copying blob eeda2c8159d7 skipped: already exists
-Copying blob 52f7a24339b4 done
-Copying config 138fb5a3a2 done
-Writing manifest to image destination
-Loaded image: sha256:138fb5a3a2e3414f1ef83e14e561276a0b1dc2b2a7614a392b4f6e8758dc888a
-[devops@GITOPSRBDAD1M ~/images]$ sudo podman load < kube-proxy-v1.29.2.tar.gz
-Getting image source signatures
-Copying blob 1ccee42a0f2e done
-Copying blob 4b55a1427d14 done
-Copying config 9344fce237 done
-Writing manifest to image destination
-Loaded image: sha256:9344fce2372f88fad811d9c6941271027abd5cc882d631630efbd2b8c268c547
-[devops@GITOPSRBDAD1M ~/images]$ sudo podman load < kube-scheduler-v1.29.2.tar.gz
-Getting image source signatures
-Copying blob 6f4d4102c049 skipped: already exists
-Copying blob 10e9b9e72178 skipped: already exists
-Copying blob 6f1e3682d66a skipped: already exists
-Copying blob ff5700ec5418 skipped: already exists
-Copying blob d52f02c6501c skipped: already exists
-Copying blob e624a5370eca skipped: already exists
-Copying blob 1a73b54f556b skipped: already exists
-Copying blob 8f2b2d741d53 skipped: already exists
-Copying blob 9959f8de3336 skipped: already exists
-Copying blob eeda2c8159d7 skipped: already exists
-Copying blob 84fcafed05b7 done
-Copying config 6fc5e6b721 done
-Writing manifest to image destination
-Loaded image: sha256:6fc5e6b7218c753ea7ebbd0320957218bad762c27a60319c6f4d8136b0840893
-[devops@GITOPSRBDAD1M ~/images]$ sudo podman load < pause-3.9.tar.gz
-Getting image source signatures
-Copying blob e3e5579ddd43 done
-Copying config e6f1816883 done
-Writing manifest to image destination
-Loaded image: sha256:e6f1816883972d4be47bd48879a08919b96afcd344132622e4d444987919323c
-[devops@GITOPSRBDAD1M ~/images]$ sudo podman load < registry-2.8.3.tar.gz
-Getting image source signatures
-Copying blob a2e9568f0343 done
-Copying blob aedc3bda2944 skipped: already exists
-Copying blob 98e9164d5432 done
-Copying blob 95d5b7fa5097 done
-Copying blob bf7f68cf6cd2 done
-Copying config a8781fe3b7 done
-Writing manifest to image destination
-Getting image source signatures
-Copying blob a2e9568f0343 skipped: already exists
-Copying blob aedc3bda2944 skipped: already exists
-Copying blob bf7f68cf6cd2 skipped: already exists
-Copying blob 98e9164d5432 skipped: already exists
-Copying blob 95d5b7fa5097 skipped: already exists
-Copying config a8781fe3b7 done
-Writing manifest to image destination
-Loaded image: localhost/registry:2.8.3
-Loaded image: localhost/registry:latest
-[devops@GITOPSRBDAD1M ~/images]$ sudo podman tag docker.io/coredns/coredns:v1.11.1 localhost/coredns:v1.11.1
-sudo podman tag docker.io/kube-controller-manager/kube-controller-manager:v1.29.2 localhost/kube-controller-manager:v1.29.2
-sudo podman tag docker.io/kube-proxy/kube-proxy:v1.29.2 localhost/kube-proxy:v1.29.2
-sudo podman tag docker.io/kube-scheduler/kube-scheduler:v1.29.2 localhost/kube-scheduler:v1.29.2
-sudo podman tag docker.io/pause/pause:3.9 localhost/pause:3.9
-sudo podman tag docker.io/registry/registry:2.8.3 localhost/registry:2.8.3Error: docker.io/coredns/coredns:v1.11.1: image not known
-[devops@GITOPSRBDAD1M ~/images]$ sudo podman tag docker.io/etcd/etcd:3.4.32 localhost/etcd:3.4.32
-Error: docker.io/etcd/etcd:3.4.32: image not known
-[devops@GITOPSRBDAD1M ~/images]$ sudo podman tag docker.io/kube-apiserver/kube-apiserver:v1.29.2 localhost/kube-apiserver:v1.29.2
-Error: docker.io/kube-apiserver/kube-apiserver:v1.29.2: image not known
-[devops@GITOPSRBDAD1M ~/images]$ sudo podman tag docker.io/kube-controller-manager/kube-controller-manager:v1.29.2 localhost/kube-controller-manager:v1.29.2
-Error: docker.io/kube-controller-manager/kube-controller-manager:v1.29.2: image not known
-[devops@GITOPSRBDAD1M ~/images]$ sudo podman tag docker.io/kube-proxy/kube-proxy:v1.29.2 localhost/kube-proxy:v1.29.2
-Error: docker.io/kube-proxy/kube-proxy:v1.29.2: image not known
-[devops@GITOPSRBDAD1M ~/images]$ sudo podman tag docker.io/kube-scheduler/kube-scheduler:v1.29.2 localhost/kube-scheduler:v1.29.2
-Error: docker.io/kube-scheduler/kube-scheduler:v1.29.2: image not known
-[devops@GITOPSRBDAD1M ~/images]$ sudo podman tag docker.io/pause/pause:3.9 localhost/pause:3.9
-Error: docker.io/pause/pause:3.9: image not known
-[devops@GITOPSRBDAD1M ~/images]$ sudo podman tag docker.io/registry/registry:2.8.3 localhost/registry:2.8.3
-Error: docker.io/registry/registry:2.8.3: image not known
-[devops@GITOPSRBDAD1M ~/images]$ ^C
-[devops@GITOPSRBDAD1M ~/images]$
+Utilisez podman images pour vérifier les images qui ont été chargées correctement :
+
+sh
+
+sudo podman images
+
+Vous verrez une liste des images avec leurs identifiants et tags actuels.
+Étape 2 : Taguer les images avec le registre local
+
+Taguez chaque image en utilisant l'identifiant correct :
+
+sh
+
+sudo podman tag sha256:cbb01a7bd410dc08ba382018ab909a674fb0e48687f0c00797ed5bc34fcc6bb4 localhost:443/coredns:v1.11.1
+sudo podman tag sha256:8a9000f98a528cbfefc5c11adee43f9ef6eb5bb9a1eb16aa83c66411a8bed8ee localhost:443/kube-apiserver:v1.29.2
+sudo podman tag sha256:138fb5a3a2e3414f1ef83e14e561276a0b1dc2b2a7614a392b4f6e8758dc888a localhost:443/kube-controller-manager:v1.29.2
+sudo podman tag sha256:9344fce2372f88fad811d9c6941271027abd5cc882d631630efbd2b8c268c547 localhost:443/kube-proxy:v1.29.2
+sudo podman tag sha256:6fc5e6b7218c753ea7ebbd0320957218bad762c27a60319c6f4d8136b0840893 localhost:443/kube-scheduler:v1.29.2
+sudo podman tag sha256:e6f1816883972d4be47bd48879a08919b96afcd344132622e4d444987919323c localhost:443/pause:3.9
+sudo podman tag sha256:a8781fe3b7 localhost:443/registry:2.8.3
+
+Assurez-vous de remplacer sha256:... par les bons identifiants des images listées dans votre sortie podman images.
+Étape 3 : Pousser les images vers le registre local
+
+Poussez chaque image vers votre registre local :
+
+sh
+
+sudo podman push localhost:443/coredns:v1.11.1
+sudo podman push localhost:443/kube-apiserver:v1.29.2
+sudo podman push localhost:443/kube-controller-manager:v1.29.2
+sudo podman push localhost:443/kube-proxy:v1.29.2
+sudo podman push localhost:443/kube-scheduler:v1.29.2
+sudo podman push localhost:443/pause:3.9
+sudo podman push localhost:443/registry:2.8.3
+
+Étape 4 : Vérifiez que les images sont dans le registre
+
+Vous pouvez vérifier que les images ont été poussées correctement en accédant à votre registre via l'interface web ou en utilisant des commandes pour lister les images présentes dans votre registre.
+
+En suivant ces étapes, vous devriez pouvoir taguer et pousser correctement les images vers votre registre local.
