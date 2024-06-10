@@ -1,159 +1,49 @@
+[devops@GITOPSRBDAD1M ~/images]$ ls
+coredns-v1.11.1.tar.gz  etcd-3.5.0.tar.gz  etcd-3.5.10-0.tar.gz  etcd-3.5.9-k3s1.tar.gz         kube-controller-manager-v1.29.2.tar.gz  kube-scheduler-v1.29.2.tar.gz  registry-2.8.3.tar.gz
+etcd-3.4.32.tar.gz      etcd-3.5.0.zip     etcd-3.5.13.tar       kube-apiserver-v1.29.2.tar.gz  kube-proxy-v1.29.2.tar.gz               pause-3.9.tar.gz
+[devops@GITOPSRBDAD1M ~/images]$
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman load < etcd-3.5.0.tar.gz
+Error: payload does not match any of the supported image formats:
+ * oci: initializing source oci:/var/tmp/podman3775727115:: open /var/tmp/podman3775727115/index.json: not a directory
+ * oci-archive: loading index: open /var/tmp/oci128129000/index.json: no such file or directory
+ * docker-archive: loading tar component manifest.json: file does not exist
+ * dir: open /var/tmp/podman3775727115/manifest.json: not a directory
+[devops@GITOPSRBDAD1M ~/images]$ # ou
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman load < etcd-3.5.10-0.tar.gz
+Error: payload does not match any of the supported image formats:
+ * oci: initializing source oci:/var/tmp/podman2861836370:: open /var/tmp/podman2861836370/index.json: not a directory
+ * oci-archive: loading index: open /var/tmp/oci2238137675/index.json: no such file or directory
+ * docker-archive: loading tar component manifest.json: file does not exist
+ * dir: open /var/tmp/podman2861836370/manifest.json: not a directory
+[devops@GITOPSRBDAD1M ~/images]$ # ou
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman load < etcd-3.5.13.tar
+Error: payload does not match any of the supported image formats:
+ * oci: initializing source oci:/var/tmp/podman1853566343:: open /var/tmp/podman1853566343/index.json: not a directory
+ * oci-archive: loading index: open /var/tmp/oci1065147937/index.json: no such file or directory
+ * docker-archive: loading tar component manifest.json: file does not exist
+ * dir: open /var/tmp/podman1853566343/manifest.json: not a directory
+[devops@GITOPSRBDAD1M ~/images]$ ls
+coredns-v1.11.1.tar.gz  etcd-3.5.0.tar.gz  etcd-3.5.10-0.tar.gz  etcd-3.5.9-k3s1.tar.gz         kube-controller-manager-v1.29.2.tar.gz  kube-scheduler-v1.29.2.tar.gz  registry-2.8.3.tar.gz
+etcd-3.4.32.tar.gz      etcd-3.5.0.zip     etcd-3.5.13.tar       kube-apiserver-v1.29.2.tar.gz  kube-proxy-v1.29.2.tar.gz               pause-3.9.tar.gz
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman imqges
+Error: unrecognized command `podman imqges`
 
-[devops@GITOPSRBDAD1M ~]$ sudo podman images
+Did you mean this?
+        image
+        images
+
+Try 'podman --help' for more information
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman images
 REPOSITORY                             TAG              IMAGE ID      CREATED        SIZE
 localhost:443/kube-apiserver           v1.29.2          8a9000f98a52  3 months ago   128 MB
 localhost:443/kube-controller-manager  v1.29.2          138fb5a3a2e3  3 months ago   123 MB
 localhost:443/kube-proxy               v1.29.2          9344fce2372f  3 months ago   83.5 MB
 localhost:443/kube-scheduler           v1.29.2          6fc5e6b7218c  3 months ago   60.6 MB
 localhost/registry                     latest           a8781fe3b7a2  4 months ago   26 MB
-localhost/regisPour résoudre le problème avec l'image etcd, essayons de charger et de taguer l'image correctement. Il semble que le fichier etcd-3.4.32.tar.gz n'a pas été chargé correctement. Voici comment vous pouvez procéder :
-Étape 1 : Charger l'image etcd
-
-Essayez de charger l'image etcd avec podman load :
-
-sh
-
-sudo podman load < etcd-3.4.32.tar.gz
-
-Si cette étape réussit, vous devriez voir un message indiquant que l'image a été chargée avec succès. Si vous rencontrez une erreur, essayez un autre fichier etcd :
-
-sh
-
-sudo podman load < etcd-3.5.0.tar.gz
-# ou
-sudo podman load < etcd-3.5.10-0.tar.gz
-# ou
-sudo podman load < etcd-3.5.13.tar
-
-Étape 2 : Taguer l'image etcd
-
-Une fois que l'image est chargée, trouvez l'identifiant de l'image etcd à l'aide de la commande podman images :
-
-sh
-
-sudo podman images
-
-Recherchez l'image etcd dans la liste et notez son identifiant. Ensuite, taguez l'image avec votre registre local :
-
-sh
-
-sudo podman tag <image_id> localhost:443/etcd:3.4.32
-# ou pour une autre version chargée
-sudo podman tag <image_id> localhost:443/etcd:3.5.0
-
-Remplacez <image_id> par l'identifiant correct de l'image etcd.
-Étape 3 : Pousser l'image vers le registre local
-
-Enfin, poussez l'image etcd vers votre registre local :
-
-sh
-
-sudo podman push localhost:443/etcd:3.4.32
-# ou pour une autre version
-sudo podman push localhost:443/etcd:3.5.0
-
-Exemple Complet
-
-Voici un exemple complet des commandes :
-
-    Charger l'image etcd :
-
-    sh
-
-sudo podman load < etcd-3.4.32.tar.gz
-
-Vérifier l'image chargée :
-
-sh
-
-sudo podman images
-
-Taguer l'image etcd :
-
-sh
-
-sudo podman tag <image_id> localhost:443/etcd:3.4.32
-
-Pousser l'image etcd :
-
-sh
-
-    sudo podman push localhost:443/etcd:3.4.32
-
-En suivant ces étapes, vous devriez pouvoir charger, taguer et pousser correctement l'image etcd vers votre registre local.
-donne moi tous les commandes
-ChatGPT
-
-Voici toutes les commandes nécessaires pour charger, taguer et pousser l'image etcd vers votre registre local :
-Étape 1 : Charger l'image etcd
-
-Essayez de charger l'image etcd avec podman load :
-
-sh
-
-sudo podman load < etcd-3.4.32.tar.gz
-# ou
-sudo podman load < etcd-3.5.0.tar.gz
-# ou
-sudo podman load < etcd-3.5.10-0.tar.gz
-# ou
-sudo podman load < etcd-3.5.13.tar
-
-Étape 2 : Vérifier l'image chargée
-
-Vérifiez l'image chargée à l'aide de la commande podman images :
-
-sh
-
-sudo podman images
-
-Étape 3 : Taguer l'image etcd
-
-Taguez l'image avec votre registre local en utilisant l'identifiant de l'image etcd que vous avez trouvé à l'étape précédente. Par exemple, si l'image etcd a l'ID abcd1234 :
-
-sh
-
-sudo podman tag abcd1234 localhost:443/etcd:3.4.32
-# ou pour une autre version
-sudo podman tag abcd1234 localhost:443/etcd:3.5.0
-
-Étape 4 : Pousser l'image vers le registre local
-
-Poussez l'image etcd vers votre registre local :
-
-sh
-
-sudo podman push localhost:443/etcd:3.4.32
-# ou pour une autre version
-sudo podman push localhost:443/etcd:3.5.0
-
-Exemple Complet
-
-Voici un exemple complet des commandes :
-
-    Charger l'image etcd :
-
-    sh
-
-sudo podman load < etcd-3.4.32.tar.gz
-
-Vérifier l'image chargée :
-
-sh
-
-sudo podman images
-
-Taguer l'image etcd :
-
-sh
-
-sudo podman tag <image_id> localhost:443/etcd:3.4.32
-
-Pousser l'image etcd :
-
-sh
-
-    sudo podman push localhost:443/etcd:3.4.32
-
-Assurez-vous de remplacer <image_id> par l'identifiant correct de l'image etcd que vous avez trouvé dans la liste des images avec podman images.
-
+localhost/registry                     2.8.3            a8781fe3b7a2  4 months ago   26 MB
+docker.io/flannel/flannel-cni-plugin   v1.4.0-flannel1  77c1250c26d9  4 months ago   10.2 MB
+localhost/my-flannel-plugin            latest           77c1250c26d9  4 months ago   10.2 MB
+docker.io/library/registry             latest           d6b2c32a0f14  8 months ago   26 MB
+localhost:443/coredns                  v1.11.1          cbb01a7bd410  9 months ago   61.2 MB
+localhost:443/pause                    3.9              e6f181688397  20 months ago  748 kB
+[devops@GITOPSRBDAD1M ~/images]$
