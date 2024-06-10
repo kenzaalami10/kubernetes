@@ -1,51 +1,7 @@
- tcp 10.173.181.26:5000: connect: connection refused
-[devops@GITOPSRBDAD1M ~/file]$ ^C
-[devops@GITOPSRBDAD1M ~/file]$ podman ps
-CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES
+
 [devops@GITOPSRBDAD1M ~/file]$ sudo podman ps
 CONTAINER ID  IMAGE                              COMMAND               CREATED     STATUS      PORTS                  NAMES
 ef252d835895  docker.io/library/registry:latest  /etc/docker/regis...  3 days ago  Up 3 days   0.0.0.0:443->5000/tcp  registry
-[devops@GITOPSRBDAD1M ~/file]$ sudo podman images
-REPOSITORY                            TAG              IMAGE ID      CREATED       SIZE
-docker.io/flannel/flannel-cni-plugin  v1.4.0-flannel1  77c1250c26d9  4 months ago  10.2 MB
-localhost/my-flannel-plugin           latest           77c1250c26d9  4 months ago  10.2 MB
-docker.io/library/registry            latest           d6b2c32a0f14  8 months ago  26 MB
-[devops@GITOPSRBDAD1M ~/file]$
-[devops@GITOPSRBDAD1M ~/file]$ ^C
-[devops@GITOPSRBDAD1M ~/file]$ sudo podman push docker-daemon:flannel-cni-plugin-v1.4.0-flannel1.tar.gz docker://my-registry.com:5000/my-flannel-plugin:latest
-[devops@GITOPSRBDAD1M ~/file]$ [devops@GITOPSRBDAD1M ~/file]$ ls
-Getting image source signatures
-Copying blob 0c4c54c75701 done
-Copying blob 451b9c2d58ac done
-Copying config 77c1250c26 done
-Writing manifest to image destination
-Loaded image: docker.io/flannel/flannel-cni-plugin:v1.4.0-flannel1
-[devops@GITOPSRBDAD1M ~/file]$ ^C
-[devops@GITOPSRBDAD1M ~/file]$ sudo podman tag docker.io/flannel/flannel-cni-plugin:v1.4.0-flannel1 my-flannel-plugin:latest
-[devops@GITOPSRBDAD1M ~/file]$ sudo podman push my-flannel-plugin:latest docker://my-registry.com:5000/my-flannel-plugin:latest
-Getting image source signatures
-Error: trying to reuse blob sha256:451b9c2d58ac03e9179dc467e00a11268fb9525abd386e73df512c057d3ea503 at destination: pinging container registry my-registry.com:5000: Get "https://my-registry.com:5000/v2/": dial tcp: lookup my-registry.com on 10.4.2.102:53: no such host
-[devops@GITOPSRBDAD1M ~/file]$ ^C
-[devops@GITOPSRBDAD1M ~/file]$ sudo podman push my-flannel-plugin:latest docker://localhost:5000/my-flannel-plugin:latest
-Getting image source signatures
-Error: trying to reuse blob sha256:451b9c2d58ac03e9179dc467e00a11268fb9525abd386e73df512c057d3ea503 at destination: pinging container registry localhost:5000: Get "https://localhost:5000/v2/": dial tcp [::1]:5000: connect: cannot assign requested address
-[devops@GITOPSRBDAD1M ~/file]$ sudo podman push my-flannel-plugin:latest docker://10.173.181.26:5000/my-flannel-plugin:latest
-Getting image source signatures
-WARN[0000] Failed, retrying in 1s ... (1/3). Error: trying to reuse blob sha256:451b9c2d58ac03e9179dc467e00a11268fb9525abd386e73df512c057d3ea503 at destination: pinging container registry 10.173.181.26:5000: Get "https://10.173.181.26:5000/v2/": dial tcp 10.173.181.26:5000: connect: connection refused
-Getting image source signatures
-WARN[0001] Failed, retrying in 1s ... (2/3). Error: trying to reuse blob sha256:451b9c2d58ac03e9179dc467e00a11268fb9525abd386e73df512c057d3ea503 at destination: pinging container registry 10.173.181.26:5000: Get "https://10.173.181.26:5000/v2/": dial tcp 10.173.181.26:5000: connect: connection refused
-Getting image source signatures
-WARN[0002] Failed, retrying in 1s ... (3/3). Error: trying to reuse blob sha256:451b9c2d58ac03e9179dc467e00a11268fb9525abd386e73df512c057d3ea503 at destination: pinging container registry 10.173.181.26:5000: Get "https://10.173.181.26:5000/v2/": dial tcp 10.173.181.26:5000: connect: connection refused
-Getting image source signatures
-Error: trying to reuse blob sha256:451b9c2d58ac03e9179dc467e00a11268fb9525abd386e73df512c057d3ea503 at destination: pinging container registry 10.173.181.26:5000: Get "https://10.173.181.26:5000/v2/": dial tcp 10.173.181.26:5000: connect: connection refused
-[devops@GITOPSRBDAD1M ~/file]$
-bash: [devops@GITOPSRBDAD1M: commande inconnue...
-^C
-[devops@GITOPSRBDAD1M ~/file]$
-
-
-
-
 [devops@GITOPSRBDAD1M ~/file]$ sudo podman images
 REPOSITORY                            TAG              IMAGE ID      CREATED       SIZE
 docker.io/flannel/flannel-cni-plugin  v1.4.0-flannel1  77c1250c26d9  4 months ago  10.2 MB
