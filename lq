@@ -1,29 +1,16 @@
-
-etcd-3.4.32/wal/walpb/record.pb.go
-etcd-3.4.32/wal/walpb/record.proto
-[devops@GITOPSRBDAD1M ~/images]$ cd etcd-3.4.32
-[devops@GITOPSRBDAD1M ~/images/etcd-3.4.32]$ cat <<EOF > Dockerfile
-> FROM golang:1.17 AS builder
-> WORKDIR /etcd
-> COPY . .
-> RUN ./build
->
-FROM alpine:3.14
-> FROM alpine:3.14
-> COPY --from=builder /etcd/bin/etcd /usr/local/bin/
-> COPY --from=builder /etcd/bin/etcdctl /usr/local/bin/
-> EXPOSE 2379 2380
-> ENTRYPOINT ["/usr/local/bin/etcd"]
-> EOF
-[devops@GITOPSRBDAD1M ~/images/etcd-3.4.32]$ sudo podman build -t localhost:443/etcd:3.4.32 .
-[1/2] STEP 1/4: FROM golang:1.17 AS builder
-✔ docker.io/library/golang:1.17
-Trying to pull docker.io/library/golang:1.17...
-Error: creating build container: initializing source docker://golang:1.17: pinging container registry registry-1.docker.io: Get "https://registry-1.docker.io/v2/": dial tcp: lookup registry-1.docker.io on 10.4.2.102:53: no such host
-[devops@GITOPSRBDAD1M ~/images/etcd-3.4.32]$ sudo podman build -t localhost:443/etcd:3.4.32 .
-[1/2] STEP 1/4: FROM golang:1.17 AS builder
-✔ quay.io/golang:1.17
-Trying to pull quay.io/golang:1.17...
-Error: creating build container: initializing source docker://quay.io/golang:1.17: pinging container registry quay.io: Get "https://quay.io/v2/": dial tcp: lookup quay.io on 10.4.2.102:53: no such host
-[devops@GITOPSRBDAD1M ~/images/etcd-3.4.32]$
+[devops@GITOPSRBDAD1M ~/images/etcd-3.4.32]$ cd
+[devops@GITOPSRBDAD1M ~]$ sudo podman images
+REPOSITORY                             TAG              IMAGE ID      CREATED        SIZE
+localhost:443/kube-apiserver           v1.29.2          8a9000f98a52  3 months ago   128 MB
+localhost:443/kube-controller-manager  v1.29.2          138fb5a3a2e3  3 months ago   123 MB
+localhost:443/kube-proxy               v1.29.2          9344fce2372f  3 months ago   83.5 MB
+localhost:443/kube-scheduler           v1.29.2          6fc5e6b7218c  3 months ago   60.6 MB
+localhost/registry                     latest           a8781fe3b7a2  4 months ago   26 MB
+localhost/registry                     2.8.3            a8781fe3b7a2  4 months ago   26 MB
+docker.io/flannel/flannel-cni-plugin   v1.4.0-flannel1  77c1250c26d9  4 months ago   10.2 MB
+localhost/my-flannel-plugin            latest           77c1250c26d9  4 months ago   10.2 MB
+docker.io/library/registry             latest           d6b2c32a0f14  8 months ago   26 MB
+localhost:443/coredns                  v1.11.1          cbb01a7bd410  9 months ago   61.2 MB
+localhost:443/pause                    3.9              e6f181688397  20 months ago  748 kB
+[devops@GITOPSRBDAD1M ~]$
 
