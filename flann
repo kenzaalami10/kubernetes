@@ -250,6 +250,11 @@ spec:
 
 
 
+[devops@GITOPSRBDAD1M ~]$ podman tag docker.io/flannel/flannel:v0.25.1 localhost:443/flannel:v0.25.1
+Error: docker.io/flannel/flannel:v0.25.1: image not known
+[devops@GITOPSRBDAD1M ~]$ ^C
+[devops@GITOPSRBDAD1M ~]$
+
 
 
 
