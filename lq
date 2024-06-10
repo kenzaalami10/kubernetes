@@ -42,3 +42,14 @@ Error: trying to reuse blob sha256:451b9c2d58ac03e9179dc467e00a11268fb9525abd386
 bash: [devops@GITOPSRBDAD1M: commande inconnue...
 ^C
 [devops@GITOPSRBDAD1M ~/file]$
+
+
+
+
+[devops@GITOPSRBDAD1M ~/file]$ sudo podman images
+REPOSITORY                            TAG              IMAGE ID      CREATED       SIZE
+docker.io/flannel/flannel-cni-plugin  v1.4.0-flannel1  77c1250c26d9  4 months ago  10.2 MB
+localhost/my-flannel-plugin           latest           77c1250c26d9  4 months ago  10.2 MB
+docker.io/library/registry            latest           d6b2c32a0f14  8 months ago  26 MB
+[devops@GITOPSRBDAD1M ~/file]$
+
