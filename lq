@@ -1,1080 +1,141 @@
 
-[devops@CAASPFEAD5M ~]$ kubectl get pods -n kube-system
-NAME                                  READY   STATUS                  RESTARTS        AGE
-coredns-58767d876d-5b4zh              0/1     ContainerCreating       0               2d19h
-coredns-58767d876d-s2tv4              0/1     ContainerCreating       0               2d19h
-etcd-caaspfead5m                      1/1     Running                 2               2d19h
-kube-apiserver-caaspfead5m            1/1     Running                 2 (2d19h ago)   2d19h
-kube-controller-manager-caaspfead5m   1/1     Running                 2               2d19h
-kube-flannel-ds-2m5f8                 0/1     Init:0/1                0               6m7s
-kube-flannel-ds-cmz69                 0/1     Init:0/1                0               6m7s
-kube-flannel-ds-x2cvg                 0/1     Init:ImagePullBackOff   0               6m7s
-kube-proxy-f2jll                      0/1     ContainerCreating       0               2d19h
-kube-proxy-lggcz                      1/1     Running                 0               2d19h
-kube-proxy-wx8rc                      0/1     ContainerCreating       0               2d19h
-kube-scheduler-caaspfead5m            1/1     Running                 2               2d19h
-[devops@CAASPFEAD5M ~]$ kubectl describe pods ^C
-[devops@CAASPFEAD5M ~]$ kubect describe pods kube-flannel-ds-x2cvg
-bash: kubect: commande inconnue...
-Impossible de rechercher des fichiers: Failed to download gpg key for repo 'kubernetes': Curl error (6): Couldn't resolve host name for https://packages.cloud.google.com/yum/doc/yum-key.gpg [Could not resolve host: packages.cloud.google.com]
-[devops@CAASPFEAD5M ~]$ ^C
-[devops@CAASPFEAD5M ~]$ kubectl describe pods kube-flannel-ds-x2cvg
-Error from server (NotFound): pods "kube-flannel-ds-x2cvg" not found
-[devops@CAASPFEAD5M ~]$ kubectl describe pods -n kube-system
-Name:                 coredns-58767d876d-5b4zh
-Namespace:            kube-system
-Priority:             2000000000
-Priority Class Name:  system-cluster-critical
-Service Account:      coredns
-Node:                 devad1m/10.173.144.180
-Start Time:           Fri, 07 Jun 2024 17:08:45 +0100
-Labels:               k8s-app=kube-dns
-                      pod-template-hash=58767d876d
-Annotations:          <none>
-Status:               Pending
-IP:
-IPs:                  <none>
-Controlled By:        ReplicaSet/coredns-58767d876d
-Containers:
-  coredns:
-    Container ID:
-    Image:         10.173.181.26/coredns:v1.11.1
-    Image ID:
-    Ports:         53/UDP, 53/TCP, 9153/TCP
-    Host Ports:    0/UDP, 0/TCP, 0/TCP
-    Args:
-      -conf
-      /etc/coredns/Corefile
-    State:          Waiting
-      Reason:       ContainerCreating
-    Ready:          False
-    Restart Count:  0
-    Limits:
-      memory:  170Mi
-    Requests:
-      cpu:        100m
-      memory:     70Mi
-    Liveness:     http-get http://:8080/health delay=60s timeout=5s period=10s #success=1 #failure=5
-    Readiness:    http-get http://:8181/ready delay=0s timeout=1s period=10s #success=1 #failure=3
-    Environment:  <none>
-    Mounts:
-      /etc/coredns from config-volume (ro)
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-ndhc8 (ro)
-Conditions:
-  Type                        Status
-  PodReadyToStartContainers   False
-  Initialized                 True
-  Ready                       False
-  ContainersReady             False
-  PodScheduled                True
-Volumes:
-  config-volume:
-    Type:      ConfigMap (a volume populated by a ConfigMap)
-    Name:      coredns
-    Optional:  false
-  kube-api-access-ndhc8:
-    Type:                    Projected (a volume that contains injected data from multiple sources)
-    TokenExpirationSeconds:  3607
-    ConfigMapName:           kube-root-ca.crt
-    ConfigMapOptional:       <nil>
-    DownwardAPI:             true
-QoS Class:                   Burstable
-Node-Selectors:              kubernetes.io/os=linux
-Tolerations:                 CriticalAddonsOnly op=Exists
-                             node-role.kubernetes.io/control-plane:NoSchedule
-                             node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
-                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
-Events:
-  Type     Reason                  Age                            From     Message
-  ----     ------                  ----                           ----     -------
-  Warning  FailedCreatePodSandBox  <invalid> (x18770 over 2d19h)  kubelet  Failed to create pod sandbox: rpc error: code = Unknown desc = creating pod sandbox with name "k8s_coredns-58767d876d-5b4zh_kube-system_b8b927d4-11f1-48c2-8e6c-b09b47bc2a89_0": initializing source docker://registry.k8s.io/pause:3.9: pinging container registry registry.k8s.io: Get "https://registry.k8s.io/v2/": dial tcp: lookup registry.k8s.io on [::1]:53: dial udp [::1]:53: connect: cannot assign requested address
-
-
-Name:                 coredns-58767d876d-s2tv4
-Namespace:            kube-system
-Priority:             2000000000
-Priority Class Name:  system-cluster-critical
-Service Account:      coredns
-Node:                 devad1m/10.173.144.180
-Start Time:           Fri, 07 Jun 2024 17:08:45 +0100
-Labels:               k8s-app=kube-dns
-                      pod-template-hash=58767d876d
-Annotations:          <none>
-Status:               Pending
-IP:
-IPs:                  <none>
-Controlled By:        ReplicaSet/coredns-58767d876d
-Containers:
-  coredns:
-    Container ID:
-    Image:         10.173.181.26/coredns:v1.11.1
-    Image ID:
-    Ports:         53/UDP, 53/TCP, 9153/TCP
-    Host Ports:    0/UDP, 0/TCP, 0/TCP
-    Args:
-      -conf
-      /etc/coredns/Corefile
-    State:          Waiting
-      Reason:       ContainerCreating
-    Ready:          False
-    Restart Count:  0
-    Limits:
-      memory:  170Mi
-    Requests:
-      cpu:        100m
-      memory:     70Mi
-    Liveness:     http-get http://:8080/health delay=60s timeout=5s period=10s #success=1 #failure=5
-    Readiness:    http-get http://:8181/ready delay=0s timeout=1s period=10s #success=1 #failure=3
-    Environment:  <none>
-    Mounts:
-      /etc/coredns from config-volume (ro)
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-z7jdk (ro)
-Conditions:
-  Type                        Status
-  PodReadyToStartContainers   False
-  Initialized                 True
-  Ready                       False
-  ContainersReady             False
-  PodScheduled                True
-Volumes:
-  config-volume:
-    Type:      ConfigMap (a volume populated by a ConfigMap)
-    Name:      coredns
-    Optional:  false
-  kube-api-access-z7jdk:
-    Type:                    Projected (a volume that contains injected data from multiple sources)
-    TokenExpirationSeconds:  3607
-    ConfigMapName:           kube-root-ca.crt
-    ConfigMapOptional:       <nil>
-    DownwardAPI:             true
-QoS Class:                   Burstable
-Node-Selectors:              kubernetes.io/os=linux
-Tolerations:                 CriticalAddonsOnly op=Exists
-                             node-role.kubernetes.io/control-plane:NoSchedule
-                             node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
-                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
-Events:
-  Type     Reason                  Age                            From     Message
-  ----     ------                  ----                           ----     -------
-  Warning  FailedCreatePodSandBox  <invalid> (x18773 over 2d19h)  kubelet  Failed to create pod sandbox: rpc error: code = Unknown desc = creating pod sandbox with name "k8s_coredns-58767d876d-s2tv4_kube-system_9a54f9c2-52d7-4b26-8b63-6861a27469d4_0": initializing source docker://registry.k8s.io/pause:3.9: pinging container registry registry.k8s.io: Get "https://registry.k8s.io/v2/": dial tcp: lookup registry.k8s.io on [::1]:53: dial udp [::1]:53: connect: cannot assign requested address
-
-
-Name:                 etcd-caaspfead5m
-Namespace:            kube-system
-Priority:             2000001000
-Priority Class Name:  system-node-critical
-Node:                 caaspfead5m/10.173.144.179
-Start Time:           Fri, 07 Jun 2024 16:26:45 +0100
-Labels:               component=etcd
-                      tier=control-plane
-Annotations:          kubeadm.kubernetes.io/etcd.advertise-client-urls: https://10.173.144.179:2379
-                      kubernetes.io/config.hash: 7d053349706957615f973e0fd90a8c53
-                      kubernetes.io/config.mirror: 7d053349706957615f973e0fd90a8c53
-                      kubernetes.io/config.seen: 2024-06-07T16:26:39.742819320+01:00
-                      kubernetes.io/config.source: file
-Status:               Running
-SeccompProfile:       RuntimeDefault
-IP:                   10.173.144.179
-IPs:
-  IP:           10.173.144.179
-Controlled By:  Node/caaspfead5m
-Containers:
-  etcd:
-    Container ID:  cri-o://53a835c8ff93d1cbbd2e08f01a9018537551d173bd65ea8f114903fa48ade2e1
-    Image:         10.173.181.26/etcd:3.5.10-0
-    Image ID:      10.173.181.26/etcd@sha256:b74f81e25d1032206b3ca51a94f5b24c9ab2c661c084e650de05f1c2a4c939a2
-    Port:          <none>
-    Host Port:     <none>
-    Command:
-      etcd
-      --advertise-client-urls=https://10.173.144.179:2379
-      --cert-file=/etc/kubernetes/pki/etcd/server.crt
-      --client-cert-auth=true
-      --data-dir=/var/lib/etcd
-      --experimental-initial-corrupt-check=true
-      --experimental-watch-progress-notify-interval=5s
-      --initial-advertise-peer-urls=https://10.173.144.179:2380
-      --initial-cluster=caaspfead5m=https://10.173.144.179:2380
-      --key-file=/etc/kubernetes/pki/etcd/server.key
-      --listen-client-urls=https://127.0.0.1:2379,https://10.173.144.179:2379
-      --listen-metrics-urls=http://127.0.0.1:2381
-      --listen-peer-urls=https://10.173.144.179:2380
-      --name=caaspfead5m
-      --peer-cert-file=/etc/kubernetes/pki/etcd/peer.crt
-      --peer-client-cert-auth=true
-      --peer-key-file=/etc/kubernetes/pki/etcd/peer.key
-      --peer-trusted-ca-file=/etc/kubernetes/pki/etcd/ca.crt
-      --snapshot-count=10000
-      --trusted-ca-file=/etc/kubernetes/pki/etcd/ca.crt
-    State:          Running
-      Started:      Fri, 07 Jun 2024 16:26:40 +0100
-    Ready:          True
-    Restart Count:  2
-    Requests:
-      cpu:        100m
-      memory:     100Mi
-    Liveness:     http-get http://127.0.0.1:2381/health%3Fexclude=NOSPACE&serializable=true delay=10s timeout=15s period=10s #success=1 #failure=8
-    Startup:      http-get http://127.0.0.1:2381/health%3Fserializable=false delay=10s timeout=15s period=10s #success=1 #failure=24
-    Environment:  <none>
-    Mounts:
-      /etc/kubernetes/pki/etcd from etcd-certs (rw)
-      /var/lib/etcd from etcd-data (rw)
-Conditions:
-  Type                        Status
-  PodReadyToStartContainers   True
-  Initialized                 True
-  Ready                       True
-  ContainersReady             True
-  PodScheduled                True
-Volumes:
-  etcd-certs:
-    Type:          HostPath (bare host directory volume)
-    Path:          /etc/kubernetes/pki/etcd
-    HostPathType:  DirectoryOrCreate
-  etcd-data:
-    Type:          HostPath (bare host directory volume)
-    Path:          /var/lib/etcd
-    HostPathType:  DirectoryOrCreate
-QoS Class:         Burstable
-Node-Selectors:    <none>
-Tolerations:       :NoExecute op=Exists
-Events:
-  Type     Reason            Age                      From     Message
-  ----     ------            ----                     ----     -------
-  Warning  DNSConfigForming  118s (x3239 over 2d19h)  kubelet  Nameserver limits were exceeded, some nameservers have been omitted, the applied nameserver line is: 10.4.2.102 10.4.2.100 10.4.2.105
-
-
-Name:                 kube-apiserver-caaspfead5m
-Namespace:            kube-system
-Priority:             2000001000
-Priority Class Name:  system-node-critical
-Node:                 caaspfead5m/10.173.144.179
-Start Time:           Fri, 07 Jun 2024 16:26:45 +0100
-Labels:               component=kube-apiserver
-                      tier=control-plane
-Annotations:          kubeadm.kubernetes.io/kube-apiserver.advertise-address.endpoint: 10.173.144.179:6443
-                      kubernetes.io/config.hash: 6e9a2443d52cb68de9566a1d99f73118
-                      kubernetes.io/config.mirror: 6e9a2443d52cb68de9566a1d99f73118
-                      kubernetes.io/config.seen: 2024-06-07T16:26:45.060170657+01:00
-                      kubernetes.io/config.source: file
-Status:               Running
-SeccompProfile:       RuntimeDefault
-IP:                   10.173.144.179
-IPs:
-  IP:           10.173.144.179
-Controlled By:  Node/caaspfead5m
-Containers:
-  kube-apiserver:
-    Container ID:  cri-o://b8dc8edbe113a3c156806d0cf859d2333bc56ead6dafe68bcb443b4bdc98bcdc
-    Image:         10.173.181.26/kube-apiserver:v1.29.2
-    Image ID:      10.173.181.26/kube-apiserver@sha256:4c2948c719438cbb8772749d5ac3eb1cee0d789cfa1ce826aad5e76864973b88
-    Port:          <none>
-    Host Port:     <none>
-    Command:
-      kube-apiserver
-      --advertise-address=10.173.144.179
-      --allow-privileged=true
-      --authorization-mode=Node,RBAC
-      --client-ca-file=/etc/kubernetes/pki/ca.crt
-      --enable-admission-plugins=NodeRestriction
-      --enable-bootstrap-token-auth=true
-      --etcd-cafile=/etc/kubernetes/pki/etcd/ca.crt
-      --etcd-certfile=/etc/kubernetes/pki/apiserver-etcd-client.crt
-      --etcd-keyfile=/etc/kubernetes/pki/apiserver-etcd-client.key
-      --etcd-servers=https://127.0.0.1:2379
-      --kubelet-client-certificate=/etc/kubernetes/pki/apiserver-kubelet-client.crt
-      --kubelet-client-key=/etc/kubernetes/pki/apiserver-kubelet-client.key
-      --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
-      --proxy-client-cert-file=/etc/kubernetes/pki/front-proxy-client.crt
-      --proxy-client-key-file=/etc/kubernetes/pki/front-proxy-client.key
-      --requestheader-allowed-names=front-proxy-client
-      --requestheader-client-ca-file=/etc/kubernetes/pki/front-proxy-ca.crt
-      --requestheader-extra-headers-prefix=X-Remote-Extra-
-      --requestheader-group-headers=X-Remote-Group
-      --requestheader-username-headers=X-Remote-User
-      --secure-port=6443
-      --service-account-issuer=https://kubernetes.default.svc.cluster.local
-      --service-account-key-file=/etc/kubernetes/pki/sa.pub
-      --service-account-signing-key-file=/etc/kubernetes/pki/sa.key
-      --service-cluster-ip-range=10.96.0.0/12
-      --tls-cert-file=/etc/kubernetes/pki/apiserver.crt
-      --tls-private-key-file=/etc/kubernetes/pki/apiserver.key
-    State:          Running
-      Started:      Fri, 07 Jun 2024 16:26:40 +0100
-    Last State:     Terminated
-      Reason:       Error
-      Exit Code:    137
-      Started:      Fri, 07 Jun 2024 16:21:33 +0100
-      Finished:     Fri, 07 Jun 2024 16:26:28 +0100
-    Ready:          True
-    Restart Count:  2
-    Requests:
-      cpu:        250m
-    Liveness:     http-get https://10.173.144.179:6443/livez delay=10s timeout=15s period=10s #success=1 #failure=8
-    Readiness:    http-get https://10.173.144.179:6443/readyz delay=0s timeout=15s period=1s #success=1 #failure=3
-    Startup:      http-get https://10.173.144.179:6443/livez delay=10s timeout=15s period=10s #success=1 #failure=24
-    Environment:  <none>
-    Mounts:
-      /etc/kubernetes/pki from k8s-certs (ro)
-      /etc/pki from etc-pki (ro)
-      /etc/ssl/certs from ca-certs (ro)
-Conditions:
-  Type                        Status
-  PodReadyToStartContainers   True
-  Initialized                 True
-  Ready                       True
-  ContainersReady             True
-  PodScheduled                True
-Volumes:
-  ca-certs:
-    Type:          HostPath (bare host directory volume)
-    Path:          /etc/ssl/certs
-    HostPathType:  DirectoryOrCreate
-  etc-pki:
-    Type:          HostPath (bare host directory volume)
-    Path:          /etc/pki
-    HostPathType:  DirectoryOrCreate
-  k8s-certs:
-    Type:          HostPath (bare host directory volume)
-    Path:          /etc/kubernetes/pki
-    HostPathType:  DirectoryOrCreate
-QoS Class:         Burstable
-Node-Selectors:    <none>
-Tolerations:       :NoExecute op=Exists
-Events:
-  Type     Reason            Age                       From     Message
-  ----     ------            ----                      ----     -------
-  Warning  DNSConfigForming  2m18s (x3238 over 2d19h)  kubelet  Nameserver limits were exceeded, some nameservers have been omitted, the applied nameserver line is: 10.4.2.102 10.4.2.100 10.4.2.105
-
-
-Name:                 kube-controller-manager-caaspfead5m
-Namespace:            kube-system
-Priority:             2000001000
-Priority Class Name:  system-node-critical
-Node:                 caaspfead5m/10.173.144.179
-Start Time:           Fri, 07 Jun 2024 16:26:45 +0100
-Labels:               component=kube-controller-manager
-                      tier=control-plane
-Annotations:          kubernetes.io/config.hash: c9af570047c7b7639a3c0fe7cfaaa7a1
-                      kubernetes.io/config.mirror: c9af570047c7b7639a3c0fe7cfaaa7a1
-                      kubernetes.io/config.seen: 2024-06-07T16:26:45.060171539+01:00
-                      kubernetes.io/config.source: file
-Status:               Running
-SeccompProfile:       RuntimeDefault
-IP:                   10.173.144.179
-IPs:
-  IP:           10.173.144.179
-Controlled By:  Node/caaspfead5m
-Containers:
-  kube-controller-manager:
-    Container ID:  cri-o://1cc64de16646484f88970b7640feb3ee0f69320c18e19337d928cb45dc6fb81b
-    Image:         10.173.181.26/kube-controller-manager:v1.29.2
-    Image ID:      10.173.181.26/kube-controller-manager@sha256:f2db72bfbf8090e41327d7ed6dea03893e96b8977e66a8f66e4c20b31206529e
-    Port:          <none>
-    Host Port:     <none>
-    Command:
-      kube-controller-manager
-      --allocate-node-cidrs=true
-      --authentication-kubeconfig=/etc/kubernetes/controller-manager.conf
-      --authorization-kubeconfig=/etc/kubernetes/controller-manager.conf
-      --bind-address=127.0.0.1
-      --client-ca-file=/etc/kubernetes/pki/ca.crt
-      --cluster-cidr=10.244.0.0/16
-      --cluster-name=kubernetes
-      --cluster-signing-cert-file=/etc/kubernetes/pki/ca.crt
-      --cluster-signing-key-file=/etc/kubernetes/pki/ca.key
-      --controllers=*,bootstrapsigner,tokencleaner
-      --kubeconfig=/etc/kubernetes/controller-manager.conf
-      --leader-elect=true
-      --requestheader-client-ca-file=/etc/kubernetes/pki/front-proxy-ca.crt
-      --root-ca-file=/etc/kubernetes/pki/ca.crt
-      --service-account-private-key-file=/etc/kubernetes/pki/sa.key
-      --service-cluster-ip-range=10.96.0.0/12
-      --use-service-account-credentials=true
-    State:          Running
-      Started:      Fri, 07 Jun 2024 16:26:40 +0100
-    Ready:          True
-    Restart Count:  2
-    Requests:
-      cpu:        200m
-    Liveness:     http-get https://127.0.0.1:10257/healthz delay=10s timeout=15s period=10s #success=1 #failure=8
-    Startup:      http-get https://127.0.0.1:10257/healthz delay=10s timeout=15s period=10s #success=1 #failure=24
-    Environment:  <none>
-    Mounts:
-      /etc/kubernetes/controller-manager.conf from kubeconfig (ro)
-      /etc/kubernetes/pki from k8s-certs (ro)
-      /etc/pki from etc-pki (ro)
-      /etc/ssl/certs from ca-certs (ro)
-      /usr/libexec/kubernetes/kubelet-plugins/volume/exec from flexvolume-dir (rw)
-Conditions:
-  Type                        Status
-  PodReadyToStartContainers   True
-  Initialized                 True
-  Ready                       True
-  ContainersReady             True
-  PodScheduled                True
-Volumes:
-  ca-certs:
-    Type:          HostPath (bare host directory volume)
-    Path:          /etc/ssl/certs
-    HostPathType:  DirectoryOrCreate
-  etc-pki:
-    Type:          HostPath (bare host directory volume)
-    Path:          /etc/pki
-    HostPathType:  DirectoryOrCreate
-  flexvolume-dir:
-    Type:          HostPath (bare host directory volume)
-    Path:          /usr/libexec/kubernetes/kubelet-plugins/volume/exec
-    HostPathType:  DirectoryOrCreate
-  k8s-certs:
-    Type:          HostPath (bare host directory volume)
-    Path:          /etc/kubernetes/pki
-    HostPathType:  DirectoryOrCreate
-  kubeconfig:
-    Type:          HostPath (bare host directory volume)
-    Path:          /etc/kubernetes/controller-manager.conf
-    HostPathType:  FileOrCreate
-QoS Class:         Burstable
-Node-Selectors:    <none>
-Tolerations:       :NoExecute op=Exists
-Events:
-  Type     Reason            Age                      From     Message
-  ----     ------            ----                     ----     -------
-  Warning  DNSConfigForming  2m2s (x3241 over 2d19h)  kubelet  Nameserver limits were exceeded, some nameservers have been omitted, the applied nameserver line is: 10.4.2.102 10.4.2.100 10.4.2.105
-
-
-Name:             kube-flannel-ds-2m5f8
-Namespace:        kube-system
-Priority:         0
-Service Account:  flannel
-Node:             devad1m/10.173.144.180
-Start Time:       Mon, 10 Jun 2024 12:47:30 +0100
-Labels:           app=flannel
-                  controller-revision-hash=94674cc67
-                  pod-template-generation=1
-                  tier=node
-Annotations:      <none>
-Status:           Pending
-IP:               10.173.144.180
-IPs:
-  IP:           10.173.144.180
-Controlled By:  DaemonSet/kube-flannel-ds
-Init Containers:
-  install-cni:
-    Container ID:
-    Image:         10.173.181.26:5000/my-flannel-plugin:latest
-    Image ID:
-    Port:          <none>
-    Host Port:     <none>
-    Command:
-      cp
-    Args:
-      -f
-      /etc/kube-flannel/cni-conf.json
-      /etc/cni/net.d/10-flannel.conflist
-    State:          Waiting
-      Reason:       PodInitializing
-    Ready:          False
-    Restart Count:  0
-    Environment:    <none>
-    Mounts:
-      /etc/cni/net.d from cni (rw)
-      /etc/kube-flannel/ from flannel-cfg (rw)
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-vl5r5 (ro)
-Containers:
-  kube-flannel:
-    Container ID:
-    Image:         10.173.181.26:5000/my-flannel-plugin:latest
-    Image ID:
-    Port:          <none>
-    Host Port:     <none>
-    Args:
-      --ip-masq
-      --kube-subnet-mgr
-    State:          Waiting
-      Reason:       PodInitializing
-    Ready:          False
-    Restart Count:  0
-    Limits:
-      cpu:     100m
-      memory:  50Mi
-    Requests:
-      cpu:     100m
-      memory:  50Mi
-    Environment:
-      POD_NAME:       kube-flannel-ds-2m5f8 (v1:metadata.name)
-      POD_NAMESPACE:  kube-system (v1:metadata.namespace)
-    Mounts:
-      /etc/kube-flannel/ from flannel-cfg (rw)
-      /run/flannel from run (rw)
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-vl5r5 (ro)
-Conditions:
-  Type                        Status
-  PodReadyToStartContainers   False
-  Initialized                 False
-  Ready                       False
-  ContainersReady             False
-  PodScheduled                True
-Volumes:
-  run:
-    Type:          HostPath (bare host directory volume)
-    Path:          /run/flannel
-    HostPathType:
-  cni:
-    Type:          HostPath (bare host directory volume)
-    Path:          /etc/cni/net.d
-    HostPathType:
-  flannel-cfg:
-    Type:      ConfigMap (a volume populated by a ConfigMap)
-    Name:      kube-flannel-cfg
-    Optional:  false
-  kube-api-access-vl5r5:
-    Type:                    Projected (a volume that contains injected data from multiple sources)
-    TokenExpirationSeconds:  3607
-    ConfigMapName:           kube-root-ca.crt
-    ConfigMapOptional:       <nil>
-    DownwardAPI:             true
-QoS Class:                   Burstable
-Node-Selectors:              <none>
-Tolerations:                 :NoSchedule op=Exists
-                             node.kubernetes.io/disk-pressure:NoSchedule op=Exists
-                             node.kubernetes.io/memory-pressure:NoSchedule op=Exists
-                             node.kubernetes.io/network-unavailable:NoSchedule op=Exists
-                             node.kubernetes.io/not-ready:NoExecute op=Exists
-                             node.kubernetes.io/pid-pressure:NoSchedule op=Exists
-                             node.kubernetes.io/unreachable:NoExecute op=Exists
-                             node.kubernetes.io/unschedulable:NoSchedule op=Exists
-Events:
-  Type     Reason                  Age                             From               Message
-  ----     ------                  ----                            ----               -------
-  Normal   Scheduled               7m18s                           default-scheduler  Successfully assigned kube-system/kube-flannel-ds-2m5f8 to devad1m
-  Warning  FailedCreatePodSandBox  <invalid> (x26 over <invalid>)  kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = creating pod sandbox with name "k8s_kube-flannel-ds-2m5f8_kube-system_f2a07174-9073-4042-8f97-163633147966_0": initializing source docker://registry.k8s.io/pause:3.9: pinging container registry registry.k8s.io: Get "https://registry.k8s.io/v2/": dial tcp: lookup registry.k8s.io on [::1]:53: dial udp [::1]:53: connect: cannot assign requested address
-
-
-Name:             kube-flannel-ds-cmz69
-Namespace:        kube-system
-Priority:         0
-Service Account:  flannel
-Node:             worker1/10.173.144.181
-Start Time:       Mon, 10 Jun 2024 12:47:33 +0100
-Labels:           app=flannel
-                  controller-revision-hash=94674cc67
-                  pod-template-generation=1
-                  tier=node
-Annotations:      <none>
-Status:           Pending
-IP:               10.173.144.181
-IPs:
-  IP:           10.173.144.181
-Controlled By:  DaemonSet/kube-flannel-ds
-Init Containers:
-  install-cni:
-    Container ID:
-    Image:         10.173.181.26:5000/my-flannel-plugin:latest
-    Image ID:
-    Port:          <none>
-    Host Port:     <none>
-    Command:
-      cp
-    Args:
-      -f
-      /etc/kube-flannel/cni-conf.json
-      /etc/cni/net.d/10-flannel.conflist
-    State:          Waiting
-      Reason:       PodInitializing
-    Ready:          False
-    Restart Count:  0
-    Environment:    <none>
-    Mounts:
-      /etc/cni/net.d from cni (rw)
-      /etc/kube-flannel/ from flannel-cfg (rw)
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-t6hcx (ro)
-Containers:
-  kube-flannel:
-    Container ID:
-    Image:         10.173.181.26:5000/my-flannel-plugin:latest
-    Image ID:
-    Port:          <none>
-    Host Port:     <none>
-    Args:
-      --ip-masq
-      --kube-subnet-mgr
-    State:          Waiting
-      Reason:       PodInitializing
-    Ready:          False
-    Restart Count:  0
-    Limits:
-      cpu:     100m
-      memory:  50Mi
-    Requests:
-      cpu:     100m
-      memory:  50Mi
-    Environment:
-      POD_NAME:       kube-flannel-ds-cmz69 (v1:metadata.name)
-      POD_NAMESPACE:  kube-system (v1:metadata.namespace)
-    Mounts:
-      /etc/kube-flannel/ from flannel-cfg (rw)
-      /run/flannel from run (rw)
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-t6hcx (ro)
-Conditions:
-  Type                        Status
-  PodReadyToStartContainers   False
-  Initialized                 False
-  Ready                       False
-  ContainersReady             False
-  PodScheduled                True
-Volumes:
-  run:
-    Type:          HostPath (bare host directory volume)
-    Path:          /run/flannel
-    HostPathType:
-  cni:
-    Type:          HostPath (bare host directory volume)
-    Path:          /etc/cni/net.d
-    HostPathType:
-  flannel-cfg:
-    Type:      ConfigMap (a volume populated by a ConfigMap)
-    Name:      kube-flannel-cfg
-    Optional:  false
-  kube-api-access-t6hcx:
-    Type:                    Projected (a volume that contains injected data from multiple sources)
-    TokenExpirationSeconds:  3607
-    ConfigMapName:           kube-root-ca.crt
-    ConfigMapOptional:       <nil>
-    DownwardAPI:             true
-QoS Class:                   Burstable
-Node-Selectors:              <none>
-Tolerations:                 :NoSchedule op=Exists
-                             node.kubernetes.io/disk-pressure:NoSchedule op=Exists
-                             node.kubernetes.io/memory-pressure:NoSchedule op=Exists
-                             node.kubernetes.io/network-unavailable:NoSchedule op=Exists
-                             node.kubernetes.io/not-ready:NoExecute op=Exists
-                             node.kubernetes.io/pid-pressure:NoSchedule op=Exists
-                             node.kubernetes.io/unreachable:NoExecute op=Exists
-                             node.kubernetes.io/unschedulable:NoSchedule op=Exists
-Events:
-  Type     Reason                  Age                             From               Message
-  ----     ------                  ----                            ----               -------
-  Normal   Scheduled               7m18s                           default-scheduler  Successfully assigned kube-system/kube-flannel-ds-cmz69 to worker1
-  Warning  FailedCreatePodSandBox  <invalid> (x27 over <invalid>)  kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = creating pod sandbox with name "k8s_kube-flannel-ds-cmz69_kube-system_39caf59d-f386-4e20-9e9e-a95e4aacc8bd_0": initializing source docker://registry.k8s.io/pause:3.9: pinging container registry registry.k8s.io: Get "https://registry.k8s.io/v2/": dial tcp: lookup registry.k8s.io on [::1]:53: dial udp [::1]:53: connect: cannot assign requested address
-
-
-Name:             kube-flannel-ds-x2cvg
-Namespace:        kube-system
-Priority:         0
-Service Account:  flannel
-Node:             caaspfead5m/10.173.144.179
-Start Time:       Mon, 10 Jun 2024 12:06:52 +0100
-Labels:           app=flannel
-                  controller-revision-hash=94674cc67
-                  pod-template-generation=1
-                  tier=node
-Annotations:      <none>
-Status:           Pending
-IP:               10.173.144.179
-IPs:
-  IP:           10.173.144.179
-Controlled By:  DaemonSet/kube-flannel-ds
-Init Containers:
-  install-cni:
-    Container ID:
-    Image:         10.173.181.26:5000/my-flannel-plugin:latest
-    Image ID:
-    Port:          <none>
-    Host Port:     <none>
-    Command:
-      cp
-    Args:
-      -f
-      /etc/kube-flannel/cni-conf.json
-      /etc/cni/net.d/10-flannel.conflist
-    State:          Waiting
-      Reason:       ImagePullBackOff
-    Ready:          False
-    Restart Count:  0
-    Environment:    <none>
-    Mounts:
-      /etc/cni/net.d from cni (rw)
-      /etc/kube-flannel/ from flannel-cfg (rw)
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-5k4tz (ro)
-Containers:
-  kube-flannel:
-    Container ID:
-    Image:         10.173.181.26:5000/my-flannel-plugin:latest
-    Image ID:
-    Port:          <none>
-    Host Port:     <none>
-    Args:
-      --ip-masq
-      --kube-subnet-mgr
-    State:          Waiting
-      Reason:       PodInitializing
-    Ready:          False
-    Restart Count:  0
-    Limits:
-      cpu:     100m
-      memory:  50Mi
-    Requests:
-      cpu:     100m
-      memory:  50Mi
-    Environment:
-      POD_NAME:       kube-flannel-ds-x2cvg (v1:metadata.name)
-      POD_NAMESPACE:  kube-system (v1:metadata.namespace)
-    Mounts:
-      /etc/kube-flannel/ from flannel-cfg (rw)
-      /run/flannel from run (rw)
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-5k4tz (ro)
-Conditions:
-  Type                        Status
-  PodReadyToStartContainers   True
-  Initialized                 False
-  Ready                       False
-  ContainersReady             False
-  PodScheduled                True
-Volumes:
-  run:
-    Type:          HostPath (bare host directory volume)
-    Path:          /run/flannel
-    HostPathType:
-  cni:
-    Type:          HostPath (bare host directory volume)
-    Path:          /etc/cni/net.d
-    HostPathType:
-  flannel-cfg:
-    Type:      ConfigMap (a volume populated by a ConfigMap)
-    Name:      kube-flannel-cfg
-    Optional:  false
-  kube-api-access-5k4tz:
-    Type:                    Projected (a volume that contains injected data from multiple sources)
-    TokenExpirationSeconds:  3607
-    ConfigMapName:           kube-root-ca.crt
-    ConfigMapOptional:       <nil>
-    DownwardAPI:             true
-QoS Class:                   Burstable
-Node-Selectors:              <none>
-Tolerations:                 :NoSchedule op=Exists
-                             node.kubernetes.io/disk-pressure:NoSchedule op=Exists
-                             node.kubernetes.io/memory-pressure:NoSchedule op=Exists
-                             node.kubernetes.io/network-unavailable:NoSchedule op=Exists
-                             node.kubernetes.io/not-ready:NoExecute op=Exists
-                             node.kubernetes.io/pid-pressure:NoSchedule op=Exists
-                             node.kubernetes.io/unreachable:NoExecute op=Exists
-                             node.kubernetes.io/unschedulable:NoSchedule op=Exists
-Events:
-  Type     Reason            Age                     From               Message
-  ----     ------            ----                    ----               -------
-  Normal   Scheduled         7m18s                   default-scheduler  Successfully assigned kube-system/kube-flannel-ds-x2cvg to caaspfead5m
-  Normal   Pulling           6m41s (x3 over 7m17s)   kubelet            Pulling image "10.173.181.26:5000/my-flannel-plugin:latest"
-  Warning  Failed            6m41s (x3 over 7m17s)   kubelet            Failed to pull image "10.173.181.26:5000/my-flannel-plugin:latest": RegistryUnavailable: pinging container registry 10.173.181.26:5000: Get "https://10.173.181.26:5000/v2/": dial tcp 10.173.181.26:5000: connect: connection refused
-  Warning  Failed            6m41s (x3 over 7m17s)   kubelet            Error: RegistryUnavailable
-  Normal   BackOff           6m16s (x4 over 7m17s)   kubelet            Back-off pulling image "10.173.181.26:5000/my-flannel-plugin:latest"
-  Warning  Failed            6m16s (x4 over 7m17s)   kubelet            Error: ImagePullBackOff
-  Warning  DNSConfigForming  2m12s (x27 over 7m17s)  kubelet            Nameserver limits were exceeded, some nameservers have been omitted, the applied nameserver line is: 10.4.2.102 10.4.2.100 10.4.2.105
-
-
-Name:                 kube-proxy-f2jll
-Namespace:            kube-system
-Priority:             2000001000
-Priority Class Name:  system-node-critical
-Service Account:      kube-proxy
-Node:                 worker1/10.173.144.181
-Start Time:           Fri, 07 Jun 2024 17:09:15 +0100
-Labels:               controller-revision-hash=9455f4654
-                      k8s-app=kube-proxy
-                      pod-template-generation=1
-Annotations:          <none>
-Status:               Pending
-IP:                   10.173.144.181
-IPs:
-  IP:           10.173.144.181
-Controlled By:  DaemonSet/kube-proxy
-Containers:
-  kube-proxy:
-    Container ID:
-    Image:         10.173.181.26/kube-proxy:v1.29.2
-    Image ID:
-    Port:          <none>
-    Host Port:     <none>
-    Command:
-      /usr/local/bin/kube-proxy
-      --config=/var/lib/kube-proxy/config.conf
-      --hostname-override=$(NODE_NAME)
-    State:          Waiting
-      Reason:       ContainerCreating
-    Ready:          False
-    Restart Count:  0
-    Environment:
-      NODE_NAME:   (v1:spec.nodeName)
-    Mounts:
-      /lib/modules from lib-modules (ro)
-      /run/xtables.lock from xtables-lock (rw)
-      /var/lib/kube-proxy from kube-proxy (rw)
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-jqncl (ro)
-Conditions:
-  Type                        Status
-  PodReadyToStartContainers   False
-  Initialized                 True
-  Ready                       False
-  ContainersReady             False
-  PodScheduled                True
-Volumes:
-  kube-proxy:
-    Type:      ConfigMap (a volume populated by a ConfigMap)
-    Name:      kube-proxy
-    Optional:  false
-  xtables-lock:
-    Type:          HostPath (bare host directory volume)
-    Path:          /run/xtables.lock
-    HostPathType:  FileOrCreate
-  lib-modules:
-    Type:          HostPath (bare host directory volume)
-    Path:          /lib/modules
-    HostPathType:
-  kube-api-access-jqncl:
-    Type:                    Projected (a volume that contains injected data from multiple sources)
-    TokenExpirationSeconds:  3607
-    ConfigMapName:           kube-root-ca.crt
-    ConfigMapOptional:       <nil>
-    DownwardAPI:             true
-QoS Class:                   BestEffort
-Node-Selectors:              kubernetes.io/os=linux
-Tolerations:                 op=Exists
-                             node.kubernetes.io/disk-pressure:NoSchedule op=Exists
-                             node.kubernetes.io/memory-pressure:NoSchedule op=Exists
-                             node.kubernetes.io/network-unavailable:NoSchedule op=Exists
-                             node.kubernetes.io/not-ready:NoExecute op=Exists
-                             node.kubernetes.io/pid-pressure:NoSchedule op=Exists
-                             node.kubernetes.io/unreachable:NoExecute op=Exists
-                             node.kubernetes.io/unschedulable:NoSchedule op=Exists
-Events:
-  Type     Reason                  Age                            From     Message
-  ----     ------                  ----                           ----     -------
-  Warning  FailedCreatePodSandBox  <invalid> (x18756 over 2d19h)  kubelet  Failed to create pod sandbox: rpc error: code = Unknown desc = creating pod sandbox with name "k8s_kube-proxy-f2jll_kube-system_2523305b-f4f0-46c6-b849-3bee8a9c59fb_0": initializing source docker://registry.k8s.io/pause:3.9: pinging container registry registry.k8s.io: Get "https://registry.k8s.io/v2/": dial tcp: lookup registry.k8s.io on [::1]:53: dial udp [::1]:53: connect: cannot assign requested address
-
-
-Name:                 kube-proxy-lggcz
-Namespace:            kube-system
-Priority:             2000001000
-Priority Class Name:  system-node-critical
-Service Account:      kube-proxy
-Node:                 caaspfead5m/10.173.144.179
-Start Time:           Fri, 07 Jun 2024 16:26:59 +0100
-Labels:               controller-revision-hash=9455f4654
-                      k8s-app=kube-proxy
-                      pod-template-generation=1
-Annotations:          <none>
-Status:               Running
-IP:                   10.173.144.179
-IPs:
-  IP:           10.173.144.179
-Controlled By:  DaemonSet/kube-proxy
-Containers:
-  kube-proxy:
-    Container ID:  cri-o://d8830e73eb35a0e420a193262a390ab600baf4e37c2b7ee9b5728d5f3d778c55
-    Image:         10.173.181.26/kube-proxy:v1.29.2
-    Image ID:      10.173.181.26/kube-proxy@sha256:eb6f67c06d726c7f18a84a1a8be88f41999f01e8ee5cf20bde35fbc297daa1d8
-    Port:          <none>
-    Host Port:     <none>
-    Command:
-      /usr/local/bin/kube-proxy
-      --config=/var/lib/kube-proxy/config.conf
-      --hostname-override=$(NODE_NAME)
-    State:          Running
-      Started:      Fri, 07 Jun 2024 16:26:59 +0100
-    Ready:          True
-    Restart Count:  0
-    Environment:
-      NODE_NAME:   (v1:spec.nodeName)
-    Mounts:
-      /lib/modules from lib-modules (ro)
-      /run/xtables.lock from xtables-lock (rw)
-      /var/lib/kube-proxy from kube-proxy (rw)
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-h42nx (ro)
-Conditions:
-  Type                        Status
-  PodReadyToStartContainers   True
-  Initialized                 True
-  Ready                       True
-  ContainersReady             True
-  PodScheduled                True
-Volumes:
-  kube-proxy:
-    Type:      ConfigMap (a volume populated by a ConfigMap)
-    Name:      kube-proxy
-    Optional:  false
-  xtables-lock:
-    Type:          HostPath (bare host directory volume)
-    Path:          /run/xtables.lock
-    HostPathType:  FileOrCreate
-  lib-modules:
-    Type:          HostPath (bare host directory volume)
-    Path:          /lib/modules
-    HostPathType:
-  kube-api-access-h42nx:
-    Type:                    Projected (a volume that contains injected data from multiple sources)
-    TokenExpirationSeconds:  3607
-    ConfigMapName:           kube-root-ca.crt
-    ConfigMapOptional:       <nil>
-    DownwardAPI:             true
-QoS Class:                   BestEffort
-Node-Selectors:              kubernetes.io/os=linux
-Tolerations:                 op=Exists
-                             node.kubernetes.io/disk-pressure:NoSchedule op=Exists
-                             node.kubernetes.io/memory-pressure:NoSchedule op=Exists
-                             node.kubernetes.io/network-unavailable:NoSchedule op=Exists
-                             node.kubernetes.io/not-ready:NoExecute op=Exists
-                             node.kubernetes.io/pid-pressure:NoSchedule op=Exists
-                             node.kubernetes.io/unreachable:NoExecute op=Exists
-                             node.kubernetes.io/unschedulable:NoSchedule op=Exists
-Events:
-  Type     Reason            Age                      From     Message
-  ----     ------            ----                     ----     -------
-  Warning  DNSConfigForming  111s (x3234 over 2d19h)  kubelet  Nameserver limits were exceeded, some nameservers have been omitted, the applied nameserver line is: 10.4.2.102 10.4.2.100 10.4.2.105
-
-
-Name:                 kube-proxy-wx8rc
-Namespace:            kube-system
-Priority:             2000001000
-Priority Class Name:  system-node-critical
-Service Account:      kube-proxy
-Node:                 devad1m/10.173.144.180
-Start Time:           Fri, 07 Jun 2024 17:08:45 +0100
-Labels:               controller-revision-hash=9455f4654
-                      k8s-app=kube-proxy
-                      pod-template-generation=1
-Annotations:          <none>
-Status:               Pending
-IP:                   10.173.144.180
-IPs:
-  IP:           10.173.144.180
-Controlled By:  DaemonSet/kube-proxy
-Containers:
-  kube-proxy:
-    Container ID:
-    Image:         10.173.181.26/kube-proxy:v1.29.2
-    Image ID:
-    Port:          <none>
-    Host Port:     <none>
-    Command:
-      /usr/local/bin/kube-proxy
-      --config=/var/lib/kube-proxy/config.conf
-      --hostname-override=$(NODE_NAME)
-    State:          Waiting
-      Reason:       ContainerCreating
-    Ready:          False
-    Restart Count:  0
-    Environment:
-      NODE_NAME:   (v1:spec.nodeName)
-    Mounts:
-      /lib/modules from lib-modules (ro)
-      /run/xtables.lock from xtables-lock (rw)
-      /var/lib/kube-proxy from kube-proxy (rw)
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-lnmr7 (ro)
-Conditions:
-  Type                        Status
-  PodReadyToStartContainers   False
-  Initialized                 True
-  Ready                       False
-  ContainersReady             False
-  PodScheduled                True
-Volumes:
-  kube-proxy:
-    Type:      ConfigMap (a volume populated by a ConfigMap)
-    Name:      kube-proxy
-    Optional:  false
-  xtables-lock:
-    Type:          HostPath (bare host directory volume)
-    Path:          /run/xtables.lock
-    HostPathType:  FileOrCreate
-  lib-modules:
-    Type:          HostPath (bare host directory volume)
-    Path:          /lib/modules
-    HostPathType:
-  kube-api-access-lnmr7:
-    Type:                    Projected (a volume that contains injected data from multiple sources)
-    TokenExpirationSeconds:  3607
-    ConfigMapName:           kube-root-ca.crt
-    ConfigMapOptional:       <nil>
-    DownwardAPI:             true
-QoS Class:                   BestEffort
-Node-Selectors:              kubernetes.io/os=linux
-Tolerations:                 op=Exists
-                             node.kubernetes.io/disk-pressure:NoSchedule op=Exists
-                             node.kubernetes.io/memory-pressure:NoSchedule op=Exists
-                             node.kubernetes.io/network-unavailable:NoSchedule op=Exists
-                             node.kubernetes.io/not-ready:NoExecute op=Exists
-                             node.kubernetes.io/pid-pressure:NoSchedule op=Exists
-                             node.kubernetes.io/unreachable:NoExecute op=Exists
-                             node.kubernetes.io/unschedulable:NoSchedule op=Exists
-Events:
-  Type     Reason                  Age                            From     Message
-  ----     ------                  ----                           ----     -------
-  Warning  FailedCreatePodSandBox  <invalid> (x18752 over 2d19h)  kubelet  Failed to create pod sandbox: rpc error: code = Unknown desc = creating pod sandbox with name "k8s_kube-proxy-wx8rc_kube-system_e28d11d2-5515-4bf1-bd04-defe68c68a0f_0": initializing source docker://registry.k8s.io/pause:3.9: pinging container registry registry.k8s.io: Get "https://registry.k8s.io/v2/": dial tcp: lookup registry.k8s.io on [::1]:53: dial udp [::1]:53: connect: cannot assign requested address
-
-
-Name:                 kube-scheduler-caaspfead5m
-Namespace:            kube-system
-Priority:             2000001000
-Priority Class Name:  system-node-critical
-Node:                 caaspfead5m/10.173.144.179
-Start Time:           Fri, 07 Jun 2024 16:26:45 +0100
-Labels:               component=kube-scheduler
-                      tier=control-plane
-Annotations:          kubernetes.io/config.hash: 28994fd8a049dbed2fcf1b0be428df68
-                      kubernetes.io/config.mirror: 28994fd8a049dbed2fcf1b0be428df68
-                      kubernetes.io/config.seen: 2024-06-07T16:26:45.060172244+01:00
-                      kubernetes.io/config.source: file
-Status:               Running
-SeccompProfile:       RuntimeDefault
-IP:                   10.173.144.179
-IPs:
-  IP:           10.173.144.179
-Controlled By:  Node/caaspfead5m
-Containers:
-  kube-scheduler:
-    Container ID:  cri-o://45d9a62be4283bf1aa70f26d014d40e076877e00203eddb70492ec06f4d0f065
-    Image:         10.173.181.26/kube-scheduler:v1.29.2
-    Image ID:      10.173.181.26/kube-scheduler@sha256:d58a924717c1e62734904f3db834617b6c5ab073c94f6261e140960c8f9a1d18
-    Port:          <none>
-    Host Port:     <none>
-    Command:
-      kube-scheduler
-      --authentication-kubeconfig=/etc/kubernetes/scheduler.conf
-      --authorization-kubeconfig=/etc/kubernetes/scheduler.conf
-      --bind-address=127.0.0.1
-      --kubeconfig=/etc/kubernetes/scheduler.conf
-      --leader-elect=true
-    State:          Running
-      Started:      Fri, 07 Jun 2024 16:26:40 +0100
-    Ready:          True
-    Restart Count:  2
-    Requests:
-      cpu:        100m
-    Liveness:     http-get https://127.0.0.1:10259/healthz delay=10s timeout=15s period=10s #success=1 #failure=8
-    Startup:      http-get https://127.0.0.1:10259/healthz delay=10s timeout=15s period=10s #success=1 #failure=24
-    Environment:  <none>
-    Mounts:
-      /etc/kubernetes/scheduler.conf from kubeconfig (ro)
-Conditions:
-  Type                        Status
-  PodReadyToStartContainers   True
-  Initialized                 True
-  Ready                       True
-  ContainersReady             True
-  PodScheduled                True
-Volumes:
-  kubeconfig:
-    Type:          HostPath (bare host directory volume)
-    Path:          /etc/kubernetes/scheduler.conf
-    HostPathType:  FileOrCreate
-QoS Class:         Burstable
-Node-Selectors:    <none>
-Tolerations:       :NoExecute op=Exists
-Events:
-  Type     Reason            Age                      From     Message
-  ----     ------            ----                     ----     -------
-  Warning  DNSConfigForming  116s (x3227 over 2d19h)  kubelet  Nameserver limits were exceeded, some nameservers have been omitted, the applied nameserver line is: 10.4.2.102 10.4.2.100 10.4.2.105
-[devops@CAASPFEAD5M ~]$
-
-
-
+[devops@GITOPSRBDAD1M ~]$ cd images
+[devops@GITOPSRBDAD1M ~/images]$ ls
+coredns-v1.11.1.tar.gz  etcd-3.5.0.tar.gz  etcd-3.5.10-0.tar.gz  etcd-3.5.9-k3s1.tar.gz         kube-controller-manager-v1.29.2.tar.gz  kube-scheduler-v1.29.2.tar.gz  registry-2.8.3.tar.gz
+etcd-3.4.32.tar.gz      etcd-3.5.0.zip     etcd-3.5.13.tar       kube-apiserver-v1.29.2.tar.gz  kube-proxy-v1.29.2.tar.gz               pause-3.9.tar.gz
+[devops@GITOPSRBDAD1M ~/images]$ podman ps
+CONTAINER ID  IMAGE       COMMAND     CREATED     STATUS      PORTS       NAMES
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman ps
+CONTAINER ID  IMAGE                              COMMAND               CREATED     STATUS      PORTS                  NAMES
+ef252d835895  docker.io/library/registry:latest  /etc/docker/regis...  3 days ago  Up 3 days   0.0.0.0:443->5000/tcp  registry
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman images
+REPOSITORY                            TAG              IMAGE ID      CREATED       SIZE
+docker.io/flannel/flannel-cni-plugin  v1.4.0-flannel1  77c1250c26d9  4 months ago  10.2 MB
+localhost/my-flannel-plugin           latest           77c1250c26d9  4 months ago  10.2 MB
+docker.io/library/registry            latest           d6b2c32a0f14  8 months ago  26 MB
+[devops@GITOPSRBDAD1M ~/images]$ ^C
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman load < coredns-v1.11.1.tar.gz
+Getting image source signatures
+Copying blob e023e0e48e6e done
+Copying blob e023e0e48e6e done
+Copying blob 6fbdf253bbc2 done
+Copying blob 7bea6b893187 done
+Copying blob ff5700ec5418 done
+Copying blob d52f02c6501c done
+Copying blob e624a5370eca done
+Copying blob 1a73b54f556b done
+Copying blob d2d7ec0f6756 done
+Copying blob 4cb10dd2545b done
+Copying blob aec96fc6d10e done
+Copying blob 545a68d51bc4 done
+Copying config cbb01a7bd4 done
+Writing manifest to image destination
+Loaded image: sha256:cbb01a7bd410dc08ba382018ab909a674fb0e48687f0c00797ed5bc34fcc6bb4
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman load < etcd-3.4.32.tar.gz
+Error: payload does not match any of the supported image formats:
+ * oci: initializing source oci:/var/tmp/podman828895466:: open /var/tmp/podman828895466/index.json: not a directory
+ * oci-archive: loading index: open /var/tmp/oci4050999529/index.json: no such file or directory
+ * docker-archive: loading tar component manifest.json: file does not exist
+ * dir: open /var/tmp/podman828895466/manifest.json: not a directory
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman load < kube-apiserver-v1.29.2.tar.gz
+Getting image source signatures
+Copying blob 6f4d4102c049 done
+Copying blob 10e9b9e72178 done
+Copying blob 6f1e3682d66a done
+Copying blob ff5700ec5418 skipped: already exists
+Copying blob d52f02c6501c skipped: already exists
+Copying blob e624a5370eca skipped: already exists
+Copying blob 1a73b54f556b skipped: already exists
+Copying blob 8f2b2d741d53 done
+Copying blob 9959f8de3336 done
+Copying blob eeda2c8159d7 done
+Copying blob e2561eb7fe6f done
+Copying config 8a9000f98a done
+Writing manifest to image destination
+Loaded image: sha256:8a9000f98a528cbfefc5c11adee43f9ef6eb5bb9a1eb16aa83c66411a8bed8ee
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman load < kube-controller-manager-v1.29.2.tar.gz
+Getting image source signatures
+Copying blob 6f4d4102c049 skipped: already exists
+Copying blob 10e9b9e72178 skipped: already exists
+Copying blob 6f1e3682d66a skipped: already exists
+Copying blob ff5700ec5418 skipped: already exists
+Copying blob d52f02c6501c skipped: already exists
+Copying blob e624a5370eca skipped: already exists
+Copying blob 1a73b54f556b skipped: already exists
+Copying blob 8f2b2d741d53 skipped: already exists
+Copying blob 9959f8de3336 skipped: already exists
+Copying blob eeda2c8159d7 skipped: already exists
+Copying blob 52f7a24339b4 done
+Copying config 138fb5a3a2 done
+Writing manifest to image destination
+Loaded image: sha256:138fb5a3a2e3414f1ef83e14e561276a0b1dc2b2a7614a392b4f6e8758dc888a
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman load < kube-proxy-v1.29.2.tar.gz
+Getting image source signatures
+Copying blob 1ccee42a0f2e done
+Copying blob 4b55a1427d14 done
+Copying config 9344fce237 done
+Writing manifest to image destination
+Loaded image: sha256:9344fce2372f88fad811d9c6941271027abd5cc882d631630efbd2b8c268c547
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman load < kube-scheduler-v1.29.2.tar.gz
+Getting image source signatures
+Copying blob 6f4d4102c049 skipped: already exists
+Copying blob 10e9b9e72178 skipped: already exists
+Copying blob 6f1e3682d66a skipped: already exists
+Copying blob ff5700ec5418 skipped: already exists
+Copying blob d52f02c6501c skipped: already exists
+Copying blob e624a5370eca skipped: already exists
+Copying blob 1a73b54f556b skipped: already exists
+Copying blob 8f2b2d741d53 skipped: already exists
+Copying blob 9959f8de3336 skipped: already exists
+Copying blob eeda2c8159d7 skipped: already exists
+Copying blob 84fcafed05b7 done
+Copying config 6fc5e6b721 done
+Writing manifest to image destination
+Loaded image: sha256:6fc5e6b7218c753ea7ebbd0320957218bad762c27a60319c6f4d8136b0840893
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman load < pause-3.9.tar.gz
+Getting image source signatures
+Copying blob e3e5579ddd43 done
+Copying config e6f1816883 done
+Writing manifest to image destination
+Loaded image: sha256:e6f1816883972d4be47bd48879a08919b96afcd344132622e4d444987919323c
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman load < registry-2.8.3.tar.gz
+Getting image source signatures
+Copying blob a2e9568f0343 done
+Copying blob aedc3bda2944 skipped: already exists
+Copying blob 98e9164d5432 done
+Copying blob 95d5b7fa5097 done
+Copying blob bf7f68cf6cd2 done
+Copying config a8781fe3b7 done
+Writing manifest to image destination
+Getting image source signatures
+Copying blob a2e9568f0343 skipped: already exists
+Copying blob aedc3bda2944 skipped: already exists
+Copying blob bf7f68cf6cd2 skipped: already exists
+Copying blob 98e9164d5432 skipped: already exists
+Copying blob 95d5b7fa5097 skipped: already exists
+Copying config a8781fe3b7 done
+Writing manifest to image destination
+Loaded image: localhost/registry:2.8.3
+Loaded image: localhost/registry:latest
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman tag docker.io/coredns/coredns:v1.11.1 localhost/coredns:v1.11.1
+sudo podman tag docker.io/kube-controller-manager/kube-controller-manager:v1.29.2 localhost/kube-controller-manager:v1.29.2
+sudo podman tag docker.io/kube-proxy/kube-proxy:v1.29.2 localhost/kube-proxy:v1.29.2
+sudo podman tag docker.io/kube-scheduler/kube-scheduler:v1.29.2 localhost/kube-scheduler:v1.29.2
+sudo podman tag docker.io/pause/pause:3.9 localhost/pause:3.9
+sudo podman tag docker.io/registry/registry:2.8.3 localhost/registry:2.8.3Error: docker.io/coredns/coredns:v1.11.1: image not known
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman tag docker.io/etcd/etcd:3.4.32 localhost/etcd:3.4.32
+Error: docker.io/etcd/etcd:3.4.32: image not known
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman tag docker.io/kube-apiserver/kube-apiserver:v1.29.2 localhost/kube-apiserver:v1.29.2
+Error: docker.io/kube-apiserver/kube-apiserver:v1.29.2: image not known
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman tag docker.io/kube-controller-manager/kube-controller-manager:v1.29.2 localhost/kube-controller-manager:v1.29.2
+Error: docker.io/kube-controller-manager/kube-controller-manager:v1.29.2: image not known
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman tag docker.io/kube-proxy/kube-proxy:v1.29.2 localhost/kube-proxy:v1.29.2
+Error: docker.io/kube-proxy/kube-proxy:v1.29.2: image not known
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman tag docker.io/kube-scheduler/kube-scheduler:v1.29.2 localhost/kube-scheduler:v1.29.2
+Error: docker.io/kube-scheduler/kube-scheduler:v1.29.2: image not known
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman tag docker.io/pause/pause:3.9 localhost/pause:3.9
+Error: docker.io/pause/pause:3.9: image not known
+[devops@GITOPSRBDAD1M ~/images]$ sudo podman tag docker.io/registry/registry:2.8.3 localhost/registry:2.8.3
+Error: docker.io/registry/registry:2.8.3: image not known
+[devops@GITOPSRBDAD1M ~/images]$ ^C
+[devops@GITOPSRBDAD1M ~/images]$
