@@ -94,6 +94,89 @@ Events:
 
 
 
+[devops@DEVAD1M ~]$ kubectl get pods -A
+NAMESPACE      NAME                              READY   STATUS              RESTARTS        AGE
+kube-flannel   kube-flannel-ds-zj5zc             1/1     Running             0               20m
+kube-system    coredns-58767d876d-79c4q          0/1     ContainerCreating   0               10s
+kube-system    coredns-58767d876d-plsfq          0/1     ContainerCreating   0               10s
+kube-system    etcd-devad1m                      1/1     Running             2               4h52m
+kube-system    kube-apiserver-devad1m            1/1     Running             2 (4h53m ago)   4h52m
+kube-system    kube-controller-manager-devad1m   1/1     Running             2               4h52m
+kube-system    kube-proxy-skl2m                  1/1     Running             0               4h52m
+kube-system    kube-scheduler-devad1m            1/1     Running             2               4h52m
+[devops@DEVAD1M ~]$ kubectl describe pods coredns-58767d876d-79c4q  -n kube-system
+Name:                 coredns-58767d876d-79c4q
+Namespace:            kube-system
+Priority:             2000000000
+Priority Class Name:  system-cluster-critical
+Service Account:      coredns
+Node:                 devad1m/10.173.144.180
+Start Time:           Wed, 12 Jun 2024 13:06:49 +0100
+Labels:               k8s-app=kube-dns
+                      pod-template-hash=58767d876d
+Annotations:          <none>
+Status:               Pending
+IP:
+IPs:                  <none>
+Controlled By:        ReplicaSet/coredns-58767d876d
+Containers:
+  coredns:
+    Container ID:
+    Image:         10.173.181.26/coredns:v1.11.1
+    Image ID:
+    Ports:         53/UDP, 53/TCP, 9153/TCP
+    Host Ports:    0/UDP, 0/TCP, 0/TCP
+    Args:
+      -conf
+      /etc/coredns/Corefile
+    State:          Waiting
+      Reason:       ContainerCreating
+    Ready:          False
+    Restart Count:  0
+    Limits:
+      memory:  170Mi
+    Requests:
+      cpu:        100m
+      memory:     70Mi
+    Liveness:     http-get http://:8080/health delay=60s timeout=5s period=10s #success=1 #failure=5
+    Readiness:    http-get http://:8181/ready delay=0s timeout=1s period=10s #success=1 #failure=3
+    Environment:  <none>
+    Mounts:
+      /etc/coredns from config-volume (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-j5p89 (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   False
+  Initialized                 True
+  Ready                       False
+  ContainersReady             False
+  PodScheduled                True
+Volumes:
+  config-volume:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      coredns
+    Optional:  false
+  kube-api-access-j5p89:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              kubernetes.io/os=linux
+Tolerations:                 CriticalAddonsOnly op=Exists
+                             node-role.kubernetes.io/control-plane:NoSchedule
+                             node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason                  Age   From               Message
+  ----     ------                  ----  ----               -------
+  Normal   Scheduled               28s   default-scheduler  Successfully assigned kube-system/coredns-58767d876d-79c4q to devad1m
+  Warning  FailedCreatePodSandBox  28s   kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = failed to create pod network sandbox k8s_coredns-58767d876d-79c4q_kube-system_e22c220e-bcac-4f7a-9bfe-0d4a6f476dd9_0(38e46e9fdb636e9a8f95ffcf78610aa032b787198b193038b5254900f41507a3): No CNI configuration file in /etc/cni/net.d/. Has your network provider started?
+  Warning  FailedCreatePodSandBox  15s   kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = failed to create pod network sandbox k8s_coredns-58767d876d-79c4q_kube-system_e22c220e-bcac-4f7a-9bfe-0d4a6f476dd9_0(c962f5661bb17ee97a09b239c35df7b48e4ab1a3237da331bb6c003fc9bca4a7): No CNI configuration file in /etc/cni/net.d/. Has your network provider started?
+  Warning  FailedCreatePodSandBox  4s    kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = failed to create pod network sandbox k8s_coredns-58767d876d-79c4q_kube-system_e22c220e-bcac-4f7a-9bfe-0d4a6f476dd9_0(6321587f728c59c4c3fc9ebd6681ff8104aa108045a30925ccfc7403eefa8772): No CNI configuration file in /etc/cni/net.d/. Has your network provider started?
+[devops@DEVAD1M ~]$
+
 
 
 
