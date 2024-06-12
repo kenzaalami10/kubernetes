@@ -1,22 +1,22 @@
-[devops@DEVAD1M ~]$ clear
+
 [devops@DEVAD1M ~]$ kubectl get pods -A
 NAMESPACE      NAME                              READY   STATUS              RESTARTS        AGE
-kube-flannel   kube-flannel-ds-zj5zc             1/1     Running             0               11m
-kube-system    coredns-58767d876d-m4zqg          0/1     ContainerCreating   0               28s
-kube-system    coredns-58767d876d-mth68          0/1     ContainerCreating   0               28s
-kube-system    etcd-devad1m                      1/1     Running             2               4h43m
-kube-system    kube-apiserver-devad1m            1/1     Running             2 (4h43m ago)   4h43m
-kube-system    kube-controller-manager-devad1m   1/1     Running             2               4h43m
-kube-system    kube-proxy-skl2m                  1/1     Running             0               4h42m
-kube-system    kube-scheduler-devad1m            1/1     Running             2               4h43m
-[devops@DEVAD1M ~]$ kubectl describe pods coredns-58767d876d-m4zqg -n kube-system
-Name:                 coredns-58767d876d-m4zqg
+kube-flannel   kube-flannel-ds-zj5zc             1/1     Running             0               15m
+kube-system    coredns-58767d876d-5mzrd          0/1     ContainerCreating   0               3s
+kube-system    coredns-58767d876d-z5svw          0/1     ContainerCreating   0               3s
+kube-system    etcd-devad1m                      1/1     Running             2               4h47m
+kube-system    kube-apiserver-devad1m            1/1     Running             2 (4h48m ago)   4h47m
+kube-system    kube-controller-manager-devad1m   1/1     Running             2               4h47m
+kube-system    kube-proxy-skl2m                  1/1     Running             0               4h47m
+kube-system    kube-scheduler-devad1m            1/1     Running             2               4h47m
+[devops@DEVAD1M ~]$ kubectl describe pods coredns-58767d876d-5mzrd -n kube-system
+Name:                 coredns-58767d876d-5mzrd
 Namespace:            kube-system
 Priority:             2000000000
 Priority Class Name:  system-cluster-critical
 Service Account:      coredns
 Node:                 devad1m/10.173.144.180
-Start Time:           Wed, 12 Jun 2024 12:57:11 +0100
+Start Time:           Wed, 12 Jun 2024 13:01:51 +0100
 Labels:               k8s-app=kube-dns
                       pod-template-hash=58767d876d
 Annotations:          <none>
@@ -48,7 +48,7 @@ Containers:
     Environment:  <none>
     Mounts:
       /etc/coredns from config-volume (ro)
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-pzrdq (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-84tgq (ro)
 Conditions:
   Type                        Status
   PodReadyToStartContainers   False
@@ -61,7 +61,7 @@ Volumes:
     Type:      ConfigMap (a volume populated by a ConfigMap)
     Name:      coredns
     Optional:  false
-  kube-api-access-pzrdq:
+  kube-api-access-84tgq:
     Type:                    Projected (a volume that contains injected data from multiple sources)
     TokenExpirationSeconds:  3607
     ConfigMapName:           kube-root-ca.crt
@@ -76,10 +76,7 @@ Tolerations:                 CriticalAddonsOnly op=Exists
 Events:
   Type     Reason                  Age   From               Message
   ----     ------                  ----  ----               -------
-  Normal   Scheduled               53s   default-scheduler  Successfully assigned kube-system/coredns-58767d876d-m4zqg to devad1m
-  Warning  FailedCreatePodSandBox  53s   kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = failed to create pod network sandbox k8s_coredns-58767d876d-m4zqg_kube-system_97d9494e-f028-4e43-b51f-fbd0598a1f41_0(c66e9d88569abc92089ca3cb58b1d45c0f11c3f6031ff5c1ad98d1fd4f7e54d9): error adding pod kube-system_coredns-58767d876d-m4zqg to CNI network "cbr0": plugin type="flannel" failed (add): failed to delegate add: failed to set bridge addr: "cni0" already has an IP address different from 10.244.0.1/24
-  Warning  FailedCreatePodSandBox  39s   kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = failed to create pod network sandbox k8s_coredns-58767d876d-m4zqg_kube-system_97d9494e-f028-4e43-b51f-fbd0598a1f41_0(beea870ad29c3301d35ffddceacd67514d78762c9b2de8829951113167be4e78): error adding pod kube-system_coredns-58767d876d-m4zqg to CNI network "cbr0": plugin type="flannel" failed (add): failed to delegate add: failed to set bridge addr: "cni0" already has an IP address different from 10.244.0.1/24
-  Warning  FailedCreatePodSandBox  26s   kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = failed to create pod network sandbox k8s_coredns-58767d876d-m4zqg_kube-system_97d9494e-f028-4e43-b51f-fbd0598a1f41_0(680a6ecac5912e18cd9214956a28ece6342a2bdd655680bbc33ee2591c4eb570): error adding pod kube-system_coredns-58767d876d-m4zqg to CNI network "cbr0": plugin type="flannel" failed (add): failed to delegate add: failed to set bridge addr: "cni0" already has an IP address different from 10.244.0.1/24
-  Warning  FailedCreatePodSandBox  11s   kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = failed to create pod network sandbox k8s_coredns-58767d876d-m4zqg_kube-system_97d9494e-f028-4e43-b51f-fbd0598a1f41_0(211b28a7ca2bcb31738a78db9a092961ff299b515502932c77cad73c99c76148): error adding pod kube-system_coredns-58767d876d-m4zqg to CNI network "cbr0": plugin type="flannel" failed (add): failed to delegate add: failed to set bridge addr: "cni0" already has an IP address different from 10.244.0.1/24
+  Normal   Scheduled               28s   default-scheduler  Successfully assigned kube-system/coredns-58767d876d-5mzrd to devad1m
+  Warning  FailedCreatePodSandBox  28s   kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = failed to create pod network sandbox k8s_coredns-58767d876d-5mzrd_kube-system_5b605aa7-dbbd-47ae-be57-c3e1fd15a74a_0(3c17a90e99e1de9a01aaf1d34b1b1df11196d27675afad910df7185779a1e3fc): error adding pod kube-system_coredns-58767d876d-5mzrd to CNI network "cbr0": plugin type="flannel" failed (add): failed to delegate add: failed to set bridge addr: "cni0" already has an IP address different from 10.244.0.1/24
+  Warning  FailedCreatePodSandBox  12s   kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = failed to create pod network sandbox k8s_coredns-58767d876d-5mzrd_kube-system_5b605aa7-dbbd-47ae-be57-c3e1fd15a74a_0(e7667bb3b26139e96f73b3627a1b48bbdaa9d74b8772f370965d4b89091e2bb6): error adding pod kube-system_coredns-58767d876d-5mzrd to CNI network "cbr0": plugin type="flannel" failed (add): failed to delegate add: failed to set bridge addr: "cni0" already has an IP address different from 10.244.0.1/24
 [devops@DEVAD1M ~]$
-
