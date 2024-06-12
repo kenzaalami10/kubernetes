@@ -1,0 +1,32 @@
+
+[devops@GITOPSRBDAD1M ~]$ sudo podman images
+REPOSITORY                                TAG              IMAGE ID      CREATED        SIZE
+localhost:443/kube-apiserver              v1.29.2          8a9000f98a52  3 months ago   128 MB
+10.173.181.26/kube-apiserver              v1.29.2          8a9000f98a52  3 months ago   128 MB
+10.173.181.26/kube-scheduler              v1.29.2          6fc5e6b7218c  3 months ago   60.6 MB
+10.173.181.26/kube-proxy                  v1.29.2          9344fce2372f  3 months ago   83.5 MB
+localhost:443/kube-scheduler              v1.29.2          6fc5e6b7218c  3 months ago   60.6 MB
+localhost:443/kube-controller-manager     v1.29.2          138fb5a3a2e3  3 months ago   123 MB
+10.173.181.26/kube-controller-manager     v1.29.2          138fb5a3a2e3  3 months ago   123 MB
+localhost:443/kube-proxy                  v1.29.2          9344fce2372f  3 months ago   83.5 MB
+10.173.181.26/registry                    latest           a8781fe3b7a2  4 months ago   26 MB
+10.173.181.26/registry                    2.8.3            a8781fe3b7a2  4 months ago   26 MB
+localhost/registry                        2.8.3            a8781fe3b7a2  4 months ago   26 MB
+localhost/registry                        latest           a8781fe3b7a2  4 months ago   26 MB
+10.173.181.26/flannel/flannel-cni-plugin  v1.4.0-flannel1  77c1250c26d9  4 months ago   10.2 MB
+docker.io/flannel/flannel-cni-plugin      v1.4.0-flannel1  77c1250c26d9  4 months ago   10.2 MB
+10.173.181.26/my-flannel-plugin           latest           77c1250c26d9  4 months ago   10.2 MB
+localhost/my-flannel-plugin               latest           77c1250c26d9  4 months ago   10.2 MB
+docker.io/library/registry                latest           d6b2c32a0f14  8 months ago   26 MB
+localhost:443/coredns                     v1.11.1          cbb01a7bd410  10 months ago  61.2 MB
+10.173.181.26/coredns                     v1.11.1          cbb01a7bd410  10 months ago  61.2 MB
+10.173.181.26/pause                       3.9              e6f181688397  20 months ago  748 kB
+localhost:443/pause                       3.9              e6f181688397  20 months ago  748 kB
+quay.io/coreos/etcd                       v3.2.5           03012333722b  6 years ago    36 MB
+localhost:443/etcd                        latest           03012333722b  6 years ago    36 MB
+localhost:443/etcd                        v3.2.5           03012333722b  6 years ago    36 MB
+host.docker.internal:443/etcd             v3.2.5           03012333722b  6 years ago    36 MB
+10.173.181.26:443/etcd                    v3.2.5           03012333722b  6 years ago    36 MB
+10.173.181.26/etcd                        v3.2.5           03012333722b  6 years ago    36 MB
+10.173.181.26/etcd                        latest           03012333722b  6 years ago    36 MB
+[devops@GITOPSRBDAD1M ~]$
