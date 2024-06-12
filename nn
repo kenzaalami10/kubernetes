@@ -80,3 +80,36 @@ Events:
   Warning  FailedCreatePodSandBox  28s   kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = failed to create pod network sandbox k8s_coredns-58767d876d-5mzrd_kube-system_5b605aa7-dbbd-47ae-be57-c3e1fd15a74a_0(3c17a90e99e1de9a01aaf1d34b1b1df11196d27675afad910df7185779a1e3fc): error adding pod kube-system_coredns-58767d876d-5mzrd to CNI network "cbr0": plugin type="flannel" failed (add): failed to delegate add: failed to set bridge addr: "cni0" already has an IP address different from 10.244.0.1/24
   Warning  FailedCreatePodSandBox  12s   kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = failed to create pod network sandbox k8s_coredns-58767d876d-5mzrd_kube-system_5b605aa7-dbbd-47ae-be57-c3e1fd15a74a_0(e7667bb3b26139e96f73b3627a1b48bbdaa9d74b8772f370965d4b89091e2bb6): error adding pod kube-system_coredns-58767d876d-5mzrd to CNI network "cbr0": plugin type="flannel" failed (add): failed to delegate add: failed to set bridge addr: "cni0" already has an IP address different from 10.244.0.1/24
 [devops@DEVAD1M ~]$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+sudo rm -rf /etc/cni/net.d
+sudo rm -rf /var/lib/cni/
+sudo rm -rf /var/run/flannel/
+sudo rm -rf /run/flannel/
+
