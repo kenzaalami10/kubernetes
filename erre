@@ -6,3 +6,20 @@ E0612 11:20:54.555251       1 main.go:227] Failed to create SubnetManager: faile
 cat: /etc/kube-flannel/net-conf.json: Aucun fichier ou dossier de ce type
 [devops@DEVAD1M ~]$ ls -l  /etc/kube-flannel/net-conf.json
 ls: impossible d'accéder à '/etc/kube-flannel/net-conf.json': Aucun fichier ou dossier de ce type
+
+
+
+
+
+
+
+
+
+
+
+{
+    "Network": "10.244.0.0/16",
+    "Backend": {
+        "Type": "vxlan"
+    }
+}
