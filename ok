@@ -1,14 +1,17 @@
-Error from server (NotFound): deployments.apps "kube-flannel" not found
-[devops@DEVAD1M ~]$ kubectl get pods -A
-NAMESPACE      NAME                              READY   STATUS              RESTARTS        AGE
-kube-flannel   kube-flannel-ds-w8jv2             1/1     Running             0               42m
-kube-system    coredns-6d76bfd755-jt5fz          0/1     ContainerCreating   0               4m59s
-kube-system    coredns-7cc886bcb-p68xc           0/1     ContainerCreating   0               36s
-kube-system    coredns-7cc886bcb-zhd7t           0/1     ContainerCreating   0               36s
-kube-system    etcd-devad1m                      1/1     Running             2               5h37m
-kube-system    kube-apiserver-devad1m            1/1     Running             2 (5h38m ago)   5h37m
-kube-system    kube-controller-manager-devad1m   1/1     Running             2               5h37m
-kube-system    kube-proxy-skl2m                  1/1     Running             0               5h37m
-kube-system    kube-scheduler-devad1m            1/1     Running             2               5h37m
-[devops@DEVAD1M ~]$
+kubectl delete deployment -n kube-system -l k8s-app=kube-dns --force
+kubectl delete replicaset -n kube-system -l k8s-app=kube-dns --force
+kubectl delete pod -n kube-system -l k8s-app=kube-dns --force
+
+
+
+
+
+kubectl delete service -n kube-system kube-dns --force
+kubectl delete configmap -n kube-system coredns --force
+kubectl delete serviceaccount -n kube-system coredns --force
+kubectl delete clusterrole -n kube-system system:coredns --force
+kubectl delete clusterrolebinding -n kube-system system:coredns --force
+
+
+sudo systemctl restart kubelet
 
