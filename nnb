@@ -1,0 +1,27 @@
+
+[devops@DEVAD1M ~]$ ls /etc/cni/net.d
+ls: impossible d'accéder à '/etc/cni/net.d': Aucun fichier ou dossier de ce type
+[devops@DEVAD1M ~]$ kubectl delete daemonset kube-flannel-ds -n kube-flannel
+daemonset.apps "kube-flannel-ds" deleted
+[devops@DEVAD1M ~]$ kubectl apply -f kube-flannel.yaml
+namespace/kube-flannel unchanged
+serviceaccount/flannel unchanged
+clusterrole.rbac.authorization.k8s.io/flannel unchanged
+clusterrolebinding.rbac.authorization.k8s.io/flannel unchanged
+configmap/kube-flannel-cfg unchanged
+daemonset.apps/kube-flannel-ds created
+[devops@DEVAD1M ~]$ kubectl get pods -A
+NAMESPACE      NAME                              READY   STATUS              RESTARTS        AGE
+kube-flannel   kube-flannel-ds-w8jv2             1/1     Running             0               5s
+kube-system    coredns-58767d876d-79c4q          0/1     ContainerCreating   0               3m35s
+kube-system    coredns-58767d876d-plsfq          0/1     ContainerCreating   0               3m35s
+kube-system    etcd-devad1m                      1/1     Running             2               4h55m
+kube-system    kube-apiserver-devad1m            1/1     Running             2 (4h56m ago)   4h55m
+kube-system    kube-controller-manager-devad1m   1/1     Running             2               4h55m
+kube-system    kube-proxy-skl2m                  1/1     Running             0               4h55m
+kube-system    kube-scheduler-devad1m            1/1     Running             2               4h55m
+[devops@DEVAD1M ~]$ ls /etc/cni/net.d
+10-flannel.conflist
+[devops@DEVAD1M ~]$ cat 10-flannel.conflist
+cat: 10-flannel.conflist: Aucun fichier ou dossier de ce type
+[devops@DEVAD1M ~]$
