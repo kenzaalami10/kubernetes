@@ -1,0 +1,8 @@
+[devops@DEVAD1M ~]$ kubectl logs kube-flannel-ds-spmwn -n kube-flannel -c kube-flannel
+I0612 11:20:54.543660       1 main.go:210] CLI flags config: {etcdEndpoints:http://127.0.0.1:4001,http://127.0.0.1:2379 etcdPrefix:/coreos.com/network etcdKeyfile: etcdCertfile: etcdCAFile: etcdUsername: etcdPassword: version:false kubeSubnetMgr:true kubeApiUrl: kubeAnnotationPrefix:flannel.alpha.coreos.com kubeConfigFile: iface:[] ifaceRegex:[] ipMasq:true ifaceCanReach: subnetFile:/run/flannel/subnet.env publicIP: publicIPv6: subnetLeaseRenewMargin:60 healthzIP:0.0.0.0 healthzPort:0 iptablesResyncSeconds:5 iptablesForwardRules:true netConfPath:/etc/kube-flannel/net-conf.json setNodeNetworkUnavailable:true}
+W0612 11:20:54.543737       1 client_config.go:618] Neither --kubeconfig nor --master was specified.  Using the inClusterConfig.  This might not work.
+E0612 11:20:54.555251       1 main.go:227] Failed to create SubnetManager: failed to read net conf: open /etc/kube-flannel/net-conf.json: no such file or directory
+[devops@DEVAD1M ~]$ cat /etc/kube-flannel/net-conf.json
+cat: /etc/kube-flannel/net-conf.json: Aucun fichier ou dossier de ce type
+[devops@DEVAD1M ~]$ ls -l  /etc/kube-flannel/net-conf.json
+ls: impossible d'accéder à '/etc/kube-flannel/net-conf.json': Aucun fichier ou dossier de ce type
