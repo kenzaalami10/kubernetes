@@ -1,172 +1,3 @@
-devops@DEVAD1M ~]$ kubectl get nodes
-NAME      STATUS   ROLES           AGE   VERSION
-devad1m   Ready    control-plane   13m   v1.29.2
-[devops@DEVAD1M ~]$ kubectl get nodes -o wide
-NAME      STATUS   ROLES           AGE   VERSION   INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                               KERNEL-VERSION                CONTAINER-RUNTIME
-devad1m   Ready    control-plane   13m   v1.29.2   10.173.144.180   <none>        Red Hat Enterprise Linux 8.9 (Ootpa)   4.18.0-513.9.1.el8_9.x86_64   cri-o://1.29.2
-[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
-NAME                              READY   STATUS             RESTARTS        AGE
-coredns-58767d876d-6zkx5          0/1     CrashLoopBackOff   10 (5m8s ago)   13m
-coredns-58767d876d-p2qf2          0/1     CrashLoopBackOff   11 (27s ago)    13m
-etcd-devad1m                      1/1     Running            2               13m
-kube-apiserver-devad1m            1/1     Running            2 (14m ago)     13m
-kube-controller-manager-devad1m   1/1     Running            2               13m
-kube-proxy-skl2m                  1/1     Running            0               13m
-kube-scheduler-devad1m            1/1     Running            2               13m
-[devops@DEVAD1M ~]$
-
-
-
-
-
-[devops@GITOPSRBDAD1M ~]$ sudo podman ps
-CONTAINER ID  IMAGE                              COMMAND               CREATED     STATUS       PORTS                  NAMES
-ef252d835895  docker.io/library/registry:latest  /etc/docker/regis...  4 days ago  Up 39 hours  0.0.0.0:443->5000/tcp  registry
-[devops@GITOPSRBDAD1M ~]$ sudo podman ps
-CONTAINER ID  IMAGE                              COMMAND               CREATED     STATUS       PORTS                  NAMES
-ef252d835895  docker.io/library/registry:latest  /etc/docker/regis...  4 days ago  Up 39 hours  0.0.0.0:443->5000/tcp  registry
-[devops@GITOPSRBDAD1M ~]$ sudo podman images
-REPOSITORY                                TAG              IMAGE ID      CREATED        SIZE
-localhost:443/kube-apiserver              v1.29.2          8a9000f98a52  3 months ago   128 MB
-10.173.181.26/kube-apiserver              v1.29.2          8a9000f98a52  3 months ago   128 MB
-10.173.181.26/kube-scheduler              v1.29.2          6fc5e6b7218c  3 months ago   60.6 MB
-10.173.181.26/kube-proxy                  v1.29.2          9344fce2372f  3 months ago   83.5 MB
-localhost:443/kube-scheduler              v1.29.2          6fc5e6b7218c  3 months ago   60.6 MB
-localhost:443/kube-controller-manager     v1.29.2          138fb5a3a2e3  3 months ago   123 MB
-10.173.181.26/kube-controller-manager     v1.29.2          138fb5a3a2e3  3 months ago   123 MB
-localhost:443/kube-proxy                  v1.29.2          9344fce2372f  3 months ago   83.5 MB
-10.173.181.26/registry                    latest           a8781fe3b7a2  4 months ago   26 MB
-10.173.181.26/registry                    2.8.3            a8781fe3b7a2  4 months ago   26 MB
-localhost/registry                        2.8.3            a8781fe3b7a2  4 months ago   26 MB
-localhost/registry                        latest           a8781fe3b7a2  4 months ago   26 MB
-10.173.181.26/flannel/flannel-cni-plugin  v1.4.0-flannel1  77c1250c26d9  4 months ago   10.2 MB
-docker.io/flannel/flannel-cni-plugin      v1.4.0-flannel1  77c1250c26d9  4 months ago   10.2 MB
-10.173.181.26/my-flannel-plugin           latest           77c1250c26d9  4 months ago   10.2 MB
-localhost/my-flannel-plugin               latest           77c1250c26d9  4 months ago   10.2 MB
-docker.io/library/registry                latest           d6b2c32a0f14  8 months ago   26 MB
-localhost:443/coredns                     v1.11.1          cbb01a7bd410  10 months ago  61.2 MB
-10.173.181.26/coredns                     v1.11.1          cbb01a7bd410  10 months ago  61.2 MB
-10.173.181.26/pause                       3.9              e6f181688397  20 months ago  748 kB
-localhost:443/pause                       3.9              e6f181688397  20 months ago  748 kB
-quay.io/coreos/etcd                       v3.2.5           03012333722b  6 years ago    36 MB
-localhost:443/etcd                        latest           03012333722b  6 years ago    36 MB
-localhost:443/etcd                        v3.2.5           03012333722b  6 years ago    36 MB
-host.docker.internal:443/etcd             v3.2.5           03012333722b  6 years ago    36 MB
-10.173.181.26:443/etcd                    v3.2.5           03012333722b  6 years ago    36 MB
-10.173.181.26/etcd                        v3.2.5           03012333722b  6 years ago    36 MB
-10.173.181.26/etcd                        latest           03012333722b  6 years ago    36 MB
-[devops@GITOPSRBDAD1M ~]$
-
-
-
-
-
-
-[devops@GITOPSRBDAD1M ~]$ cat kube-flannel.yml
-apiVersion: v1
-kind: Namespace
-metadata:
-  labels:
-    k8s-app: flannel
-    pod-security.kubernetes.io/enforce: privileged
-  name: kube-flannel
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  labels:
-    k8s-app: flannel
-  name: flannel
-  namespace: kube-flannel
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    k8s-app: flannel
-  name: flannel
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  verbs:
-  - get
-- apiGroups:
-  - ""
-  resources:
-  - nodes
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - nodes/status
-  verbs:
-  - patch
-- apiGroups:
-  - networking.k8s.io
-  resources:
-  - clustercidrs
-  verbs:
-  - list
-  - watch
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  labels:
-    k8s-app: flannel
-  name: flannel
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: flannel
-subjects:
-- kind: ServiceAccount
-  name: flannel
-  namespace: kube-flannel
----
-apiVersion: v1
-data:
-  cni-conf.json: |
-    {
-      "name": "cbr0",
-      "cniVersion": "0.3.1",
-      "plugins": [
-        {
-          "type": "flannel",
-          "delegate": {
-            "hairpinMode": true,
-            "isDefaultGateway": true
-          }
-        },
-        {
-          "type": "portmap",
-          "capabilities": {
-            "portMappings": true
-          }
-        }
-      ]
-    }
-  net-conf.json: |
-    {
-      "Network": "10.244.0.0/16",
-      "Backend": {
-        "Type": "vxlan"
-      }
-    }
-kind: ConfigMap
-metadata:
-  labels:
-    app: flannel
-    k8s-app: flannel
-    tier: node
-  name: kube-flannel-cfg
-  namespace: kube-flannel
----
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -214,7 +45,7 @@ spec:
               fieldPath: metadata.namespace
         - name: EVENT_QUEUE_DEPTH
           value: "5000"
-        image: docker.io/flannel/flannel:v0.25.1
+        image: 10.173.181.26/flannel/flannel:v0.25.1
         name: kube-flannel
         resources:
           requests:
@@ -241,7 +72,7 @@ spec:
         - /opt/cni/bin/flannel
         command:
         - cp
-        image: docker.io/flannel/flannel-cni-plugin:v1.4.0-flannel1
+        image: 10.173.181.26/flannel/flannel-cni-plugin:v1.4.0-flannel1
         name: install-cni-plugin
         volumeMounts:
         - mountPath: /opt/cni/bin
@@ -252,7 +83,7 @@ spec:
         - /etc/cni/net.d/10-flannel.conflist
         command:
         - cp
-        image: docker.io/flannel/flannel:v0.25.1
+        image: 10.173.181.26/flannel/flannel:v0.25.1
         name: install-cni
         volumeMounts:
         - mountPath: /etc/cni/net.d
@@ -281,5 +112,50 @@ spec:
           path: /run/xtables.lock
           type: FileOrCreate
         name: xtables-lock
-[devops@GITOPSRBDAD1M ~]$
+
+kubectl apply -f kube-flannel.yml
+
+
+
+
+
+
+
+
+
+kubectl edit deployment coredns -n kube-system
+containers:
+- name: coredns
+  image: 10.173.181.26/coredns:v1.11.1
+
+
+corefile 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns
+  namespace: kube-system
+data:
+  Corefile: |
+    .:53 {
+        errors
+        health {
+           lameduck 5s
+        }
+        ready
+        kubernetes cluster.local in-addr.arpa ip6.arpa {
+           fallthrough in-addr.arpa ip6.arpa
+        }
+        prometheus :9153
+        forward . /etc/resolv.conf
+        cache 30
+        loop
+        reload
+        loadbalance
+    }
+
+
+
+kubectl delete pod -n kube-system -l k8s-app=kube-dns
+
 
