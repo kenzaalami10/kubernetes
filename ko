@@ -1,0 +1,146 @@
+[devops@DEVAD1M ~]$ kubectl get pods -A
+NAMESPACE      NAME                              READY   STATUS              RESTARTS        AGE
+kube-flannel   kube-flannel-ds-w8jv2             1/1     Running             0               27m
+kube-system    coredns-58767d876d-2hjwq          0/1     ContainerCreating   0               31s
+kube-system    coredns-58767d876d-j45hr          0/1     ContainerCreating   0               31s
+kube-system    etcd-devad1m                      1/1     Running             2               5h22m
+kube-system    kube-apiserver-devad1m            1/1     Running             2 (5h23m ago)   5h22m
+kube-system    kube-controller-manager-devad1m   1/1     Running             2               5h22m
+kube-system    kube-proxy-skl2m                  1/1     Running             0               5h22m
+kube-system    kube-scheduler-devad1m            1/1     Running             2               5h22m
+[devops@DEVAD1M ~]$ ^C
+[devops@DEVAD1M ~]$ sudo journalctl -u kubelet
+-- Logs begin at Mon 2024-06-10 17:39:22 +01, end at Wed 2024-06-12 13:43:45 +01. --
+juin 12 04:06:30 DEVAD1M kubelet[1997]: E0612 04:06:30.565047    1997 kubelet_node_status.go:96] "Unable to register node with API server" err="Post \"https://10.173.144.179:6443/api/v1/nodes\": dial tcp 1>
+juin 12 04:06:30 DEVAD1M kubelet[1997]: E0612 04:06:30.565051    1997 controller.go:145] "Failed to ensure lease exists, will retry" err="Get \"https://10.173.144.179:6443/apis/coordination.k8s.io/v1/names>
+juin 12 04:06:36 DEVAD1M kubelet[1997]: W0612 04:06:36.708420    1997 reflector.go:539] vendor/k8s.io/client-go/informers/factory.go:159: failed to list *v1.RuntimeClass: Get "https://10.173.144.179:6443/a>
+juin 12 04:06:36 DEVAD1M kubelet[1997]: E0612 04:06:36.708519    1997 reflector.go:147] vendor/k8s.io/client-go/informers/factory.go:159: Failed to watch *v1.RuntimeClass: failed to list *v1.RuntimeClass: >
+juin 12 04:06:36 DEVAD1M kubelet[1997]: E0612 04:06:36.708557    1997 event.go:355] "Unable to write event (may retry after sleeping)" err="Patch \"https://10.173.144.179:6443/api/v1/namespaces/default/eve>
+juin 12 04:06:36 DEVAD1M kubelet[1997]: E0612 04:06:36.708628    1997 event.go:294] "Unable to write event (retry limit exceeded!)" event="&Event{ObjectMeta:{devad1m.17d822c09f3c8f41  default    0 0001-01->
+juin 12 04:06:36 DEVAD1M kubelet[1997]: E0612 04:06:36.942366    1997 eviction_manager.go:282] "Eviction manager: failed to get summary stats" err="failed to get node info: node \"devad1m\" not found"
+juin 12 04:06:37 DEVAD1M kubelet[1997]: I0612 04:06:37.567002    1997 kubelet_node_status.go:73] "Attempting to register node" node="devad1m"
+juin 12 04:06:39 DEVAD1M kubelet[1997]: E0612 04:06:39.780270    1997 controller.go:145] "Failed to ensure lease exists, will retry" err="Get \"https://10.173.144.179:6443/apis/coordination.k8s.io/v1/names>
+juin 12 04:06:39 DEVAD1M kubelet[1997]: E0612 04:06:39.780270    1997 kubelet_node_status.go:96] "Unable to register node with API server" err="Post \"https://10.173.144.179:6443/api/v1/nodes\": dial tcp 1>
+juin 12 04:06:46 DEVAD1M kubelet[1997]: I0612 04:06:46.783475    1997 kubelet_node_status.go:73] "Attempting to register node" node="devad1m"
+juin 12 04:06:46 DEVAD1M kubelet[1997]: E0612 04:06:46.943317    1997 eviction_manager.go:282] "Eviction manager: failed to get summary stats" err="failed to get node info: node \"devad1m\" not found"
+juin 12 04:06:48 DEVAD1M kubelet[1997]: W0612 04:06:48.996477    1997 reflector.go:539] vendor/k8s.io/client-go/informers/factory.go:159: failed to list *v1.Node: Get "https://10.173.144.179:6443/api/v1/no>
+juin 12 04:06:48 DEVAD1M kubelet[1997]: E0612 04:06:48.996556    1997 reflector.go:147] vendor/k8s.io/client-go/informers/factory.go:159: Failed to watch *v1.Node: failed to list *v1.Node: Get "https://10.>
+juin 12 04:06:48 DEVAD1M kubelet[1997]: W0612 04:06:48.996478    1997 reflector.go:539] vendor/k8s.io/client-go/informers/factory.go:159: failed to list *v1.Service: Get "https://10.173.144.179:6443/api/v1>
+juin 12 04:06:48 DEVAD1M kubelet[1997]: E0612 04:06:48.996593    1997 reflector.go:147] vendor/k8s.io/client-go/informers/factory.go:159: Failed to watch *v1.Service: failed to list *v1.Service: Get "https>
+juin 12 04:06:48 DEVAD1M kubelet[1997]: E0612 04:06:48.996501    1997 kubelet_node_status.go:96] "Unable to register node with API server" err="Post \"https://10.173.144.179:6443/api/v1/nodes\": dial tcp 1>
+juin 12 04:06:48 DEVAD1M kubelet[1997]: E0612 04:06:48.996605    1997 controller.go:145] "Failed to ensure lease exists, will retry" err="Get \"https://10.173.144.179:6443/apis/coordination.k8s.io/v1/names>
+juin 12 04:06:55 DEVAD1M kubelet[1997]: I0612 04:06:55.998954    1997 kubelet_node_status.go:73] "Attempting to register node" node="devad1m"
+juin 12 04:06:56 DEVAD1M kubelet[1997]: E0612 04:06:56.944048    1997 eviction_manager.go:282] "Eviction manager: failed to get summary stats" err="failed to get node info: node \"devad1m\" not found"
+juin 12 04:06:58 DEVAD1M kubelet[1997]: E0612 04:06:58.212345    1997 controller.go:145] "Failed to ensure lease exists, will retry" err="Get \"https://10.173.144.179:6443/apis/coordination.k8s.io/v1/names>
+juin 12 04:06:58 DEVAD1M kubelet[1997]: E0612 04:06:58.212351    1997 kubelet_node_status.go:96] "Unable to register node with API server" err="Post \"https://10.173.144.179:6443/api/v1/nodes\": dial tcp 1>
+juin 12 04:07:05 DEVAD1M kubelet[1997]: I0612 04:07:05.214270    1997 kubelet_node_status.go:73] "Attempting to register node" node="devad1m"
+juin 12 04:07:06 DEVAD1M kubelet[1997]: E0612 04:07:06.944452    1997 eviction_manager.go:282] "Eviction manager: failed to get summary stats" err="failed to get node info: node \"devad1m\" not found"
+juin 12 04:07:07 DEVAD1M kubelet[1997]: E0612 04:07:07.428408    1997 kubelet_node_status.go:96] "Unable to register node with API server" err="Post \"https://10.173.144.179:6443/api/v1/nodes\": dial tcp 1>
+juin 12 04:07:07 DEVAD1M kubelet[1997]: E0612 04:07:07.428411    1997 controller.go:145] "Failed to ensure lease exists, will retry" err="Get \"https://10.173.144.179:6443/apis/coordination.k8s.io/v1/names>
+juin 12 04:07:07 DEVAD1M kubelet[1997]: W0612 04:07:07.428422    1997 reflector.go:539] vendor/k8s.io/client-go/informers/factory.go:159: failed to list *v1.CSIDriver: Get "https://10.173.144.179:6443/apis>
+juin 12 04:07:07 DEVAD1M kubelet[1997]: E0612 04:07:07.428521    1997 reflector.go:147] vendor/k8s.io/client-go/informers/factory.go:159: Failed to watch *v1.CSIDriver: failed to list *v1.CSIDriver: Get "h>
+juin 12 04:07:14 DEVAD1M kubelet[1997]: I0612 04:07:14.429983    1997 kubelet_node_status.go:73] "Attempting to register node" node="devad1m"
+juin 12 04:07:16 DEVAD1M kubelet[1997]: E0612 04:07:16.644364    1997 kubelet_node_status.go:96] "Unable to register node with API server" err="Post \"https://10.173.144.179:6443/api/v1/nodes\": dial tcp 1>
+juin 12 04:07:16 DEVAD1M kubelet[1997]: E0612 04:07:16.644411    1997 controller.go:145] "Failed to ensure lease exists, will retry" err="Get \"https://10.173.144.179:6443/apis/coordination.k8s.io/v1/names>
+juin 12 04:07:16 DEVAD1M kubelet[1997]: E0612 04:07:16.945482    1997 eviction_manager.go:282] "Eviction manager: failed to get summary stats" err="failed to get node info: node \"devad1m\" not found"
+juin 12 04:07:23 DEVAD1M kubelet[1997]: I0612 04:07:23.646078    1997 kubelet_node_status.go:73] "Attempting to register node" node="devad1m"
+juin 12 04:07:25 DEVAD1M kubelet[1997]: E0612 04:07:25.860442    1997 kubelet_node_status.go:96] "Unable to register node with API server" err="Post \"https://10.173.144.179:6443/api/v1/nodes\": dial tcp 1>
+juin 12 04:07:25 DEVAD1M kubelet[1997]: E0612 04:07:25.860445    1997 controller.go:145] "Failed to ensure lease exists, will retry" err="Get \"https://10.173.144.179:6443/apis/coordination.k8s.io/v1/names>
+juin 12 04:07:26 DEVAD1M kubelet[1997]: E0612 04:07:26.946257    1997 eviction_manager.go:282] "Eviction manager: failed to get summary stats" err="failed to get node info: node \"devad1m\" not found"
+juin 12 04:07:32 DEVAD1M kubelet[1997]: W0612 04:07:32.004344    1997 reflector.go:539] vendor/k8s.io/client-go/informers/factory.go:159: failed to list *v1.RuntimeClass: Get "https://10.173.144.179:6443/a>
+juin 12 04:07:32 DEVAD1M kubelet[1997]: E0612 04:07:32.004510    1997 reflector.go:147] vendor/k8s.io/client-go/informers/factory.go:159: Failed to watch *v1.RuntimeClass: failed to list *v1.RuntimeClass: >
+juin 12 04:07:32 DEVAD1M kubelet[1997]: I0612 04:07:32.862898    1997 kubelet_node_status.go:73] "Attempting to register node" node="devad1m"
+juin 12 04:07:35 DEVAD1M kubelet[1997]: E0612 04:07:35.076360    1997 kubelet_node_status.go:96] "Unable to register node with API server" err="Post \"https://10.173.144.179:6443/api/v1/nodes\": dial tcp 1>
+juin 12 04:07:35 DEVAD1M kubelet[1997]: E0612 04:07:35.076361    1997 controller.go:145] "Failed to ensure lease exists, will retry" err="Get \"https://10.173.144.179:6443/apis/coordination.k8s.io/v1/names>
+juin 12 04:07:35 DEVAD1M kubelet[1997]: W0612 04:07:35.076366    1997 reflector.go:539] vendor/k8s.io/client-go/informers/factory.go:159: failed to list *v1.Service: Get "https://10.173.144.179:6443/api/v1>
+juin 12 04:07:35 DEVAD1M kubelet[1997]: E0612 04:07:35.076474    1997 reflector.go:147] vendor/k8s.io/client-go/informers/factory.go:159: Failed to watch *v1.Service: failed to list *v1.Service: Get "https>
+juin 12 04:07:36 DEVAD1M kubelet[1997]: E0612 04:07:36.947151    1997 eviction_manager.go:282] "Eviction manager: failed to get summary stats" err="failed to get node info: node \"devad1m\" not found"
+juin 12 04:07:41 DEVAD1M kubelet[1997]: W0612 04:07:41.220447    1997 reflector.go:539] vendor/k8s.io/client-go/informers/factory.go:159: failed to list *v1.Node: Get "https://10.173.144.179:6443/api/v1/no>
+juin 12 04:07:41 DEVAD1M kubelet[1997]: E0612 04:07:41.220532    1997 reflector.go:147] vendor/k8s.io/client-go/informers/factory.go:159: Failed to watch *v1.Node: failed to list *v1.Node: Get "https://10.>
+juin 12 04:07:42 DEVAD1M kubelet[1997]: I0612 04:07:42.078080    1997 kubelet_node_status.go:73] "Attempting to register node" node="devad1m"
+juin 12 04:07:44 DEVAD1M kubelet[1997]: E0612 04:07:44.292387    1997 kubelet_node_status.go:96] "Unable to register node with API server" err="Post \"https://10.173.144.179:6443/api/v1/nodes\": dial tcp 1>
+juin 12 04:07:44 DEVAD1M kubelet[1997]: E0612 04:07:44.292401    1997 controller.go:145] "Failed to ensure lease exists, will retry" err="Get \"https://10.173.144.179:6443/apis/coordination.k8s.io/v1/names>
+juin 12 04:07:44 DEVAD1M kubelet[1997]: W0612 04:07:44.292506    1997 reflector.go:539] vendor/k8s.io/client-go/informers/factory.go:159: failed to list *v1.CSIDriver: Get "https://10.173.144.179:6443/apis>
+juin 12 04:07:44 DEVAD1M kubelet[1997]: E0612 04:07:44.292554    1997 reflector.go:147] vendor/k8s.io/client-go/informers/factory.go:159: Failed to watch *v1.CSIDriver: failed to list *v1.CSIDriver: Get "h>
+juin 12 04:07:46 DEVAD1M kubelet[1997]: E0612 04:07:46.947370    1997 eviction_manager.go:282] "Eviction manager: failed to get summary stats" err="failed to get node info: node \"devad1m\" not found"
+juin 12 04:07:51 DEVAD1M kubelet[1997]: I0612 04:07:51.294997    1997 kubelet_node_status.go:73] "Attempting to register node" node="devad1m"
+juin 12 04:07:53 DEVAD1M kubelet[1997]: E0612 04:07:53.508439    1997 controller.go:145] "Failed to ensure lease exists, will retry" err="Get \"https://10.173.144.179:6443/apis/coordination.k8s.io/v1/names>
+juin 12 04:07:53 DEVAD1M kubelet[1997]: E0612 04:07:53.508454    1997 kubelet_node_status.go:96] "Unable to register node with API server" err="Post \"https://10.173.144.179:6443/api/v1/nodes\": dial tcp 1>
+
+[devops@DEVAD1M ~]$ ^C
+[devops@DEVAD1M ~]$ kubectl cluster-info
+Kubernetes control plane is running at https://10.173.144.180:6443
+CoreDNS is running at https://10.173.144.180:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+[devops@DEVAD1M ~]$ kubectl get cs
+Warning: v1 ComponentStatus is deprecated in v1.19+
+NAME                 STATUS    MESSAGE   ERROR
+scheduler            Healthy   ok
+controller-manager   Healthy   ok
+etcd-0               Healthy   ok
+[devops@DEVAD1M ~]$ kubectl logs -f kube-apiserver -n kube-system
+Error from server (NotFound): pods "kube-apiserver" not found
+[devops@DEVAD1M ~]$ sudo systemctl restart kubelet
+[devops@DEVAD1M ~]$ sudo cat /etc/cni/net.d/*
+{
+  "name": "cbr0",
+  "cniVersion": "0.3.1",
+  "plugins": [
+    {
+      "type": "flannel",
+      "delegate": {
+        "hairpinMode": true,
+        "isDefaultGateway": true
+      }
+    },
+    {
+      "type": "portmap",
+      "capabilities": {
+        "portMappings": true
+      }
+    }
+  ]
+}
+[devops@DEVAD1M ~]$ sudo ls /opt/cni/bin/
+bandwidth  bridge  dhcp  dummy  firewall  flannel  host-device  host-local  ipvlan  loopback  macvlan  portmap  ptp  sbr  static  tap  tuning  vlan  vrf
+[devops@DEVAD1M ~]$ kubectl delete pod -n kube-system -l k8s-app=kube-dns --force
+Warning: Immediate deletion does not wait for confirmation that the running resource has been terminated. The resource may continue to run on the cluster indefinitely.
+pod "coredns-58767d876d-2hjwq" force deleted
+pod "coredns-58767d876d-j45hr" force deleted
+[devops@DEVAD1M ~]$ kubectl rollout restart deployment coredns -n kube-system
+deployment.apps/coredns restarted
+[devops@DEVAD1M ~]$ kubectl get pods -A
+NAMESPACE      NAME                              READY   STATUS              RESTARTS        AGE
+kube-flannel   kube-flannel-ds-w8jv2             1/1     Running             0               37m
+kube-system    coredns-58767d876d-wvtx5          0/1     ContainerCreating   0               10s
+kube-system    coredns-6d76bfd755-6wnz9          0/1     ContainerCreating   0               8s
+kube-system    coredns-6d76bfd755-jt5fz          0/1     ContainerCreating   0               8s
+kube-system    etcd-devad1m                      1/1     Running             2               5h32m
+kube-system    kube-apiserver-devad1m            1/1     Running             2 (5h33m ago)   5h32m
+kube-system    kube-controller-manager-devad1m   1/1     Running             2               5h32m
+kube-system    kube-proxy-skl2m                  1/1     Running             0               5h32m
+kube-system    kube-scheduler-devad1m            1/1     Running             2               5h32m
+[devops@DEVAD1M ~]$ kubectl get pods -A
+NAMESPACE      NAME                              READY   STATUS              RESTARTS        AGE
+kube-flannel   kube-flannel-ds-w8jv2             1/1     Running             0               37m
+kube-system    coredns-58767d876d-wvtx5          0/1     ContainerCreating   0               20s
+kube-system    coredns-6d76bfd755-6wnz9          0/1     ContainerCreating   0               18s
+kube-system    coredns-6d76bfd755-jt5fz          0/1     ContainerCreating   0               18s
+kube-system    etcd-devad1m                      1/1     Running             2               5h33m
+kube-system    kube-apiserver-devad1m            1/1     Running             2 (5h33m ago)   5h33m
+kube-system    kube-controller-manager-devad1m   1/1     Running             2               5h33m
+kube-system    kube-proxy-skl2m                  1/1     Running             0               5h32m
+kube-system    kube-scheduler-devad1m            1/1     Running             2               5h33m
+[devops@DEVAD1M ~]$ kubectl get pods -A
+NAMESPACE      NAME                              READY   STATUS              RESTARTS        AGE
+kube-flannel   kube-flannel-ds-w8jv2             1/1     Running             0               37m
+kube-system    coredns-58767d876d-wvtx5          0/1     ContainerCreating   0               21s
+kube-system    coredns-6d76bfd755-6wnz9          0/1     ContainerCreating   0               19s
+kube-system    coredns-6d76bfd755-jt5fz          0/1     ContainerCreating   0               19s
+kube-system    etcd-devad1m                      1/1     Running             2               5h33m
+kube-system    kube-apiserver-devad1m            1/1     Running             2 (5h33m ago)   5h33m
+kube-system    kube-controller-manager-devad1m   1/1     Running             2               5h33m
+kube-system    kube-proxy-skl2m                  1/1     Running             0               5h32m
+kube-system    kube-scheduler-devad1m            1/1     Running             2               5h33m
+[devops@DEVAD1M ~]$
