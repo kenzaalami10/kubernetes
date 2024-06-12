@@ -1,305 +1,58 @@
+devops@DEVAD1M ~]$ kubectl get nodes
+NAME      STATUS   ROLES           AGE   VERSION
+devad1m   Ready    control-plane   13m   v1.29.2
+[devops@DEVAD1M ~]$ kubectl get nodes -o wide
+NAME      STATUS   ROLES           AGE   VERSION   INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                               KERNEL-VERSION                CONTAINER-RUNTIME
+devad1m   Ready    control-plane   13m   v1.29.2   10.173.144.180   <none>        Red Hat Enterprise Linux 8.9 (Ootpa)   4.18.0-513.9.1.el8_9.x86_64   cri-o://1.29.2
+[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
+NAME                              READY   STATUS             RESTARTS        AGE
+coredns-58767d876d-6zkx5          0/1     CrashLoopBackOff   10 (5m8s ago)   13m
+coredns-58767d876d-p2qf2          0/1     CrashLoopBackOff   11 (27s ago)    13m
+etcd-devad1m                      1/1     Running            2               13m
+kube-apiserver-devad1m            1/1     Running            2 (14m ago)     13m
+kube-controller-manager-devad1m   1/1     Running            2               13m
+kube-proxy-skl2m                  1/1     Running            0               13m
+kube-scheduler-devad1m            1/1     Running            2               13m
+[devops@DEVAD1M ~]$
 
-[devops@DEVAD1M ~]$ sudo kubeadm init --kubernetes-version v1.29.2 --image-repository 10.173.181.26 --pod-network-cidr=10.244.0.0/16
-[init] Using Kubernetes version: v1.29.2
-[preflight] Running pre-flight checks
-[preflight] Pulling images required for setting up a Kubernetes cluster
-[preflight] This might take a minute or two, depending on the speed of your internet connection
-[preflight] You can also perform this action in beforehand using 'kubeadm config images pull'
-[certs] Using certificateDir folder "/etc/kubernetes/pki"
-[certs] Generating "ca" certificate and key
-[certs] Generating "apiserver" certificate and key
-[certs] apiserver serving cert is signed for DNS names [devad1m kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 10.173.144.180]
-[certs] Generating "apiserver-kubelet-client" certificate and key
-[certs] Generating "front-proxy-ca" certificate and key
-[certs] Generating "front-proxy-client" certificate and key
-[certs] Generating "etcd/ca" certificate and key
-[certs] Generating "etcd/server" certificate and key
-[certs] etcd/server serving cert is signed for DNS names [devad1m localhost] and IPs [10.173.144.180 127.0.0.1 ::1]
-[certs] Generating "etcd/peer" certificate and key
-[certs] etcd/peer serving cert is signed for DNS names [devad1m localhost] and IPs [10.173.144.180 127.0.0.1 ::1]
-[certs] Generating "etcd/healthcheck-client" certificate and key
-[certs] Generating "apiserver-etcd-client" certificate and key
-[certs] Generating "sa" key and public key
-[kubeconfig] Using kubeconfig folder "/etc/kubernetes"
-[kubeconfig] Writing "admin.conf" kubeconfig file
-[kubeconfig] Writing "super-admin.conf" kubeconfig file
-[kubeconfig] Writing "kubelet.conf" kubeconfig file
-[kubeconfig] Writing "controller-manager.conf" kubeconfig file
-[kubeconfig] Writing "scheduler.conf" kubeconfig file
-[etcd] Creating static Pod manifest for local etcd in "/etc/kubernetes/manifests"
-[control-plane] Using manifest folder "/etc/kubernetes/manifests"
-[control-plane] Creating static Pod manifest for "kube-apiserver"
-[control-plane] Creating static Pod manifest for "kube-controller-manager"
-[control-plane] Creating static Pod manifest for "kube-scheduler"
-[kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
-[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
-[kubelet-start] Starting the kubelet
-[wait-control-plane] Waiting for the kubelet to boot up the control plane as static Pods from directory "/etc/kubernetes/manifests". This can take up to 4m0s
-[apiclient] All control plane components are healthy after 4.503004 seconds
-[upload-config] Storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace
-[kubelet] Creating a ConfigMap "kubelet-config" in namespace kube-system with the configuration for the kubelets in the cluster
-[upload-certs] Skipping phase. Please see --upload-certs
-[mark-control-plane] Marking the node devad1m as control-plane by adding the labels: [node-role.kubernetes.io/control-plane node.kubernetes.io/exclude-from-external-load-balancers]
-[mark-control-plane] Marking the node devad1m as control-plane by adding the taints [node-role.kubernetes.io/control-plane:NoSchedule]
-[bootstrap-token] Using token: nupwlb.iglph2qkwkidvtfe
-[bootstrap-token] Configuring bootstrap tokens, cluster-info ConfigMap, RBAC Roles
-[bootstrap-token] Configured RBAC rules to allow Node Bootstrap tokens to get nodes
-[bootstrap-token] Configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order for nodes to get long term certificate credentials
-[bootstrap-token] Configured RBAC rules to allow the csrapprover controller automatically approve CSRs from a Node Bootstrap Token
-[bootstrap-token] Configured RBAC rules to allow certificate rotation for all node client certificates in the cluster
-[bootstrap-token] Creating the "cluster-info" ConfigMap in the "kube-public" namespace
-[kubelet-finalize] Updating "/etc/kubernetes/kubelet.conf" to point to a rotatable kubelet client certificate and key
-[addons] Applied essential addon: CoreDNS
-[addons] Applied essential addon: kube-proxy
 
-Your Kubernetes control-plane has initialized successfully!
 
-To start using your cluster, you need to run the following as a regular user:
 
-  mkdir -p $HOME/.kube
-  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-  sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-Alternatively, if you are the root user, you can run:
-
-  export KUBECONFIG=/etc/kubernetes/admin.conf
-
-You should now deploy a pod network to the cluster.
-Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
-  https://kubernetes.io/docs/concepts/cluster-administration/addons/
-
-Then you can join any number of worker nodes by running the following on each as root:
-
-kubeadm join 10.173.144.180:6443 --token nupwlb.iglph2qkwkidvtfe \
-        --discovery-token-ca-cert-hash sha256:74b2b5105925b70ef1c00fe843e968b8b21221b27809628f354153087ede08ec
-[devops@DEVAD1M ~]$ mkdir -p $HOME/.kube
-[devops@DEVAD1M ~]$   sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-cp : voulez-vous écraser '/home/devops/.kube/config' ? y
-[devops@DEVAD1M ~]$  sudo chown $(id -u):$(id -g) $HOME/.kube/config
-[devops@DEVAD1M ~]$ kubectl get nodes
-error: error loading config file "/etc/kubernetes/admin.conf": open /etc/kubernetes/admin.conf: permission denied
-[devops@DEVAD1M ~]$ sudo kubectl get nodes
-E0612 08:15:48.006044  285302 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-E0612 08:15:48.006724  285302 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-E0612 08:15:48.008659  285302 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-E0612 08:15:48.009062  285302 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-E0612 08:15:48.010257  285302 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-The connection to the server localhost:8080 was refused - did you specify the right host or port?
-[devops@DEVAD1M ~]$ systemctl stop firewalld
-==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units ====
-Authentification requise pour arrêter « firewalld.service ».
-Authenticating as: admin
-Password:
-[devops@DEVAD1M ~]$ sudo systemctl stop firewalld
-[devops@DEVAD1M ~]$ sudo setenforce 0
-setenforce: SELinux is disabled
-[devops@DEVAD1M ~]$ sudo swapoff -a
-[devops@DEVAD1M ~]$ sudo kubectl get nodes
-E0612 08:16:37.345993  285472 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-E0612 08:16:37.346452  285472 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-E0612 08:16:37.348074  285472 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-E0612 08:16:37.348548  285472 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-E0612 08:16:37.350142  285472 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-The connection to the server localhost:8080 was refused - did you specify the right host or port?
-[devops@DEVAD1M ~]$ systemctl status kubelet
-● kubelet.service - kubelet: The Kubernetes Node Agent
-   Loaded: loaded (/usr/lib/systemd/system/kubelet.service; enabled; vendor preset: disabled)
-  Drop-In: /usr/lib/systemd/system/kubelet.service.d
-           └─10-kubeadm.conf
-   Active: active (running) since Wed 2024-06-12 08:14:38 +01; 2min 16s ago
-     Docs: https://kubernetes.io/docs/
- Main PID: 284770 (kubelet)
-    Tasks: 13 (limit: 22944)
-   Memory: 36.5M
-   CGroup: /system.slice/kubelet.service
-           └─284770 /usr/bin/kubelet --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf --config=/var/lib/kubelet/config.yaml --container-runtime-endpoi>
-
-[devops@DEVAD1M ~]$ systemctl status crio
-● crio.service - Container Runtime Interface for OCI (CRI-O)
-   Loaded: loaded (/usr/lib/systemd/system/crio.service; enabled; vendor preset: disabled)
-   Active: active (running) since Wed 2024-06-12 08:07:39 +01; 9min ago
-     Docs: https://github.com/cri-o/cri-o
- Main PID: 283241 (crio)
-    Tasks: 12
-   Memory: 54.3M
-   CGroup: /system.slice/crio.service
-           └─283241 /usr/bin/crio
-[devops@DEVAD1M ~]$ systemctl restart  kubelet
-==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units ====
-Authentification requise pour redémarrer « kubelet.service ».
-Authenticating as: admin
-Password:
-[devops@DEVAD1M ~]$ sudo systemctl restart  kubelet
-[devops@DEVAD1M ~]$ sudo systemctl restart crio
-[devops@DEVAD1M ~]$ sudo kubectl get nodes
-E0612 08:17:24.431077  285747 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-E0612 08:17:24.432136  285747 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-E0612 08:17:24.432486  285747 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-E0612 08:17:24.433963  285747 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-E0612 08:17:24.434276  285747 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-The connection to the server localhost:8080 was refused - did you specify the right host or port?
-[devops@DEVAD1M ~]$ ^C
-[devops@DEVAD1M ~]$ sudo kubectl get nodes --v=5
-E0612 08:17:56.376978  285875 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-I0612 08:17:56.377054  285875 cached_discovery.go:120] skipped caching discovery info due to Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-E0612 08:17:56.377511  285875 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-I0612 08:17:56.378653  285875 cached_discovery.go:120] skipped caching discovery info due to Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-I0612 08:17:56.378690  285875 shortcut.go:103] Error loading discovery information: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-E0612 08:17:56.379029  285875 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-I0612 08:17:56.379052  285875 cached_discovery.go:120] skipped caching discovery info due to Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-E0612 08:17:56.379398  285875 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-I0612 08:17:56.380504  285875 cached_discovery.go:120] skipped caching discovery info due to Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-E0612 08:17:56.380803  285875 memcache.go:265] couldn't get current server API group list: Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-I0612 08:17:56.380821  285875 cached_discovery.go:120] skipped caching discovery info due to Get "http://localhost:8080/api?timeout=32s": dial tcp 127.0.0.1:8080: connect: connection refused
-I0612 08:17:56.380876  285875 helpers.go:264] Connection error: Get http://localhost:8080/api?timeout=32s: dial tcp 127.0.0.1:8080: connect: connection refused
-The connection to the server localhost:8080 was refused - did you specify the right host or port?
-[devops@DEVAD1M ~]$ ^C
-[devops@DEVAD1M ~]$ sudo cat /etc/kubernetes/manifests/kube-apiserver.yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  annotations:
-    kubeadm.kubernetes.io/kube-apiserver.advertise-address.endpoint: 10.173.144.180:6443
-  creationTimestamp: null
-  labels:
-    component: kube-apiserver
-    tier: control-plane
-  name: kube-apiserver
-  namespace: kube-system
-spec:
-  containers:
-  - command:
-    - kube-apiserver
-    - --advertise-address=10.173.144.180
-    - --allow-privileged=true
-    - --authorization-mode=Node,RBAC
-    - --client-ca-file=/etc/kubernetes/pki/ca.crt
-    - --enable-admission-plugins=NodeRestriction
-    - --enable-bootstrap-token-auth=true
-    - --etcd-cafile=/etc/kubernetes/pki/etcd/ca.crt
-    - --etcd-certfile=/etc/kubernetes/pki/apiserver-etcd-client.crt
-    - --etcd-keyfile=/etc/kubernetes/pki/apiserver-etcd-client.key
-    - --etcd-servers=https://127.0.0.1:2379
-    - --kubelet-client-certificate=/etc/kubernetes/pki/apiserver-kubelet-client.crt
-    - --kubelet-client-key=/etc/kubernetes/pki/apiserver-kubelet-client.key
-    - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
-    - --proxy-client-cert-file=/etc/kubernetes/pki/front-proxy-client.crt
-    - --proxy-client-key-file=/etc/kubernetes/pki/front-proxy-client.key
-    - --requestheader-allowed-names=front-proxy-client
-    - --requestheader-client-ca-file=/etc/kubernetes/pki/front-proxy-ca.crt
-    - --requestheader-extra-headers-prefix=X-Remote-Extra-
-    - --requestheader-group-headers=X-Remote-Group
-    - --requestheader-username-headers=X-Remote-User
-    - --secure-port=6443
-    - --service-account-issuer=https://kubernetes.default.svc.cluster.local
-    - --service-account-key-file=/etc/kubernetes/pki/sa.pub
-    - --service-account-signing-key-file=/etc/kubernetes/pki/sa.key
-    - --service-cluster-ip-range=10.96.0.0/12
-    - --tls-cert-file=/etc/kubernetes/pki/apiserver.crt
-    - --tls-private-key-file=/etc/kubernetes/pki/apiserver.key
-    image: 10.173.181.26/kube-apiserver:v1.29.2
-    imagePullPolicy: IfNotPresent
-    livenessProbe:
-      failureThreshold: 8
-      httpGet:
-        host: 10.173.144.180
-        path: /livez
-        port: 6443
-        scheme: HTTPS
-      initialDelaySeconds: 10
-      periodSeconds: 10
-      timeoutSeconds: 15
-    name: kube-apiserver
-    readinessProbe:
-      failureThreshold: 3
-      httpGet:
-        host: 10.173.144.180
-        path: /readyz
-        port: 6443
-        scheme: HTTPS
-      periodSeconds: 1
-      timeoutSeconds: 15
-    resources:
-      requests:
-        cpu: 250m
-    startupProbe:
-      failureThreshold: 24
-      httpGet:
-        host: 10.173.144.180
-        path: /livez
-        port: 6443
-        scheme: HTTPS
-      initialDelaySeconds: 10
-      periodSeconds: 10
-      timeoutSeconds: 15
-    volumeMounts:
-    - mountPath: /etc/ssl/certs
-      name: ca-certs
-      readOnly: true
-    - mountPath: /etc/pki
-      name: etc-pki
-      readOnly: true
-    - mountPath: /etc/kubernetes/pki
-      name: k8s-certs
-      readOnly: true
-  hostNetwork: true
-  priority: 2000001000
-  priorityClassName: system-node-critical
-  securityContext:
-    seccompProfile:
-      type: RuntimeDefault
-  volumes:
-  - hostPath:
-      path: /etc/ssl/certs
-      type: DirectoryOrCreate
-    name: ca-certs
-  - hostPath:
-      path: /etc/pki
-      type: DirectoryOrCreate
-    name: etc-pki
-  - hostPath:
-      path: /etc/kubernetes/pki
-      type: DirectoryOrCreate
-    name: k8s-certs
-status: {}
-[devops@DEVAD1M ~]$ sudo firewall-cmd --list-all
-FirewallD is not running
-[devops@DEVAD1M ~]$ sudo systemctl restart kube-apiserver
-Failed to restart kube-apiserver.service: Unit kube-apiserver.service not found.
-[devops@DEVAD1M ~]$ sudo kubectl get nodes --server=https://localhost:6443
-Please enter Username: devops
-Please enter Password: E0612 08:19:15.205818  286100 memcache.go:265] couldn't get current server API group list: Get "https://localhost:6443/api?timeout=32s": tls: failed to verify certificate: x509: certificate is valid for devad1m, kubernetes, kubernetes.default, kubernetes.default.svc, kubernetes.default.svc.cluster.local, not localhost
-E0612 08:19:15.209138  286100 memcache.go:265] couldn't get current server API group list: Get "https://localhost:6443/api?timeout=32s": tls: failed to verify certificate: x509: certificate is valid for devad1m, kubernetes, kubernetes.default, kubernetes.default.svc, kubernetes.default.svc.cluster.local, not localhost
-E0612 08:19:15.212059  286100 memcache.go:265] couldn't get current server API group list: Get "https://localhost:6443/api?timeout=32s": tls: failed to verify certificate: x509: certificate is valid for devad1m, kubernetes, kubernetes.default, kubernetes.default.svc, kubernetes.default.svc.cluster.local, not localhost
-E0612 08:19:15.215643  286100 memcache.go:265] couldn't get current server API group list: Get "https://localhost:6443/api?timeout=32s": tls: failed to verify certificate: x509: certificate is valid for devad1m, kubernetes, kubernetes.default, kubernetes.default.svc, kubernetes.default.svc.cluster.local, not localhost
-E0612 08:19:15.218411  286100 memcache.go:265] couldn't get current server API group list: Get "https://localhost:6443/api?timeout=32s": tls: failed to verify certificate: x509: certificate is valid for devad1m, kubernetes, kubernetes.default, kubernetes.default.svc, kubernetes.default.svc.cluster.local, not localhost
-Unable to connect to the server: tls: failed to verify certificate: x509: certificate is valid for devad1m, kubernetes, kubernetes.default, kubernetes.default.svc, kubernetes.default.svc.cluster.local, not localhost
-[devops@DEVAD1M ~]$ ^C
-[devops@DEVAD1M ~]$ sudo kubectl get nodes --server=https://devad1m:6443
-Please enter Username: devops
-Please enter Password: E0612 08:19:58.261792  286185 memcache.go:265] couldn't get current server API group list: Get "https://devad1m:6443/api?timeout=32s": tls: failed to verify certificate: x509: certificate signed by unknown authority
-E0612 08:19:58.265084  286185 memcache.go:265] couldn't get current server API group list: Get "https://devad1m:6443/api?timeout=32s": tls: failed to verify certificate: x509: certificate signed by unknown authority
-E0612 08:19:58.268053  286185 memcache.go:265] couldn't get current server API group list: Get "https://devad1m:6443/api?timeout=32s": tls: failed to verify certificate: x509: certificate signed by unknown authority
-E0612 08:19:58.270912  286185 memcache.go:265] couldn't get current server API group list: Get "https://devad1m:6443/api?timeout=32s": tls: failed to verify certificate: x509: certificate signed by unknown authority
-E0612 08:19:58.273761  286185 memcache.go:265] couldn't get current server API group list: Get "https://devad1m:6443/api?timeout=32s": tls: failed to verify certificate: x509: certificate signed by unknown authority
-Unable to connect to the server: tls: failed to verify certificate: x509: certificate signed by unknown authority
-[devops@DEVAD1M ~]$ sudo kubectl get nodes --server=https://devad1m:6443
-Please enter Username: deva1M
-Please enter Password:
-[devops@DEVAD1M ~]$ sudo kubectl get nodes --server=https://devad1m:6443
-Please enter Username: devad1m
-Please enter Password: E0612 08:20:19.914283  286262 memcache.go:265] couldn't get current server API group list: Get "https://devad1m:6443/api?timeout=32s": tls: failed to verify certificate: x509: certificate signed by unknown authority
-E0612 08:20:19.920702  286262 memcache.go:265] couldn't get current server API group list: Get "https://devad1m:6443/api?timeout=32s": tls: failed to verify certificate: x509: certificate signed by unknown authority
-E0612 08:20:19.924000  286262 memcache.go:265] couldn't get current server API group list: Get "https://devad1m:6443/api?timeout=32s": tls: failed to verify certificate: x509: certificate signed by unknown authority
-E0612 08:20:19.926986  286262 memcache.go:265] couldn't get current server API group list: Get "https://devad1m:6443/api?timeout=32s": tls: failed to verify certificate: x509: certificate signed by unknown authority
-E0612 08:20:19.930587  286262 memcache.go:265] couldn't get current server API group list: Get "https://devad1m:6443/api?timeout=32s": tls: failed to verify certificate: x509: certificate signed by unknown authority
-Unable to connect to the server: tls: failed to verify certificate: x509: certificate signed by unknown authority
-[devops@DEVAD1M ~]$ sudo kubectl get nodes --server=https://localhost:6443 --insecure-skip-tls-verify
-Please enter Username: devops
-Please enter Password: E0612 08:20:49.015162  286361 memcache.go:265] couldn't get current server API group list: unknown
-E0612 08:20:49.020894  286361 memcache.go:265] couldn't get current server API group list: unknown
-E0612 08:20:49.026983  286361 memcache.go:265] couldn't get current server API group list: unknown
-E0612 08:20:49.031982  286361 memcache.go:265] couldn't get current server API group list: unknown
-E0612 08:20:49.036381  286361 memcache.go:265] couldn't get current server API group list: unknown
-Error from server (Forbidd
-
+[devops@GITOPSRBDAD1M ~]$ sudo podman ps
+CONTAINER ID  IMAGE                              COMMAND               CREATED     STATUS       PORTS                  NAMES
+ef252d835895  docker.io/library/registry:latest  /etc/docker/regis...  4 days ago  Up 39 hours  0.0.0.0:443->5000/tcp  registry
+[devops@GITOPSRBDAD1M ~]$ sudo podman ps
+CONTAINER ID  IMAGE                              COMMAND               CREATED     STATUS       PORTS                  NAMES
+ef252d835895  docker.io/library/registry:latest  /etc/docker/regis...  4 days ago  Up 39 hours  0.0.0.0:443->5000/tcp  registry
+[devops@GITOPSRBDAD1M ~]$ sudo podman images
+REPOSITORY                                TAG              IMAGE ID      CREATED        SIZE
+localhost:443/kube-apiserver              v1.29.2          8a9000f98a52  3 months ago   128 MB
+10.173.181.26/kube-apiserver              v1.29.2          8a9000f98a52  3 months ago   128 MB
+10.173.181.26/kube-scheduler              v1.29.2          6fc5e6b7218c  3 months ago   60.6 MB
+10.173.181.26/kube-proxy                  v1.29.2          9344fce2372f  3 months ago   83.5 MB
+localhost:443/kube-scheduler              v1.29.2          6fc5e6b7218c  3 months ago   60.6 MB
+localhost:443/kube-controller-manager     v1.29.2          138fb5a3a2e3  3 months ago   123 MB
+10.173.181.26/kube-controller-manager     v1.29.2          138fb5a3a2e3  3 months ago   123 MB
+localhost:443/kube-proxy                  v1.29.2          9344fce2372f  3 months ago   83.5 MB
+10.173.181.26/registry                    latest           a8781fe3b7a2  4 months ago   26 MB
+10.173.181.26/registry                    2.8.3            a8781fe3b7a2  4 months ago   26 MB
+localhost/registry                        2.8.3            a8781fe3b7a2  4 months ago   26 MB
+localhost/registry                        latest           a8781fe3b7a2  4 months ago   26 MB
+10.173.181.26/flannel/flannel-cni-plugin  v1.4.0-flannel1  77c1250c26d9  4 months ago   10.2 MB
+docker.io/flannel/flannel-cni-plugin      v1.4.0-flannel1  77c1250c26d9  4 months ago   10.2 MB
+10.173.181.26/my-flannel-plugin           latest           77c1250c26d9  4 months ago   10.2 MB
+localhost/my-flannel-plugin               latest           77c1250c26d9  4 months ago   10.2 MB
+docker.io/library/registry                latest           d6b2c32a0f14  8 months ago   26 MB
+localhost:443/coredns                     v1.11.1          cbb01a7bd410  10 months ago  61.2 MB
+10.173.181.26/coredns                     v1.11.1          cbb01a7bd410  10 months ago  61.2 MB
+10.173.181.26/pause                       3.9              e6f181688397  20 months ago  748 kB
+localhost:443/pause                       3.9              e6f181688397  20 months ago  748 kB
+quay.io/coreos/etcd                       v3.2.5           03012333722b  6 years ago    36 MB
+localhost:443/etcd                        latest           03012333722b  6 years ago    36 MB
+localhost:443/etcd                        v3.2.5           03012333722b  6 years ago    36 MB
+host.docker.internal:443/etcd             v3.2.5           03012333722b  6 years ago    36 MB
+10.173.181.26:443/etcd                    v3.2.5           03012333722b  6 years ago    36 MB
+10.173.181.26/etcd                        v3.2.5           03012333722b  6 years ago    36 MB
+10.173.181.26/etcd                        latest           03012333722b  6 years ago    36 MB
+[devops@GITOPSRBDAD1M ~]$
