@@ -1,220 +1,64 @@
-
-[devops@DEVAD1M ~]$ cat kube-flannel.yaml
-apiVersion: v1
-kind: Namespace
-metadata:
-  labels:
-    k8s-app: flannel
-    pod-security.kubernetes.io/enforce: privileged
-  name: kube-flannel
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  labels:
-    k8s-app: flannel
-  name: flannel
-  namespace: kube-flannel
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    k8s-app: flannel
-  name: flannel
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  verbs:
-  - get
-- apiGroups:
-  - ""
-  resources:
-  - nodes
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - nodes/status
-  verbs:
-  - patch
-- apiGroups:
-  - networking.k8s.io
-  resources:
-  - clustercidrs
-  verbs:
-  - list
-  - watch
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  labels:
-    k8s-app: flannel
-  name: flannel
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: flannel
-subjects:
-- kind: ServiceAccount
-  name: flannel
-  namespace: kube-flannel
----
-apiVersion: v1
-data:
-  cni-conf.json: |
-    {
-      "name": "cbr0",
-      "cniVersion": "0.3.1",
-      "plugins": [
-        {
-          "type": "flannel",
-          "delegate": {
-            "hairpinMode": true,
-            "isDefaultGateway": true
-          }
-        },
-        {
-          "type": "portmap",
-          "capabilities": {
-            "portMappings": true
-          }
-        }
-      ]
-    }
-  net-conf.json: |
-    {
-      "Network": "10.244.0.0/16",
-      "Backend": {
-        "Type": "vxlan"
-      }
-    }
-kind: ConfigMap
-metadata:
-  labels:
-    app: flannel
-    k8s-app: flannel
-    tier: node
-  name: kube-flannel-cfg
-  namespace: kube-flannel
----
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  labels:
-    app: flannel
-    k8s-app: flannel
-    tier: node
-  name: kube-flannel-ds
-  namespace: kube-flannel
-spec:
-  selector:
-    matchLabels:
-      app: flannel
-      k8s-app: flannel
-  template:
-    metadata:
-      labels:
-        app: flannel
-        k8s-app: flannel
-        tier: node
-    spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: kubernetes.io/os
-                operator: In
-                values:
-                - linux
-      containers:
-      - args:
-        - --ip-masq
-        - --kube-subnet-mgr
-        command:
-        - /opt/bin/flanneld
-        env:
-        - name: POD_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
-        - name: POD_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-        - name: EVENT_QUEUE_DEPTH
-          value: "5000"
-        image: 10.173.181.26/flannel/flannel:v0.25.1
-        name: kube-flannel
-        resources:
-          requests:
-            cpu: 100m
-            memory: 50Mi
-        securityContext:
-          capabilities:
-            add:
-            - NET_ADMIN
-            - NET_RAW
-          privileged: false
-        volumeMounts:
-        - mountPath: /run/flannel
-          name: run
-        - mountPath: /etc/kube-flannel/
-          name: flannel-cfg
-        - mountPath: /run/xtables.lock
-          name: xtables-lock
-      hostNetwork: true
-      initContainers:
-      - args:
-        - -f
-        - /flannel
-        - /opt/cni/bin/flannel
-        command:
-        - cp
-        image: 10.173.181.26/flannel/flannel-cni-plugin:v1.4.0-flannel1
-        name: install-cni-plugin
-        volumeMounts:
-        - mountPath: /opt/cni/bin
-          name: cni-plugin
-      - args:
-        - -f
-        - /etc/kube-flannel/cni-conf.json
-        - /etc/cni/net.d/10-flannel.conflist
-        command:
-        - cp
-        image: 10.173.181.26/flannel/flannel:v0.25.1
-        name: install-cni
-        volumeMounts:
-        - mountPath: /etc/cni/net.d
-          name: cni
-        - mountPath: /etc/kube-flannel/
-          name: flannel-cfg
-      priorityClassName: system-node-critical
-      serviceAccountName: flannel
-      tolerations:
-      - effect: NoSchedule
-        operator: Exists
-      volumes:
-      - hostPath:
-          path: /run/flannel
-        name: run
-      - hostPath:
-          path: /opt/cni/bin
-        name: cni-plugin
-      - hostPath:
-          path: /etc/cni/net.d
-        name: cni
-      - configMap:
-          name: kube-flannel-cfg
-        name: flannel-cfg
-      - hostPath:
-          path: /run/xtables.lock
-          type: FileOrCreate
-        name: xtables-lock
+[devops@DEVAD1M ~]$ kubectl get pods -A
+NAMESPACE      NAME                              READY   STATUS    RESTARTS        AGE
+kube-flannel   kube-flannel-ds-w8jv2             1/1     Running   0               48m
+kube-system    coredns-675f547b9c-7mbc2          0/1     Pending   0               27s
+kube-system    coredns-675f547b9c-7zzfh          0/1     Pending   0               27s
+kube-system    etcd-devad1m                      1/1     Running   2               5h44m
+kube-system    kube-apiserver-devad1m            1/1     Running   2 (5h45m ago)   5h44m
+kube-system    kube-controller-manager-devad1m   1/1     Running   2               5h44m
+kube-system    kube-proxy-skl2m                  1/1     Running   0               5h44m
+kube-system    kube-scheduler-devad1m            1/1     Running   2               5h44m
+[devops@DEVAD1M ~]$ kubectl describe pods  coredns-675f547b9c-7mbc2 -n kube-system
+Name:             coredns-675f547b9c-7mbc2
+Namespace:        kube-system
+Priority:         0
+Service Account:  coredns
+Node:             <none>
+Labels:           k8s-app=kube-dns
+                  pod-template-hash=675f547b9c
+Annotations:      <none>
+Status:           Pending
+IP:
+IPs:              <none>
+Controlled By:    ReplicaSet/coredns-675f547b9c
+Containers:
+  coredns:
+    Image:      10.173.181.26/coredns:v1.11.1
+    Port:       <none>
+    Host Port:  <none>
+    Args:
+      -conf
+      /etc/coredns/Corefile
+    Limits:
+      memory:  170Mi
+    Requests:
+      cpu:        100m
+      memory:     70Mi
+    Liveness:     http-get http://:8080/health delay=60s timeout=5s period=10s #success=1 #failure=5
+    Readiness:    http-get http://:8181/ready delay=0s timeout=1s period=10s #success=1 #failure=3
+    Environment:  <none>
+    Mounts:
+      /etc/coredns from config-volume (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-rd4s8 (ro)
+Conditions:
+  Type           Status
+  PodScheduled   False
+Volumes:
+  config-volume:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      coredns
+    Optional:  false
+  kube-api-access-rd4s8:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason            Age   From               Message
+  ----     ------            ----  ----               -------
+  Warning  FailedScheduling  88s   default-scheduler  0/1 nodes are available: 1 node(s) had untolerated taint {node-role.kubernetes.io/control-plane: }. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.
