@@ -1,32 +1,32 @@
-pod "coredns-58767d876d-v7g42" deleted
-[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
-NAME                              READY   STATUS    RESTARTS      AGE
-coredns-58767d876d-5whhg          0/1     Running   0             3s
-coredns-58767d876d-qzmtd          0/1     Running   0             3s
-etcd-devad1m                      1/1     Running   2             83m
-kube-apiserver-devad1m            1/1     Running   2 (84m ago)   83m
-kube-controller-manager-devad1m   1/1     Running   2             83m
-kube-proxy-skl2m                  1/1     Running   0             83m
-kube-scheduler-devad1m            1/1     Running   2             83m
-[devops@DEVAD1M ~]$ kubectl describe  pods coredns-58767d876d-5whhg  -n kube-system
-Name:                 coredns-58767d876d-5whhg
+[devops@DEVAD1M ~]$ kubectl get pods -A
+NAMESPACE      NAME                              READY   STATUS    RESTARTS        AGE
+kube-flannel   kube-flannel-ds-zj5zc             1/1     Running   0               33s
+kube-system    coredns-58767d876d-2fqxc          0/1     Running   0               3h5m
+kube-system    coredns-58767d876d-vwhqh          0/1     Running   0               3h5m
+kube-system    etcd-devad1m                      1/1     Running   2               4h32m
+kube-system    kube-apiserver-devad1m            1/1     Running   2 (4h33m ago)   4h32m
+kube-system    kube-controller-manager-devad1m   1/1     Running   2               4h32m
+kube-system    kube-proxy-skl2m                  1/1     Running   0               4h32m
+kube-system    kube-scheduler-devad1m            1/1     Running   2               4h32m
+[devops@DEVAD1M ~]$ kubectl describe pods  coredns-58767d876d-2fqxc -n kube-system
+Name:                 coredns-58767d876d-2fqxc
 Namespace:            kube-system
 Priority:             2000000000
 Priority Class Name:  system-cluster-critical
 Service Account:      coredns
 Node:                 devad1m/10.173.144.180
-Start Time:           Wed, 12 Jun 2024 09:38:30 +0100
+Start Time:           Wed, 12 Jun 2024 09:40:56 +0100
 Labels:               k8s-app=kube-dns
                       pod-template-hash=58767d876d
 Annotations:          <none>
 Status:               Running
-IP:                   10.85.0.17
+IP:                   10.85.0.19
 IPs:
-  IP:           10.85.0.17
+  IP:           10.85.0.19
 Controlled By:  ReplicaSet/coredns-58767d876d
 Containers:
   coredns:
-    Container ID:  cri-o://c022d98ddb86f2efd5c31abf29ca3c7921232ae6d0ca8832f5de10568fe1d7eb
+    Container ID:  cri-o://6435d9ebbf10d2d7d8203ff13242156cd32b0f6dbafcb922b7369a9129f02701
     Image:         10.173.181.26/coredns:v1.11.1
     Image ID:      10.173.181.26/coredns@sha256:54dcce8c8e5073d043ad8d4c4a74ecf4fba40134cc2185da7c697c97a1fa8943
     Ports:         53/UDP, 53/TCP, 9153/TCP
@@ -35,7 +35,7 @@ Containers:
       -conf
       /etc/coredns/Corefile
     State:          Running
-      Started:      Wed, 12 Jun 2024 09:38:31 +0100
+      Started:      Wed, 12 Jun 2024 09:40:57 +0100
     Ready:          False
     Restart Count:  0
     Limits:
@@ -48,7 +48,7 @@ Containers:
     Environment:  <none>
     Mounts:
       /etc/coredns from config-volume (ro)
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-fmlcx (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-54xkp (ro)
 Conditions:
   Type                        Status
   PodReadyToStartContainers   True
@@ -61,7 +61,7 @@ Volumes:
     Type:      ConfigMap (a volume populated by a ConfigMap)
     Name:      coredns
     Optional:  false
-  kube-api-access-fmlcx:
+  kube-api-access-54xkp:
     Type:                    Projected (a volume that contains injected data from multiple sources)
     TokenExpirationSeconds:  3607
     ConfigMapName:           kube-root-ca.crt
@@ -74,13 +74,8 @@ Tolerations:                 CriticalAddonsOnly op=Exists
                              node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
                              node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
 Events:
-  Type     Reason     Age               From               Message
-  ----     ------     ----              ----               -------
-  Normal   Scheduled  18s               default-scheduler  Successfully assigned kube-system/coredns-58767d876d-5whhg to devad1m
-  Normal   Pulled     17s               kubelet            Container image "10.173.181.26/coredns:v1.11.1" already present on machine
-  Normal   Created    17s               kubelet            Created container coredns
-  Normal   Started    17s               kubelet            Started container coredns
-  Warning  Unhealthy  8s (x3 over 17s)  kubelet            Readiness probe failed: Get "http://10.85.0.17:8181/ready": dial tcp 10.85.0.17:8181: connect: connection refused
-[devops@DEVAD1M ~]$ sudo cat /etc/resolv.conf
-nameserver 192.168.121.1
-[devops@DEVAD1M ~]$
+  Type     Reason     Age                    From     Message
+  ----     ------     ----                   ----     -------
+  Warning  Unhealthy  85s (x1259 over 3h6m)  kubelet  Readiness probe failed: Get "http://10.85.0.19:8181/ready": dial tcp 10.85.0.19:8181: connect: connection refused
+[devops@DEVAD1M ~]$ ^C
+[devops@DEVAD1M ~]$ ^C
