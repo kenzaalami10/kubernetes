@@ -1,104 +1,32 @@
-
-[devops@DEVAD1M ~]$ cat /etc/resolv.conf
-[devops@DEVAD1M ~]$ ip a
-1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
-    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-    inet 127.0.0.1/8 scope host lo
-       valid_lft forever preferred_lft forever
-2: ens160: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
-    link/ether 00:50:56:a0:61:20 brd ff:ff:ff:ff:ff:ff
-    altname enp3s0
-    inet 10.173.144.180/24 brd 10.173.144.255 scope global noprefixroute ens160
-       valid_lft forever preferred_lft forever
-3: virbr0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default qlen 1000
-    link/ether 52:54:00:4e:96:cf brd ff:ff:ff:ff:ff:ff
-    inet 192.168.122.1/24 brd 192.168.122.255 scope global virbr0
-       valid_lft forever preferred_lft forever
-4: cni0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
-    link/ether 46:28:33:81:f9:76 brd ff:ff:ff:ff:ff:ff
-    inet 10.85.0.1/16 brd 10.85.255.255 scope global cni0
-       valid_lft forever preferred_lft forever
-13: vethab985583@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master cni0 state UP group default
-    link/ether 3a:dd:a2:be:b2:56 brd ff:ff:ff:ff:ff:ff link-netns dd69dadc-44cf-40f1-bb15-550ff36a5ac7
-14: veth76ee49cb@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master cni0 state UP group default
-    link/ether 2a:6f:0b:a3:40:2b brd ff:ff:ff:ff:ff:ff link-netns e1c35bc3-7ef0-49e9-adbf-18ec5834fd97
-[devops@DEVAD1M ~]$
-
-
-[devops@DEVAD1M ~]$  kubectl edit configmap coredns -n kube-system -o yaml
-apiVersion: v1
-data:
-  Corefile: |
-    .:53 {
-        errors
-        health
-        kubernetes cluster.local in-addr.arpa ip6.arpa {
-          pods insecure
-          fallthrough in-addr.arpa ip6.arpa
-        }
-        prometheus :9153
-        forward . 192.168.122.1
-        cache 30
-        loop
-        reload
-        loadbalance
-    }
-kind: ConfigMap
-metadata:
-  creationTimestamp: "2024-06-12T07:14:38Z"
-  name: coredns
-  namespace: kube-system
-  resourceVersion: "7396"
-  uid: d51c7a2e-f479-4a0c-982a-a0298c7a98a0
-[devops@DEVAD1M ~]$ kubectl delete pod -n kube-system -l k8s-app=kube-dns
-pod "coredns-58767d876d-fbsx6" deleted
-pod "coredns-58767d876d-g9x2s" deleted
+pod "coredns-58767d876d-v7g42" deleted
 [devops@DEVAD1M ~]$ kubectl get pods -n kube-system
 NAME                              READY   STATUS    RESTARTS      AGE
-coredns-58767d876d-htdxq          0/1     Running   0             4s
-coredns-58767d876d-v7g42          0/1     Running   0             4s
-etcd-devad1m                      1/1     Running   2             81m
-kube-apiserver-devad1m            1/1     Running   2 (81m ago)   81m
-kube-controller-manager-devad1m   1/1     Running   2             81m
-kube-proxy-skl2m                  1/1     Running   0             80m
-kube-scheduler-devad1m            1/1     Running   2             81m
-[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
-NAME                              READY   STATUS    RESTARTS      AGE
-coredns-58767d876d-htdxq          0/1     Running   0             6s
-coredns-58767d876d-v7g42          0/1     Running   0             6s
-etcd-devad1m                      1/1     Running   2             81m
-kube-apiserver-devad1m            1/1     Running   2 (82m ago)   81m
-kube-controller-manager-devad1m   1/1     Running   2             81m
-kube-proxy-skl2m                  1/1     Running   0             80m
-kube-scheduler-devad1m            1/1     Running   2             81m
-[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
-NAME                              READY   STATUS    RESTARTS      AGE
-coredns-58767d876d-htdxq          0/1     Running   0             7s
-coredns-58767d876d-v7g42          0/1     Running   0             7s
-etcd-devad1m                      1/1     Running   2             81m
-kube-apiserver-devad1m            1/1     Running   2 (82m ago)   81m
-kube-controller-manager-devad1m   1/1     Running   2             81m
-kube-proxy-skl2m                  1/1     Running   0             81m
-kube-scheduler-devad1m            1/1     Running   2             81m
-[devops@DEVAD1M ~]$ kubectl describe  pods coredns-58767d876d-htdxq  -n kube-system
-Name:                 coredns-58767d876d-htdxq
+coredns-58767d876d-5whhg          0/1     Running   0             3s
+coredns-58767d876d-qzmtd          0/1     Running   0             3s
+etcd-devad1m                      1/1     Running   2             83m
+kube-apiserver-devad1m            1/1     Running   2 (84m ago)   83m
+kube-controller-manager-devad1m   1/1     Running   2             83m
+kube-proxy-skl2m                  1/1     Running   0             83m
+kube-scheduler-devad1m            1/1     Running   2             83m
+[devops@DEVAD1M ~]$ kubectl describe  pods coredns-58767d876d-5whhg  -n kube-system
+Name:                 coredns-58767d876d-5whhg
 Namespace:            kube-system
 Priority:             2000000000
 Priority Class Name:  system-cluster-critical
 Service Account:      coredns
 Node:                 devad1m/10.173.144.180
-Start Time:           Wed, 12 Jun 2024 09:35:45 +0100
+Start Time:           Wed, 12 Jun 2024 09:38:30 +0100
 Labels:               k8s-app=kube-dns
                       pod-template-hash=58767d876d
 Annotations:          <none>
 Status:               Running
-IP:                   10.85.0.15
+IP:                   10.85.0.17
 IPs:
-  IP:           10.85.0.15
+  IP:           10.85.0.17
 Controlled By:  ReplicaSet/coredns-58767d876d
 Containers:
   coredns:
-    Container ID:  cri-o://9ecf11224f0762bff3f91078e1a4d5289039b7d935b377e7f60ed1763b888aa7
+    Container ID:  cri-o://c022d98ddb86f2efd5c31abf29ca3c7921232ae6d0ca8832f5de10568fe1d7eb
     Image:         10.173.181.26/coredns:v1.11.1
     Image ID:      10.173.181.26/coredns@sha256:54dcce8c8e5073d043ad8d4c4a74ecf4fba40134cc2185da7c697c97a1fa8943
     Ports:         53/UDP, 53/TCP, 9153/TCP
@@ -107,7 +35,7 @@ Containers:
       -conf
       /etc/coredns/Corefile
     State:          Running
-      Started:      Wed, 12 Jun 2024 09:35:46 +0100
+      Started:      Wed, 12 Jun 2024 09:38:31 +0100
     Ready:          False
     Restart Count:  0
     Limits:
@@ -120,7 +48,7 @@ Containers:
     Environment:  <none>
     Mounts:
       /etc/coredns from config-volume (ro)
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-prrg6 (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-fmlcx (ro)
 Conditions:
   Type                        Status
   PodReadyToStartContainers   True
@@ -133,7 +61,7 @@ Volumes:
     Type:      ConfigMap (a volume populated by a ConfigMap)
     Name:      coredns
     Optional:  false
-  kube-api-access-prrg6:
+  kube-api-access-fmlcx:
     Type:                    Projected (a volume that contains injected data from multiple sources)
     TokenExpirationSeconds:  3607
     ConfigMapName:           kube-root-ca.crt
@@ -148,10 +76,11 @@ Tolerations:                 CriticalAddonsOnly op=Exists
 Events:
   Type     Reason     Age               From               Message
   ----     ------     ----              ----               -------
-  Normal   Scheduled  22s               default-scheduler  Successfully assigned kube-system/coredns-58767d876d-htdxq to devad1m
-  Normal   Pulled     21s               kubelet            Container image "10.173.181.26/coredns:v1.11.1" already present on machine
-  Normal   Created    21s               kubelet            Created container coredns
-  Normal   Started    21s               kubelet            Started container coredns
-  Warning  Unhealthy  2s (x4 over 21s)  kubelet            Readiness probe failed: Get "http://10.85.0.15:8181/ready": dial tcp 10.85.0.15:8181: connect: connection refused
+  Normal   Scheduled  18s               default-scheduler  Successfully assigned kube-system/coredns-58767d876d-5whhg to devad1m
+  Normal   Pulled     17s               kubelet            Container image "10.173.181.26/coredns:v1.11.1" already present on machine
+  Normal   Created    17s               kubelet            Created container coredns
+  Normal   Started    17s               kubelet            Started container coredns
+  Warning  Unhealthy  8s (x3 over 17s)  kubelet            Readiness probe failed: Get "http://10.85.0.17:8181/ready": dial tcp 10.85.0.17:8181: connect: connection refused
+[devops@DEVAD1M ~]$ sudo cat /etc/resolv.conf
+nameserver 192.168.121.1
 [devops@DEVAD1M ~]$
-
