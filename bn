@@ -119,3 +119,27 @@ spec:
 
 
 kubectl apply -f coredns.yaml
+
+
+
+
+[devops@DEVAD1M ~]$ rm  coredns.yaml
+[devops@DEVAD1M ~]$ nano  coredns.yaml
+[devops@DEVAD1M ~]$ nano  coredns.yaml
+[devops@DEVAD1M ~]$ kubectl apply -f coredns.yaml
+configmap/coredns configured
+serviceaccount/coredns unchanged
+service/kube-dns unchanged
+deployment.apps/coredns configured
+[devops@DEVAD1M ~]$ kubectl get pods -A
+NAMESPACE      NAME                              READY   STATUS              RESTARTS        AGE
+kube-flannel   kube-flannel-ds-w8jv2             1/1     Running             0               54m
+kube-system    coredns-675f547b9c-7mbc2          0/1     Pending             0               6m14s
+kube-system    coredns-675f547b9c-7zzfh          0/1     Pending             0               6m14s
+kube-system    coredns-76b55c6b58-mk7cr          0/1     ContainerCreating   0               9s
+kube-system    etcd-devad1m                      1/1     Running             2               5h50m
+kube-system    kube-apiserver-devad1m            1/1     Running             2 (5h51m ago)   5h50m
+kube-system    kube-controller-manager-devad1m   1/1     Running             2               5h50m
+kube-system    kube-proxy-skl2m                  1/1     Running             0               5h50m
+kube-system    kube-scheduler-devad1m            1/1     Running             2               5h50m
+[devops@DEVAD1M ~]$
