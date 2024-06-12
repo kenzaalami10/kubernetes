@@ -1,48 +1,18 @@
-[devops@DEVAD1M ~]$ kubectl get configmap coredns -n kube-system -o yaml
-apiVersion: v1
-data:
-  Corefile: |
-    .:53 {
-        errors
-        health {
-           lameduck 5s
-        }
-        ready
-        kubernetes cluster.local in-addr.arpa ip6.arpa {
-           pods insecure
-           fallthrough in-addr.arpa ip6.arpa
-           ttl 30
-        }
-        prometheus :9153
-        forward . /etc/resolv.conf {
-           max_concurrent 1000
-        }
-        cache 30
-        loop
-        reload
-        loadbalance
-    }
-kind: ConfigMap
-metadata:
-  creationTimestamp: "2024-06-12T07:14:38Z"
-  name: coredns
-  namespace: kube-system
-  resourceVersion: "219"
-  uid: d51c7a2e-f479-4a0c-982a-a0298c7a98a0
-[devops@DEVAD1M ~]$ kubectl get deployment  coredns -n kube-system -o yaml
+kubectl edit deployment coredns -n kube-system
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
     deployment.kubernetes.io/revision: "1"
-  creationTimestamp: "2024-06-12T07:14:38Z"
+  creationTimestamp: "2024-05-13T13:59:53Z"
   generation: 1
   labels:
     k8s-app: kube-dns
   name: coredns
   namespace: kube-system
-  resourceVersion: "2574"
-  uid: 96d8b199-338f-403e-91db-dace2026b8c1
+  resourceVersion: "1354"
+  uid: b954a5a3-bd82-4d0c-9ed8-434a86b743a4
 spec:
   progressDeadlineSeconds: 600
   replicas: 2
@@ -152,33 +122,161 @@ spec:
             path: Corefile
           name: coredns
         name: config-volume
-status:
-  conditions:
-  - lastTransitionTime: "2024-06-12T07:14:52Z"
-    lastUpdateTime: "2024-06-12T07:14:52Z"
-    message: Deployment does not have minimum availability.
-    reason: MinimumReplicasUnavailable
-    status: "False"
-    type: Available
-  - lastTransitionTime: "2024-06-12T07:40:07Z"
-    lastUpdateTime: "2024-06-12T07:40:07Z"
-    message: ReplicaSet "coredns-58767d876d" is progressing.
-    reason: ReplicaSetUpdated
-    status: "True"
-    type: Progressing
-  observedGeneration: 1
-  replicas: 2
-  unavailableReplicas: 2
-  updatedReplicas: 2
-[devops@DEVAD1M ~]$ kubectl get pods -n kube-flannel
-No resources found in kube-flannel namespace.
-[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
-NAME                              READY   STATUS             RESTARTS      AGE
-coredns-58767d876d-q2jlq          0/1     CrashLoopBackOff   5 (58s ago)   4m4s
-coredns-58767d876d-qvv8h          0/1     CrashLoopBackOff   5 (63s ago)   4m4s
-etcd-devad1m                      1/1     Running            2             29m
-kube-apiserver-devad1m            1/1     Running            2 (30m ago)   29m
-kube-controller-manager-devad1m   1/1     Running            2             29m
-kube-proxy-skl2m                  1/1     Running            0             29m
-kube-scheduler-devad1m            1/1     Running            2             29m
-[devops@DEVAD1M ~]$
+
+
+
+
+
+kubectl edit daemonset kube-flannel-ds -n kube-flannel
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  annotations:
+    deprecated.daemonset.template.generation: "1"
+    meta.helm.sh/release-name: flannel
+    meta.helm.sh/release-namespace: kube-flannel
+  creationTimestamp: "2024-05-13T14:09:06Z"
+  generation: 1
+  labels:
+    app: flannel
+    app.kubernetes.io/managed-by: Helm
+    tier: node
+  name: kube-flannel-ds
+  namespace: kube-flannel
+  resourceVersion: "5154820"
+  uid: 1c5c625d-c939-4e34-8de9-54579eefef91
+spec:
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: flannel
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: flannel
+        tier: node
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/os
+                operator: In
+                values:
+                - linux
+      containers:
+      - command:
+        - /opt/bin/flanneld
+        - --ip-masq
+        - --kube-subnet-mgr
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        - name: EVENT_QUEUE_DEPTH
+          value: "5000"
+        image: 10.173.181.26/flannel/flannel:v0.25.1
+        imagePullPolicy: IfNotPresent
+        name: kube-flannel
+        resources:
+          requests:
+            cpu: 100m
+            memory: 50Mi
+        securityContext:
+          capabilities:
+            add:
+            - NET_ADMIN
+            - NET_RAW
+          privileged: false
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /run/flannel
+          name: run
+        - mountPath: /etc/kube-flannel/
+          name: flannel-cfg
+        - mountPath: /run/xtables.lock
+          name: xtables-lock
+      dnsPolicy: ClusterFirst
+      hostNetwork: true
+      initContainers:
+      - args:
+        - -f
+        - /flannel
+        - /opt/cni/bin/flannel
+        command:
+        - cp
+        image: 10.173.181.26/flannel/flannel-cni-plugin:v1.4.0-flannel1
+        imagePullPolicy: IfNotPresent
+        name: install-cni-plugin
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /opt/cni/bin
+          name: cni-plugin
+      - args:
+        - -f
+        - /etc/kube-flannel/cni-conf.json
+        - /etc/cni/net.d/10-flannel.conflist
+        command:
+        - cp
+        image: 10.173.181.26/flannel/flannel:v0.25.1
+        imagePullPolicy: IfNotPresent
+        name: install-cni
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/cni/net.d
+          name: cni
+        - mountPath: /etc/kube-flannel/
+          name: flannel-cfg
+      priorityClassName: system-node-critical
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: flannel
+      serviceAccountName: flannel
+      terminationGracePeriodSeconds: 30
+      tolerations:
+      - effect: NoExecute
+        operator: Exists
+      - effect: NoSchedule
+        operator: Exists
+      volumes:
+      - hostPath:
+          path: /run/flannel
+          type: ""
+        name: run
+      - hostPath:
+          path: /opt/cni/bin
+          type: ""
+        name: cni-plugin
+      - hostPath:
+          path: /etc/cni/net.d
+          type: ""
+        name: cni
+      - configMap:
+          defaultMode: 420
+          name: kube-flannel-cfg
+        name: flannel-cfg
+      - hostPath:
+          path: /run/xtables.lock
+          type: FileOrCreate
+        name: xtables-lock
+updateStrategy:
+  rollingUpdate:
+    maxSurge: 0
+    maxUnavailable: 1
+  type: RollingUpdate
