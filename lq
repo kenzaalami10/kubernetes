@@ -1,87 +1,184 @@
-[devops@DEVAD1M ~]$ kubectl create namespace kube-flannel
-namespace/kube-flannel created
-[devops@DEVAD1M ~]$ kubectl apply -f kube-flannel.yaml
-daemonset.apps/kube-flannel-ds created
-[devops@DEVAD1M ~]$ kubectl get nodes -o wide
-NAME      STATUS   ROLES           AGE   VERSION   INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                               KERNEL-VERSION                CONTAINER-RUNTIME
-devad1m   Ready    control-plane   23m   v1.29.2   10.173.144.180   <none>        Red Hat Enterprise Linux 8.9 (Ootpa)   4.18.0-513.9.1.el8_9.x86_64   cri-o://1.29.2
-[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
-NAME                              READY   STATUS             RESTARTS       AGE
-coredns-58767d876d-6zkx5          0/1     CrashLoopBackOff   13 (6s ago)    23m
-coredns-58767d876d-p2qf2          0/1     CrashLoopBackOff   13 (44s ago)   23m
-etcd-devad1m                      1/1     Running            2              23m
-kube-apiserver-devad1m            1/1     Running            2 (24m ago)    23m
-kube-controller-manager-devad1m   1/1     Running            2              23m
-kube-proxy-skl2m                  1/1     Running            0              23m
-kube-scheduler-devad1m            1/1     Running            2              23m
-[devops@DEVAD1M ~]$ ^C
-[devops@DEVAD1M ~]$ kubectl validate -f kube-flannel.yaml
-error: unknown command "validate" for "kubectl"
-[devops@DEVAD1M ~]$ kubectl apply -f kube-flannel.yaml --namespace=kube-flannel
-daemonset.apps/kube-flannel-ds unchanged
-[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
-NAME                              READY   STATUS             RESTARTS       AGE
-coredns-58767d876d-6zkx5          0/1     CrashLoopBackOff   13 (55s ago)   24m
-coredns-58767d876d-p2qf2          0/1     CrashLoopBackOff   13 (93s ago)   24m
-etcd-devad1m                      1/1     Running            2              24m
-kube-apiserver-devad1m            1/1     Running            2 (25m ago)    24m
-kube-controller-manager-devad1m   1/1     Running            2              24m
-kube-proxy-skl2m                  1/1     Running            0              24m
-kube-scheduler-devad1m            1/1     Running            2              24m
-[devops@DEVAD1M ~]$ kubectl edit deployment coredns -n kube-system
-Edit cancelled, no changes made.
-[devops@DEVAD1M ~]$
-[devops@DEVAD1M ~]$ kubectl delete pod -n kube-system -l k8s-app=kube-dns
-pod "coredns-58767d876d-6zkx5" deleted
-pod "coredns-58767d876d-p2qf2" deleted
-[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
-NAME                              READY   STATUS    RESTARTS      AGE
-coredns-58767d876d-q2jlq          0/1     Error     1 (3s ago)    4s
-coredns-58767d876d-qvv8h          0/1     Error     1 (3s ago)    4s
-etcd-devad1m                      1/1     Running   2             25m
-kube-apiserver-devad1m            1/1     Running   2 (26m ago)   25m
-kube-controller-manager-devad1m   1/1     Running   2             25m
-kube-proxy-skl2m                  1/1     Running   0             25m
-kube-scheduler-devad1m            1/1     Running   2             25m
-[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
-NAME                              READY   STATUS    RESTARTS      AGE
-coredns-58767d876d-q2jlq          0/1     Error     1 (5s ago)    6s
-coredns-58767d876d-qvv8h          0/1     Error     1 (5s ago)    6s
-etcd-devad1m                      1/1     Running   2             25m
-kube-apiserver-devad1m            1/1     Running   2 (26m ago)   25m
-kube-controller-manager-devad1m   1/1     Running   2             25m
-kube-proxy-skl2m                  1/1     Running   0             25m
-kube-scheduler-devad1m            1/1     Running   2             25m
-[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
-NAME                              READY   STATUS    RESTARTS      AGE
-coredns-58767d876d-q2jlq          0/1     Error     1 (9s ago)    10s
-coredns-58767d876d-qvv8h          0/1     Error     1 (9s ago)    10s
-etcd-devad1m                      1/1     Running   2             25m
-kube-apiserver-devad1m            1/1     Running   2 (26m ago)   25m
-kube-controller-manager-devad1m   1/1     Running   2             25m
-kube-proxy-skl2m                  1/1     Running   0             25m
-kube-scheduler-devad1m            1/1     Running   2             25m
-[devops@DEVAD1M ~]$ kubectl get  deployment coredns -n kube-system
-NAME      READY   UP-TO-DATE   AVAILABLE   AGE
-coredns   0/2     2            0           25m
-[devops@DEVAD1M ~]$ kubectl cat  deployment coredns -n kube-system
-error: unknown command "cat" for "kubectl"
-
-Did you mean this?
-        set
-        get
-        cp
-        wait
-[devops@DEVAD1M ~]$ kubectl get  deployment coredns -n kube-system
-NAME      READY   UP-TO-DATE   AVAILABLE   AGE
-coredns   0/2     2            0           26m
+[devops@DEVAD1M ~]$ kubectl get configmap coredns -n kube-system -o yaml
+apiVersion: v1
+data:
+  Corefile: |
+    .:53 {
+        errors
+        health {
+           lameduck 5s
+        }
+        ready
+        kubernetes cluster.local in-addr.arpa ip6.arpa {
+           pods insecure
+           fallthrough in-addr.arpa ip6.arpa
+           ttl 30
+        }
+        prometheus :9153
+        forward . /etc/resolv.conf {
+           max_concurrent 1000
+        }
+        cache 30
+        loop
+        reload
+        loadbalance
+    }
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2024-06-12T07:14:38Z"
+  name: coredns
+  namespace: kube-system
+  resourceVersion: "219"
+  uid: d51c7a2e-f479-4a0c-982a-a0298c7a98a0
+[devops@DEVAD1M ~]$ kubectl get deployment  coredns -n kube-system -o yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  creationTimestamp: "2024-06-12T07:14:38Z"
+  generation: 1
+  labels:
+    k8s-app: kube-dns
+  name: coredns
+  namespace: kube-system
+  resourceVersion: "2574"
+  uid: 96d8b199-338f-403e-91db-dace2026b8c1
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      k8s-app: kube-dns
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        k8s-app: kube-dns
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: k8s-app
+                  operator: In
+                  values:
+                  - kube-dns
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      containers:
+      - args:
+        - -conf
+        - /etc/coredns/Corefile
+        image: 10.173.181.26/coredns:v1.11.1
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /health
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: coredns
+        ports:
+        - containerPort: 53
+          name: dns
+          protocol: UDP
+        - containerPort: 53
+          name: dns-tcp
+          protocol: TCP
+        - containerPort: 9153
+          name: metrics
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /ready
+            port: 8181
+            scheme: HTTP
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            memory: 170Mi
+          requests:
+            cpu: 100m
+            memory: 70Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            add:
+            - NET_BIND_SERVICE
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/coredns
+          name: config-volume
+          readOnly: true
+      dnsPolicy: Default
+      nodeSelector:
+        kubernetes.io/os: linux
+      priorityClassName: system-cluster-critical
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: coredns
+      serviceAccountName: coredns
+      terminationGracePeriodSeconds: 30
+      tolerations:
+      - key: CriticalAddonsOnly
+        operator: Exists
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
+      volumes:
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: Corefile
+            path: Corefile
+          name: coredns
+        name: config-volume
+status:
+  conditions:
+  - lastTransitionTime: "2024-06-12T07:14:52Z"
+    lastUpdateTime: "2024-06-12T07:14:52Z"
+    message: Deployment does not have minimum availability.
+    reason: MinimumReplicasUnavailable
+    status: "False"
+    type: Available
+  - lastTransitionTime: "2024-06-12T07:40:07Z"
+    lastUpdateTime: "2024-06-12T07:40:07Z"
+    message: ReplicaSet "coredns-58767d876d" is progressing.
+    reason: ReplicaSetUpdated
+    status: "True"
+    type: Progressing
+  observedGeneration: 1
+  replicas: 2
+  unavailableReplicas: 2
+  updatedReplicas: 2
+[devops@DEVAD1M ~]$ kubectl get pods -n kube-flannel
+No resources found in kube-flannel namespace.
 [devops@DEVAD1M ~]$ kubectl get pods -n kube-system
 NAME                              READY   STATUS             RESTARTS      AGE
-coredns-58767d876d-q2jlq          0/1     CrashLoopBackOff   2 (18s ago)   40s
-coredns-58767d876d-qvv8h          0/1     CrashLoopBackOff   2 (17s ago)   40s
-etcd-devad1m                      1/1     Running            2             26m
-kube-apiserver-devad1m            1/1     Running            2 (26m ago)   26m
-kube-controller-manager-devad1m   1/1     Running            2             26m
-kube-proxy-skl2m                  1/1     Running            0             25m
-kube-scheduler-devad1m            1/1     Running            2             26m
+coredns-58767d876d-q2jlq          0/1     CrashLoopBackOff   5 (58s ago)   4m4s
+coredns-58767d876d-qvv8h          0/1     CrashLoopBackOff   5 (63s ago)   4m4s
+etcd-devad1m                      1/1     Running            2             29m
+kube-apiserver-devad1m            1/1     Running            2 (30m ago)   29m
+kube-controller-manager-devad1m   1/1     Running            2             29m
+kube-proxy-skl2m                  1/1     Running            0             29m
+kube-scheduler-devad1m            1/1     Running            2             29m
 [devops@DEVAD1M ~]$
