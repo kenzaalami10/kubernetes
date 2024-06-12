@@ -25,11 +25,8 @@
 [devops@DEVAD1M ~]$
 
 
+[devops@DEVAD1M ~]$  kubectl edit configmap coredns -n kube-system -o yaml
 apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: coredns
-  namespace: kube-system
 data:
   Corefile: |
     .:53 {
@@ -46,4 +43,115 @@ data:
         reload
         loadbalance
     }
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2024-06-12T07:14:38Z"
+  name: coredns
+  namespace: kube-system
+  resourceVersion: "7396"
+  uid: d51c7a2e-f479-4a0c-982a-a0298c7a98a0
+[devops@DEVAD1M ~]$ kubectl delete pod -n kube-system -l k8s-app=kube-dns
+pod "coredns-58767d876d-fbsx6" deleted
+pod "coredns-58767d876d-g9x2s" deleted
+[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
+NAME                              READY   STATUS    RESTARTS      AGE
+coredns-58767d876d-htdxq          0/1     Running   0             4s
+coredns-58767d876d-v7g42          0/1     Running   0             4s
+etcd-devad1m                      1/1     Running   2             81m
+kube-apiserver-devad1m            1/1     Running   2 (81m ago)   81m
+kube-controller-manager-devad1m   1/1     Running   2             81m
+kube-proxy-skl2m                  1/1     Running   0             80m
+kube-scheduler-devad1m            1/1     Running   2             81m
+[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
+NAME                              READY   STATUS    RESTARTS      AGE
+coredns-58767d876d-htdxq          0/1     Running   0             6s
+coredns-58767d876d-v7g42          0/1     Running   0             6s
+etcd-devad1m                      1/1     Running   2             81m
+kube-apiserver-devad1m            1/1     Running   2 (82m ago)   81m
+kube-controller-manager-devad1m   1/1     Running   2             81m
+kube-proxy-skl2m                  1/1     Running   0             80m
+kube-scheduler-devad1m            1/1     Running   2             81m
+[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
+NAME                              READY   STATUS    RESTARTS      AGE
+coredns-58767d876d-htdxq          0/1     Running   0             7s
+coredns-58767d876d-v7g42          0/1     Running   0             7s
+etcd-devad1m                      1/1     Running   2             81m
+kube-apiserver-devad1m            1/1     Running   2 (82m ago)   81m
+kube-controller-manager-devad1m   1/1     Running   2             81m
+kube-proxy-skl2m                  1/1     Running   0             81m
+kube-scheduler-devad1m            1/1     Running   2             81m
+[devops@DEVAD1M ~]$ kubectl describe  pods coredns-58767d876d-htdxq  -n kube-system
+Name:                 coredns-58767d876d-htdxq
+Namespace:            kube-system
+Priority:             2000000000
+Priority Class Name:  system-cluster-critical
+Service Account:      coredns
+Node:                 devad1m/10.173.144.180
+Start Time:           Wed, 12 Jun 2024 09:35:45 +0100
+Labels:               k8s-app=kube-dns
+                      pod-template-hash=58767d876d
+Annotations:          <none>
+Status:               Running
+IP:                   10.85.0.15
+IPs:
+  IP:           10.85.0.15
+Controlled By:  ReplicaSet/coredns-58767d876d
+Containers:
+  coredns:
+    Container ID:  cri-o://9ecf11224f0762bff3f91078e1a4d5289039b7d935b377e7f60ed1763b888aa7
+    Image:         10.173.181.26/coredns:v1.11.1
+    Image ID:      10.173.181.26/coredns@sha256:54dcce8c8e5073d043ad8d4c4a74ecf4fba40134cc2185da7c697c97a1fa8943
+    Ports:         53/UDP, 53/TCP, 9153/TCP
+    Host Ports:    0/UDP, 0/TCP, 0/TCP
+    Args:
+      -conf
+      /etc/coredns/Corefile
+    State:          Running
+      Started:      Wed, 12 Jun 2024 09:35:46 +0100
+    Ready:          False
+    Restart Count:  0
+    Limits:
+      memory:  170Mi
+    Requests:
+      cpu:        100m
+      memory:     70Mi
+    Liveness:     http-get http://:8080/health delay=60s timeout=5s period=10s #success=1 #failure=5
+    Readiness:    http-get http://:8181/ready delay=0s timeout=1s period=10s #success=1 #failure=3
+    Environment:  <none>
+    Mounts:
+      /etc/coredns from config-volume (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-prrg6 (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True
+  Initialized                 True
+  Ready                       False
+  ContainersReady             False
+  PodScheduled                True
+Volumes:
+  config-volume:
+    Type:      ConfigMap (a volume populated by a ConfigMap)
+    Name:      coredns
+    Optional:  false
+  kube-api-access-prrg6:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              kubernetes.io/os=linux
+Tolerations:                 CriticalAddonsOnly op=Exists
+                             node-role.kubernetes.io/control-plane:NoSchedule
+                             node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age               From               Message
+  ----     ------     ----              ----               -------
+  Normal   Scheduled  22s               default-scheduler  Successfully assigned kube-system/coredns-58767d876d-htdxq to devad1m
+  Normal   Pulled     21s               kubelet            Container image "10.173.181.26/coredns:v1.11.1" already present on machine
+  Normal   Created    21s               kubelet            Created container coredns
+  Normal   Started    21s               kubelet            Started container coredns
+  Warning  Unhealthy  2s (x4 over 21s)  kubelet            Readiness probe failed: Get "http://10.85.0.15:8181/ready": dial tcp 10.85.0.15:8181: connect: connection refused
+[devops@DEVAD1M ~]$
 
