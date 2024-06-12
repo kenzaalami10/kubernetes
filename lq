@@ -1,161 +1,87 @@
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  labels:
-    app: flannel
-    k8s-app: flannel
-    tier: node
-  name: kube-flannel-ds
-  namespace: kube-flannel
-spec:
-  selector:
-    matchLabels:
-      app: flannel
-      k8s-app: flannel
-  template:
-    metadata:
-      labels:
-        app: flannel
-        k8s-app: flannel
-        tier: node
-    spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: kubernetes.io/os
-                operator: In
-                values:
-                - linux
-      containers:
-      - args:
-        - --ip-masq
-        - --kube-subnet-mgr
-        command:
-        - /opt/bin/flanneld
-        env:
-        - name: POD_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
-        - name: POD_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-        - name: EVENT_QUEUE_DEPTH
-          value: "5000"
-        image: 10.173.181.26/flannel/flannel:v0.25.1
-        name: kube-flannel
-        resources:
-          requests:
-            cpu: 100m
-            memory: 50Mi
-        securityContext:
-          capabilities:
-            add:
-            - NET_ADMIN
-            - NET_RAW
-          privileged: false
-        volumeMounts:
-        - mountPath: /run/flannel
-          name: run
-        - mountPath: /etc/kube-flannel/
-          name: flannel-cfg
-        - mountPath: /run/xtables.lock
-          name: xtables-lock
-      hostNetwork: true
-      initContainers:
-      - args:
-        - -f
-        - /flannel
-        - /opt/cni/bin/flannel
-        command:
-        - cp
-        image: 10.173.181.26/flannel/flannel-cni-plugin:v1.4.0-flannel1
-        name: install-cni-plugin
-        volumeMounts:
-        - mountPath: /opt/cni/bin
-          name: cni-plugin
-      - args:
-        - -f
-        - /etc/kube-flannel/cni-conf.json
-        - /etc/cni/net.d/10-flannel.conflist
-        command:
-        - cp
-        image: 10.173.181.26/flannel/flannel:v0.25.1
-        name: install-cni
-        volumeMounts:
-        - mountPath: /etc/cni/net.d
-          name: cni
-        - mountPath: /etc/kube-flannel/
-          name: flannel-cfg
-      priorityClassName: system-node-critical
-      serviceAccountName: flannel
-      tolerations:
-      - effect: NoSchedule
-        operator: Exists
-      volumes:
-      - hostPath:
-          path: /run/flannel
-        name: run
-      - hostPath:
-          path: /opt/cni/bin
-        name: cni-plugin
-      - hostPath:
-          path: /etc/cni/net.d
-        name: cni
-      - configMap:
-          name: kube-flannel-cfg
-        name: flannel-cfg
-      - hostPath:
-          path: /run/xtables.lock
-          type: FileOrCreate
-        name: xtables-lock
+[devops@DEVAD1M ~]$ kubectl create namespace kube-flannel
+namespace/kube-flannel created
+[devops@DEVAD1M ~]$ kubectl apply -f kube-flannel.yaml
+daemonset.apps/kube-flannel-ds created
+[devops@DEVAD1M ~]$ kubectl get nodes -o wide
+NAME      STATUS   ROLES           AGE   VERSION   INTERNAL-IP      EXTERNAL-IP   OS-IMAGE                               KERNEL-VERSION                CONTAINER-RUNTIME
+devad1m   Ready    control-plane   23m   v1.29.2   10.173.144.180   <none>        Red Hat Enterprise Linux 8.9 (Ootpa)   4.18.0-513.9.1.el8_9.x86_64   cri-o://1.29.2
+[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
+NAME                              READY   STATUS             RESTARTS       AGE
+coredns-58767d876d-6zkx5          0/1     CrashLoopBackOff   13 (6s ago)    23m
+coredns-58767d876d-p2qf2          0/1     CrashLoopBackOff   13 (44s ago)   23m
+etcd-devad1m                      1/1     Running            2              23m
+kube-apiserver-devad1m            1/1     Running            2 (24m ago)    23m
+kube-controller-manager-devad1m   1/1     Running            2              23m
+kube-proxy-skl2m                  1/1     Running            0              23m
+kube-scheduler-devad1m            1/1     Running            2              23m
+[devops@DEVAD1M ~]$ ^C
+[devops@DEVAD1M ~]$ kubectl validate -f kube-flannel.yaml
+error: unknown command "validate" for "kubectl"
+[devops@DEVAD1M ~]$ kubectl apply -f kube-flannel.yaml --namespace=kube-flannel
+daemonset.apps/kube-flannel-ds unchanged
+[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
+NAME                              READY   STATUS             RESTARTS       AGE
+coredns-58767d876d-6zkx5          0/1     CrashLoopBackOff   13 (55s ago)   24m
+coredns-58767d876d-p2qf2          0/1     CrashLoopBackOff   13 (93s ago)   24m
+etcd-devad1m                      1/1     Running            2              24m
+kube-apiserver-devad1m            1/1     Running            2 (25m ago)    24m
+kube-controller-manager-devad1m   1/1     Running            2              24m
+kube-proxy-skl2m                  1/1     Running            0              24m
+kube-scheduler-devad1m            1/1     Running            2              24m
+[devops@DEVAD1M ~]$ kubectl edit deployment coredns -n kube-system
+Edit cancelled, no changes made.
+[devops@DEVAD1M ~]$
+[devops@DEVAD1M ~]$ kubectl delete pod -n kube-system -l k8s-app=kube-dns
+pod "coredns-58767d876d-6zkx5" deleted
+pod "coredns-58767d876d-p2qf2" deleted
+[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
+NAME                              READY   STATUS    RESTARTS      AGE
+coredns-58767d876d-q2jlq          0/1     Error     1 (3s ago)    4s
+coredns-58767d876d-qvv8h          0/1     Error     1 (3s ago)    4s
+etcd-devad1m                      1/1     Running   2             25m
+kube-apiserver-devad1m            1/1     Running   2 (26m ago)   25m
+kube-controller-manager-devad1m   1/1     Running   2             25m
+kube-proxy-skl2m                  1/1     Running   0             25m
+kube-scheduler-devad1m            1/1     Running   2             25m
+[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
+NAME                              READY   STATUS    RESTARTS      AGE
+coredns-58767d876d-q2jlq          0/1     Error     1 (5s ago)    6s
+coredns-58767d876d-qvv8h          0/1     Error     1 (5s ago)    6s
+etcd-devad1m                      1/1     Running   2             25m
+kube-apiserver-devad1m            1/1     Running   2 (26m ago)   25m
+kube-controller-manager-devad1m   1/1     Running   2             25m
+kube-proxy-skl2m                  1/1     Running   0             25m
+kube-scheduler-devad1m            1/1     Running   2             25m
+[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
+NAME                              READY   STATUS    RESTARTS      AGE
+coredns-58767d876d-q2jlq          0/1     Error     1 (9s ago)    10s
+coredns-58767d876d-qvv8h          0/1     Error     1 (9s ago)    10s
+etcd-devad1m                      1/1     Running   2             25m
+kube-apiserver-devad1m            1/1     Running   2 (26m ago)   25m
+kube-controller-manager-devad1m   1/1     Running   2             25m
+kube-proxy-skl2m                  1/1     Running   0             25m
+kube-scheduler-devad1m            1/1     Running   2             25m
+[devops@DEVAD1M ~]$ kubectl get  deployment coredns -n kube-system
+NAME      READY   UP-TO-DATE   AVAILABLE   AGE
+coredns   0/2     2            0           25m
+[devops@DEVAD1M ~]$ kubectl cat  deployment coredns -n kube-system
+error: unknown command "cat" for "kubectl"
 
-kubectl apply -f kube-flannel.yml
-
-
-
-
-
-
-
-
-
-kubectl edit deployment coredns -n kube-system
-containers:
-- name: coredns
-  image: 10.173.181.26/coredns:v1.11.1
-
-
-corefile 
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: coredns
-  namespace: kube-system
-data:
-  Corefile: |
-    .:53 {
-        errors
-        health {
-           lameduck 5s
-        }
-        ready
-        kubernetes cluster.local in-addr.arpa ip6.arpa {
-           fallthrough in-addr.arpa ip6.arpa
-        }
-        prometheus :9153
-        forward . /etc/resolv.conf
-        cache 30
-        loop
-        reload
-        loadbalance
-    }
-
-
-
-kubectl delete pod -n kube-system -l k8s-app=kube-dns
-
-
+Did you mean this?
+        set
+        get
+        cp
+        wait
+[devops@DEVAD1M ~]$ kubectl get  deployment coredns -n kube-system
+NAME      READY   UP-TO-DATE   AVAILABLE   AGE
+coredns   0/2     2            0           26m
+[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
+NAME                              READY   STATUS             RESTARTS      AGE
+coredns-58767d876d-q2jlq          0/1     CrashLoopBackOff   2 (18s ago)   40s
+coredns-58767d876d-qvv8h          0/1     CrashLoopBackOff   2 (17s ago)   40s
+etcd-devad1m                      1/1     Running            2             26m
+kube-apiserver-devad1m            1/1     Running            2 (26m ago)   26m
+kube-controller-manager-devad1m   1/1     Running            2             26m
+kube-proxy-skl2m                  1/1     Running            0             25m
+kube-scheduler-devad1m            1/1     Running            2             26m
+[devops@DEVAD1M ~]$
