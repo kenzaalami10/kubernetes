@@ -1,143 +1,47 @@
 
-[devops@DEVAD1M ~]$ kubectl edit daemonset kube-flannel-ds -n kube-flannel
+[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
+NAME                              READY   STATUS             RESTARTS      AGE
+coredns-58767d876d-q2jlq          0/1     CrashLoopBackOff   9 (16s ago)   21m
+coredns-58767d876d-qvv8h          0/1     CrashLoopBackOff   9 (4s ago)    21m
+etcd-devad1m                      1/1     Running            2             46m
+kube-apiserver-devad1m            1/1     Running            2 (47m ago)   46m
+kube-controller-manager-devad1m   1/1     Running            2             46m
+kube-proxy-skl2m                  1/1     Running            0             46m
+kube-scheduler-devad1m            1/1     Running            2             46m
+[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
+NAME                              READY   STATUS             RESTARTS      AGE
+coredns-58767d876d-q2jlq          0/1     CrashLoopBackOff   9 (19s ago)   21m
+coredns-58767d876d-qvv8h          0/1     CrashLoopBackOff   9 (7s ago)    21m
+etcd-devad1m                      1/1     Running            2             46m
+kube-apiserver-devad1m            1/1     Running            2 (47m ago)   46m
+kube-controller-manager-devad1m   1/1     Running            2             46m
+kube-proxy-skl2m                  1/1     Running            0             46m
+kube-scheduler-devad1m            1/1     Running            2             46m
+[devops@DEVAD1M ~]$ kubectl edit deployment coredns -n kube-system
 Edit cancelled, no changes made.
+[devops@DEVAD1M ~]$ kubectl delete daemonset kube-flannel-ds -n kube-flannel
+daemonset.apps "kube-flannel-ds" deleted
 [devops@DEVAD1M ~]$ kubectl edit daemonset kube-flannel-ds -n kube-flannel
-Edit cancelled, no changes made.
-[devops@DEVAD1M ~]$ kubectl get daemonset kube-flannel-ds -n kube-flannel
-NAME              DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
-kube-flannel-ds   1         0         0       0            0           <none>          3m23s
-[devops@DEVAD1M ~]$ clear
-[devops@DEVAD1M ~]$ kubectl apply -f kube-flannel.yaml
-daemonset.apps/kube-flannel-ds unchanged
+Error from server (NotFound): daemonsets.apps "kube-flannel-ds" not found
 [devops@DEVAD1M ~]$ ls
 admin.kubeconfig  --discovery-token-ca-cert-hash  etcd-server.key                 files         k8s-deps            kube-apiserver.key                  kube-scheduler.kubeconfig  service-account.key
 ca.crt            encryption-config.yaml          etcd-v3.3.9-linux-amd64         files.tar.gz  k8s-deps.tar.gz     kube-controller-manager.kubeconfig  roles.zip                  token.txt
 ca.key            etcd-server.crt                 etcd-v3.3.9-linux-amd64.tar.gz  hard          kube-apiserver.crt  kube-flannel.yaml                   service-account.crt
+[devops@DEVAD1M ~]$ kubectl apply -f kube-flannel.yaml
+daemonset.apps/kube-flannel-ds created
 [devops@DEVAD1M ~]$ kubectl get pods -n kube-system
-NAME                              READY   STATUS             RESTARTS       AGE
-coredns-58767d876d-q2jlq          0/1     CrashLoopBackOff   10 (31s ago)   26m
-coredns-58767d876d-qvv8h          0/1     CrashLoopBackOff   10 (10s ago)   26m
-etcd-devad1m                      1/1     Running            2              52m
-kube-apiserver-devad1m            1/1     Running            2 (52m ago)    52m
-kube-controller-manager-devad1m   1/1     Running            2              52m
-kube-proxy-skl2m                  1/1     Running            0              51m
-kube-scheduler-devad1m            1/1     Running            2              52m
+NAME                              READY   STATUS             RESTARTS      AGE
+coredns-58767d876d-q2jlq          0/1     CrashLoopBackOff   9 (93s ago)   22m
+coredns-58767d876d-qvv8h          0/1     CrashLoopBackOff   9 (81s ago)   22m
+etcd-devad1m                      1/1     Running            2             48m
+kube-apiserver-devad1m            1/1     Running            2 (48m ago)   48m
+kube-controller-manager-devad1m   1/1     Running            2             48m
+kube-proxy-skl2m                  1/1     Running            0             47m
+kube-scheduler-devad1m            1/1     Running            2             48m
+[devops@DEVAD1M ~]$ kubectl edit daemonset kube-flannel-ds -n kube-flannel
+Edit cancelled, no changes made.
 [devops@DEVAD1M ~]$ kubectl get pods -n kube-flannel
 No resources found in kube-flannel namespace.
-[devops@DEVAD1M ~]$ cat kube-flannel.yaml
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  labels:
-    app: flannel
-    k8s-app: flannel
-    tier: node
-  name: kube-flannel-ds
-  namespace: kube-flannel
-spec:
-  selector:
-    matchLabels:
-      app: flannel
-      k8s-app: flannel
-  template:
-    metadata:
-      labels:
-        app: flannel
-        k8s-app: flannel
-        tier: node
-    spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: kubernetes.io/os
-                operator: In
-                values:
-                - linux
-      containers:
-      - args:
-        - --ip-masq
-        - --kube-subnet-mgr
-        command:
-        - /opt/bin/flanneld
-        env:
-        - name: POD_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
-        - name: POD_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-        - name: EVENT_QUEUE_DEPTH
-          value: "5000"
-        image: 10.173.181.26/flannel/flannel:v0.25.1
-        name: kube-flannel
-        resources:
-          requests:
-            cpu: 100m
-            memory: 50Mi
-        securityContext:
-          capabilities:
-            add:
-            - NET_ADMIN
-            - NET_RAW
-          privileged: false
-        volumeMounts:
-        - mountPath: /run/flannel
-          name: run
-        - mountPath: /etc/kube-flannel/
-          name: flannel-cfg
-        - mountPath: /run/xtables.lock
-          name: xtables-lock
-      hostNetwork: true
-      initContainers:
-      - args:
-        - -f
-        - /flannel
-        - /opt/cni/bin/flannel
-        command:
-        - cp
-        image: 10.173.181.26/flannel/flannel-cni-plugin:v1.4.0-flannel1
-        name: install-cni-plugin
-        volumeMounts:
-        - mountPath: /opt/cni/bin
-          name: cni-plugin
-      - args:
-        - -f
-        - /etc/kube-flannel/cni-conf.json
-        - /etc/cni/net.d/10-flannel.conflist
-        command:
-        - cp
-        image: 10.173.181.26/flannel/flannel:v0.25.1
-        name: install-cni
-        volumeMounts:
-        - mountPath: /etc/cni/net.d
-          name: cni
-        - mountPath: /etc/kube-flannel/
-          name: flannel-cfg
-      priorityClassName: system-node-critical
-      serviceAccountName: flannel
-      tolerations:
-      - effect: NoSchedule
-        operator: Exists
-      volumes:
-      - hostPath:
-          path: /run/flannel
-        name: run
-      - hostPath:
-          path: /opt/cni/bin
-        name: cni-plugin
-      - hostPath:
-          path: /etc/cni/net.d
-        name: cni
-      - configMap:
-          name: kube-flannel-cfg
-        name: flannel-cfg
-      - hostPath:
-          path: /run/xtables.lock
-          type: FileOrCreate
-        name: xtables-lock
 [devops@DEVAD1M ~]$
+
 
