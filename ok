@@ -1,117 +1,14 @@
-[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
-NAME                              READY   STATUS    RESTARTS      AGE
-coredns-58767d876d-dc6dc          0/1     Running   0             10s
-coredns-58767d876d-qbm7m          0/1     Running   0             9s
-etcd-devad1m                      1/1     Running   2             66m
-kube-apiserver-devad1m            1/1     Running   2 (67m ago)   66m
-kube-controller-manager-devad1m   1/1     Running   2             66m
-kube-proxy-skl2m                  1/1     Running   0             66m
-kube-scheduler-devad1m            1/1     Running   2             66m
-[devops@DEVAD1M ~]$ kubectl describe  pods coredns-58767d876d-dc6dc -n kube-system
-Name:                 coredns-58767d876d-dc6dc
-Namespace:            kube-system
-Priority:             2000000000
-Priority Class Name:  system-cluster-critical
-Service Account:      coredns
-Node:                 devad1m/10.173.144.180
-Start Time:           Wed, 12 Jun 2024 09:20:53 +0100
-Labels:               k8s-app=kube-dns
-                      pod-template-hash=58767d876d
-Annotations:          <none>
-Status:               Running
-IP:                   10.85.0.10
-IPs:
-  IP:           10.85.0.10
-Controlled By:  ReplicaSet/coredns-58767d876d
-Containers:
-  coredns:
-    Container ID:  cri-o://d1040fff1b8208f7b6aaf8f0e775cf3ab97ef5368c9b7946b0e0340f101551a4
-    Image:         10.173.181.26/coredns:v1.11.1
-    Image ID:      10.173.181.26/coredns@sha256:54dcce8c8e5073d043ad8d4c4a74ecf4fba40134cc2185da7c697c97a1fa8943
-    Ports:         53/UDP, 53/TCP, 9153/TCP
-    Host Ports:    0/UDP, 0/TCP, 0/TCP
-    Args:
-      -conf
-      /etc/coredns/Corefile
-    State:          Running
-      Started:      Wed, 12 Jun 2024 09:20:53 +0100
-    Ready:          False
-    Restart Count:  0
-    Limits:
-      memory:  170Mi
-    Requests:
-      cpu:        100m
-      memory:     70Mi
-    Liveness:     http-get http://:8080/health delay=60s timeout=5s period=10s #success=1 #failure=5
-    Readiness:    http-get http://:8181/ready delay=0s timeout=1s period=10s #success=1 #failure=3
-    Environment:  <none>
-    Mounts:
-      /etc/coredns from config-volume (ro)
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-2jsrc (ro)
-Conditions:
-  Type                        Status
-  PodReadyToStartContainers   True
-  Initialized                 True
-  Ready                       False
-  ContainersReady             False
-  PodScheduled                True
-Volumes:
-  config-volume:
-    Type:      ConfigMap (a volume populated by a ConfigMap)
-    Name:      coredns
-    Optional:  false
-  kube-api-access-2jsrc:
-    Type:                    Projected (a volume that contains injected data from multiple sources)
-    TokenExpirationSeconds:  3607
-    ConfigMapName:           kube-root-ca.crt
-    ConfigMapOptional:       <nil>
-    DownwardAPI:             true
-QoS Class:                   Burstable
-Node-Selectors:              kubernetes.io/os=linux
-Tolerations:                 CriticalAddonsOnly op=Exists
-                             node-role.kubernetes.io/control-plane:NoSchedule
-                             node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
-                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
-Events:
-  Type     Reason     Age               From               Message
-  ----     ------     ----              ----               -------
-  Normal   Scheduled  27s               default-scheduler  Successfully assigned kube-system/coredns-58767d876d-dc6dc to devad1m
-  Normal   Pulled     27s               kubelet            Container image "10.173.181.26/coredns:v1.11.1" already present on machine
-  Normal   Created    27s               kubelet            Created container coredns
-  Normal   Started    27s               kubelet            Started container coredns
-  Warning  Unhealthy  7s (x4 over 26s)  kubelet            Readiness probe failed: Get "http://10.85.0.10:8181/ready": dial tcp 10.85.0.10:8181: connect: connection refused
-[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
-NAME                              READY   STATUS    RESTARTS      AGE
-coredns-58767d876d-dc6dc          0/1     Running   0             40s
-coredns-58767d876d-qbm7m          0/1     Running   0             39s
-etcd-devad1m                      1/1     Running   2             66m
-kube-apiserver-devad1m            1/1     Running   2 (67m ago)   66m
-kube-controller-manager-devad1m   1/1     Running   2             66m
-kube-proxy-skl2m                  1/1     Running   0             66m
-kube-scheduler-devad1m            1/1     Running   2             66m
-[devops@DEVAD1M ~]$ ls
-admin.kubeconfig  --discovery-token-ca-cert-hash  etcd-server.key                 files         k8s-deps            kube-apiserver.key                  kube-scheduler.kubeconfig  service-account.key
-ca.crt            encryption-config.yaml          etcd-v3.3.9-linux-amd64         files.tar.gz  k8s-deps.tar.gz     kube-controller-manager.kubeconfig  roles.zip                  token.txt
-ca.key            etcd-server.crt                 etcd-v3.3.9-linux-amd64.tar.gz  hard          kube-apiserver.crt  kube-flannel.yaml                   service-account.crt
-[devops@DEVAD1M ~]$ rm kube-flannel.yaml
-[devops@DEVAD1M ~]$ vi kube-flannel.yaml
-[devops@DEVAD1M ~]$ kubectl apply -f kube-flannel.yaml
-The DaemonSet "kube-flannel-ds" is invalid: spec.selector: Invalid value: v1.LabelSelector{MatchLabels:map[string]string{"app":"flannel"}, MatchExpressions:[]v1.LabelSelectorRequirement(nil)}: field is immutable
-[devops@DEVAD1M ~]$ kubectl delete -f kube-flannel.yaml
-daemonset.apps "kube-flannel-ds" deleted
-[devops@DEVAD1M ~]$ kubectl apply -f kube-flannel.yaml
-daemonset.apps/kube-flannel-ds created
-[devops@DEVAD1M ~]$ kubectl get pods -n kube-system
-NAME                              READY   STATUS    RESTARTS      AGE
-coredns-58767d876d-dc6dc          0/1     Running   0             2m14s
-coredns-58767d876d-qbm7m          0/1     Running   0             2m13s
-etcd-devad1m                      1/1     Running   2             68m
-kube-apiserver-devad1m            1/1     Running   2 (69m ago)   68m
-kube-controller-manager-devad1m   1/1     Running   2             68m
-kube-proxy-skl2m                  1/1     Running   0             68m
-kube-scheduler-devad1m            1/1     Running   2             68m
-[devops@DEVAD1M ~]$ kubectl get pods -n kube-flannel-ds
-No resources found in kube-flannel-ds namespace.
-[devops@DEVAD1M ~]$ kubectl get pods -n kube-flannel
-No resources found in kube-flannel namespace.
+Error from server (NotFound): deployments.apps "kube-flannel" not found
+[devops@DEVAD1M ~]$ kubectl get pods -A
+NAMESPACE      NAME                              READY   STATUS              RESTARTS        AGE
+kube-flannel   kube-flannel-ds-w8jv2             1/1     Running             0               42m
+kube-system    coredns-6d76bfd755-jt5fz          0/1     ContainerCreating   0               4m59s
+kube-system    coredns-7cc886bcb-p68xc           0/1     ContainerCreating   0               36s
+kube-system    coredns-7cc886bcb-zhd7t           0/1     ContainerCreating   0               36s
+kube-system    etcd-devad1m                      1/1     Running             2               5h37m
+kube-system    kube-apiserver-devad1m            1/1     Running             2 (5h38m ago)   5h37m
+kube-system    kube-controller-manager-devad1m   1/1     Running             2               5h37m
+kube-system    kube-proxy-skl2m                  1/1     Running             0               5h37m
+kube-system    kube-scheduler-devad1m            1/1     Running             2               5h37m
 [devops@DEVAD1M ~]$
+
