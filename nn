@@ -1,80 +1,96 @@
-[devops@DEVAD1M ~]$ kubectl describe  pods coredns-58767d876d-79c4q -n kube-system
-Name:                 coredns-58767d876d-79c4q
-Namespace:            kube-system
-Priority:             2000000000
-Priority Class Name:  system-cluster-critical
-Service Account:      coredns
-Node:                 devad1m/10.173.144.180
-Start Time:           Wed, 12 Jun 2024 13:06:49 +0100
-Labels:               k8s-app=kube-dns
-                      pod-template-hash=58767d876d
-Annotations:          <none>
-Status:               Pending
-IP:
-IPs:                  <none>
-Controlled By:        ReplicaSet/coredns-58767d876d
+[devops@worker1 ~]$ cat nginx.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: 10.173.181.26/my-nginx:1.27.0
+        ports:
+        - containerPort: 80
+[devops@worker1 ~]$ vi nginx.yaml
+[devops@worker1 ~]$ kubectl delete -f nginx.yaml
+deployment.apps "nginx-deployment" deleted
+[devops@worker1 ~]$ kubectl apply  -f nginx.yaml
+deployment.apps/nginx-deployment created
+[devops@worker1 ~]$ kubectl describe  pods nginx-deployment-cd4756b8-czh89
+Error from server (NotFound): pods "nginx-deployment-cd4756b8-czh89" not found
+[devops@worker1 ~]$ kubectl get pods -A
+NAMESPACE      NAME                                READY   STATUS                 RESTARTS   AGE
+default        my-nginx                            0/1     CreateContainerError   0          14m
+default        nginx-deployment-5bd579688f-mb2bx   0/1     CreateContainerError   0          13s
+default        nginx-deployment-5bd579688f-p2xdl   0/1     CreateContainerError   0          13s
+kube-flannel   kube-flannel-ds-gf8g8               1/1     Running                0          83m
+kube-system    coredns-857d9c5658-hbvth            1/1     Running                0          73m
+kube-system    etcd-worker1                        1/1     Running                1          20h
+kube-system    kube-apiserver-worker1              1/1     Running                1          20h
+kube-system    kube-controller-manager-worker1     1/1     Running                1          20h
+kube-system    kube-proxy-2t6rg                    1/1     Running                0          20h
+kube-system    kube-scheduler-worker1              1/1     Running                1          20h
+[devops@worker1 ~]$ kubectl describe  pods nginx-deployment-5bd579688f-mb2bx
+Name:             nginx-deployment-5bd579688f-mb2bx
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             worker1/10.173.144.181
+Start Time:       Thu, 13 Jun 2024 10:57:50 +0100
+Labels:           app=nginx
+                  pod-template-hash=5bd579688f
+Annotations:      <none>
+Status:           Pending
+IP:               10.10.0.210
+IPs:
+  IP:           10.10.0.210
+Controlled By:  ReplicaSet/nginx-deployment-5bd579688f
 Containers:
-  coredns:
+  nginx:
     Container ID:
-    Image:         10.173.181.26/coredns:v1.11.1
+    Image:         10.173.181.26/my-nginx:1.27.0
     Image ID:
-    Ports:         53/UDP, 53/TCP, 9153/TCP
-    Host Ports:    0/UDP, 0/TCP, 0/TCP
-    Args:
-      -conf
-      /etc/coredns/Corefile
+    Port:          80/TCP
+    Host Port:     0/TCP
+    Command:
+      nginx
+      -g
+      daemon off;
     State:          Waiting
-      Reason:       ContainerCreating
+      Reason:       CreateContainerError
     Ready:          False
     Restart Count:  0
-    Limits:
-      memory:  170Mi
-    Requests:
-      cpu:        100m
-      memory:     70Mi
-    Liveness:     http-get http://:8080/health delay=60s timeout=5s period=10s #success=1 #failure=5
-    Readiness:    http-get http://:8181/ready delay=0s timeout=1s period=10s #success=1 #failure=3
-    Environment:  <none>
+    Environment:    <none>
     Mounts:
-      /etc/coredns from config-volume (ro)
-      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-j5p89 (ro)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-d5ltb (ro)
 Conditions:
   Type                        Status
-  PodReadyToStartContainers   False
+  PodReadyToStartContainers   True
   Initialized                 True
   Ready                       False
   ContainersReady             False
   PodScheduled                True
 Volumes:
-  config-volume:
-    Type:      ConfigMap (a volume populated by a ConfigMap)
-    Name:      coredns
-    Optional:  false
-  kube-api-access-j5p89:
+  kube-api-access-d5ltb:
     Type:                    Projected (a volume that contains injected data from multiple sources)
     TokenExpirationSeconds:  3607
     ConfigMapName:           kube-root-ca.crt
     ConfigMapOptional:       <nil>
     DownwardAPI:             true
-QoS Class:                   Burstable
-Node-Selectors:              kubernetes.io/os=linux
-Tolerations:                 CriticalAddonsOnly op=Exists
-                             node-role.kubernetes.io/control-plane:NoSchedule
-                             node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
                              node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
 Events:
-  Type     Reason                  Age                     From               Message
-  ----     ------                  ----                    ----               -------
-  Normal   Scheduled               8m30s                   default-scheduler  Successfully assigned kube-system/coredns-58767d876d-79c4q to devad1m
-  Warning  FailedCreatePodSandBox  8m30s                   kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = failed to create pod network sandbox k8s_coredns-58767d876d-79c4q_kube-system_e22c220e-bcac-4f7a-9bfe-0d4a6f476dd9_0(38e46e9fdb636e9a8f95ffcf78610aa032b787198b193038b5254900f41507a3): No CNI configuration file in /etc/cni/net.d/. Has your network provider started?
-  Warning  FailedCreatePodSandBox  8m17s                   kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = failed to create pod network sandbox k8s_coredns-58767d876d-79c4q_kube-system_e22c220e-bcac-4f7a-9bfe-0d4a6f476dd9_0(c962f5661bb17ee97a09b239c35df7b48e4ab1a3237da331bb6c003fc9bca4a7): No CNI configuration file in /etc/cni/net.d/. Has your network provider started?
-  Warning  FailedCreatePodSandBox  8m6s                    kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = failed to create pod network sandbox k8s_coredns-58767d876d-79c4q_kube-system_e22c220e-bcac-4f7a-9bfe-0d4a6f476dd9_0(6321587f728c59c4c3fc9ebd6681ff8104aa108045a30925ccfc7403eefa8772): No CNI configuration file in /etc/cni/net.d/. Has your network provider started?
-  Warning  FailedCreatePodSandBox  7m55s                   kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = failed to create pod network sandbox k8s_coredns-58767d876d-79c4q_kube-system_e22c220e-bcac-4f7a-9bfe-0d4a6f476dd9_0(8f940918bec07b8bbd0800bd75718c1521b993fd623a3f153df40a88707f3b16): No CNI configuration file in /etc/cni/net.d/. Has your network provider started?
-  Warning  FailedCreatePodSandBox  7m41s                   kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = failed to create pod network sandbox k8s_coredns-58767d876d-79c4q_kube-system_e22c220e-bcac-4f7a-9bfe-0d4a6f476dd9_0(fd91ab73ec2aa41d4f46fdbc6362156881f377a8c2b3b064d189cb25cff33e12): No CNI configuration file in /etc/cni/net.d/. Has your network provider started?
-  Warning  FailedCreatePodSandBox  7m30s                   kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = failed to create pod network sandbox k8s_coredns-58767d876d-79c4q_kube-system_e22c220e-bcac-4f7a-9bfe-0d4a6f476dd9_0(c14347dbf59139205bc180c05865ab4bcbb641b7a3e992674ddacf51b34975e8): No CNI configuration file in /etc/cni/net.d/. Has your network provider started?
-  Warning  FailedCreatePodSandBox  7m18s                   kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = failed to create pod network sandbox k8s_coredns-58767d876d-79c4q_kube-system_e22c220e-bcac-4f7a-9bfe-0d4a6f476dd9_0(38099e19cac18ce2f1072a81ce25ae7cc95fafe9e1d30ee413528d8e3b16d479): No CNI configuration file in /etc/cni/net.d/. Has your network provider started?
-  Warning  FailedCreatePodSandBox  7m4s                    kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = failed to create pod network sandbox k8s_coredns-58767d876d-79c4q_kube-system_e22c220e-bcac-4f7a-9bfe-0d4a6f476dd9_0(d67a721177ce3a03d51e58fd778dded765254684308a5c92d6d059d010d056bf): No CNI configuration file in /etc/cni/net.d/. Has your network provider started?
-  Warning  FailedCreatePodSandBox  6m49s                   kubelet            Failed to create pod sandbox: rpc error: code = Unknown desc = failed to create pod network sandbox k8s_coredns-58767d876d-79c4q_kube-system_e22c220e-bcac-4f7a-9bfe-0d4a6f476dd9_0(4b547e51f7aa96f1663ff5c7c3b21da4b98e94394ac5a934c46ad2651033aa42): No CNI configuration file in /etc/cni/net.d/. Has your network provider started?
-  Warning  FailedCreatePodSandBox  3m17s (x17 over 6m36s)  kubelet            (combined from similar events): Failed to create pod sandbox: rpc error: code = Unknown desc = failed to create pod network sandbox k8s_coredns-58767d876d-79c4q_kube-system_e22c220e-bcac-4f7a-9bfe-0d4a6f476dd9_0(829a22b1494c81a3aa45ee16c9d73d99e5f6aeae3f175c33c6f8c1aaa17c58b5): No CNI configuration file in /etc/cni/net.d/. Has your network provider started?
-
-
+  Type     Reason     Age                From               Message
+  ----     ------     ----               ----               -------
+  Normal   Scheduled  25s                default-scheduler  Successfully assigned default/nginx-deployment-5bd579688f-mb2bx to worker1
+  Normal   Pulled     10s (x3 over 24s)  kubelet            Container image "10.173.181.26/my-nginx:1.27.0" already present on machine
+  Warning  Failed     10s (x3 over 24s)  kubelet            Error: container create failed: executable file `nginx` not found in $PATH: No such file or directory
